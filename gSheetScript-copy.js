@@ -19,10 +19,10 @@ function formSubmit(e) {
       "date": submitVals[0]
     }
   };
-  UrlFetchApp.fetch('https://lsl-discordbot.herokuapp.com/submit?auth=YouShallNotPass', postdata);
+  UrlFetchApp.fetch('https://discord-lsl.herokuapp.com/submit?auth=YouShallNotPass', postdata);
 }
 
 function rowDelete(e) {
   if (e.changeType !== "REMOVE_ROW") return;
-  UrlFetchApp.fetch('https://lsl-discordbot.herokuapp.com/delete?auth=YouShallNotPass');
+  UrlFetchApp.fetch('https://discord-lsl.herokuapp.com/delete?auth=YouShallNotPass');
 }
