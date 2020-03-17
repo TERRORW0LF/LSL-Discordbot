@@ -15,7 +15,7 @@ async function handleMessage(message) {
             message.channel.send(`Please post commands in <#${process.env.botCHANNEL}>.`);
             return;
         }
-        const command = message.content.split(' ')[0].toLowerCase();
+        const command = message.content.split(' ')[0].toLowerCase().replace('?', '!';
         switch(command) {
             case '!submit':
                 handleSubmit(message);
