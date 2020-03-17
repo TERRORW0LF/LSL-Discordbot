@@ -29,7 +29,7 @@ async function setClient() {
     jwtClient = new google.auth.JWT(
         process.env.gCredsEMAIL,
         null,
-        process.env.gCredsKEY,
+        process.env.gCredsKEY.replace(/\\n/gm, '\n'),
         ['https://www.googleapis.com/auth/spreadsheets']
     );
     return;
