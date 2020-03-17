@@ -61,7 +61,7 @@ function getNewRole(points) {
     if (points < 1000) return 'Surfer';
     if (points < 2000) return 'Super Surfer';
     if (points < 4000) return 'Epic Surfer';
-    if (points < 5500) return 'Lengedary Surfer';
+    if (points < 5500) return 'Legendary Surfer';
     return 'Mythic Surfer';
 }
 
