@@ -44,7 +44,6 @@ async function roleUpdate(guild) {
 
             if (user.roles.find(r => r.name === roleStr)) continue;
             var curRole = await getCurRole(roles, user);
-            console.log('Remove Roles');
             if (curRole.size) await user.removeRoles(curRole);
             var newRole = roles.find(r => r.name === roleStr);
             console.log(newRole);
