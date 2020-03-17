@@ -1,7 +1,7 @@
 module.exports = getUser;
 
 async function getUser(guild, user) {
-    const guildMembers = await guild.fetchMembers(user, 10);
+    const guildMembers = await guild.fetchMembers();
     console.log('hey');
     const members = await guildMembers.members;
     console.log('hey');
