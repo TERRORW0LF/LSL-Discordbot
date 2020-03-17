@@ -33,7 +33,7 @@ async function roleUpdate(guild) {
             }
         }
         for (var property in users) {
-            console.log(String(property);
+            console.log(String(property));
             const user = await getUser(guild, String(property));
             if (!user.user) continue;
             const roleStr = await getNewRole(Number(users[property].points));
