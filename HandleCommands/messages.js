@@ -10,7 +10,7 @@ module.exports = handleMessage;
 
 async function handleMessage(message) {
     try {
-        if(!message.content.startsWith('!') || message.author.bot) return;
+        if(!message.content.startsWith('?') || message.author.bot) return;
         if(message.channel.id !== process.env.botCHANNEL) {
             message.channel.send(`Please post commands in <#${process.env.botCHANNEL}>.`);
             return;
