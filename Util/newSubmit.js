@@ -14,7 +14,7 @@ function newSubmit(discord) {
         }
         try {
             console.log(req.body);
-            await sendSubmit(discord, req.body);
+            await sendSubmit(discord, req);
             const guild = discord.guilds.get(process.env.DiscordGUILD);
             roleUpdate(guild);
             const wrCache = await getWrCache();
