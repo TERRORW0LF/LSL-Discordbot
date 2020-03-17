@@ -4,12 +4,7 @@ function formSubmit(e) {
   const submit = values[0].split('/')[2].split(' ').slice(1, 2);
   submitVals.push(values[0].replace(' '+submit, ''));
   values.slice(1).map(function (str) {submitVals.push(str)});
-  const postdata = {
-    "method": "post",
-    "headers": {
-      "contentType": "application/json"
-    },
-    "payload": {
+  const msg = {
       "user": submitVals[1],
       "map": submitVals[4],
       "season": "season3",
@@ -17,7 +12,12 @@ function formSubmit(e) {
       "time": submitVals[2],
       "link": submitVals[3],
       "date": submitVals[0]
-    }
+    };
+  const postdata = {
+    "method": "post",
+    "contentType": "application/json"
+    "payload": JSON.Stringify(msg),
+    "muteHttpExceptions": true
   };
   UrlFetchApp.fetch('https://discord-lsl.herokuapp.com/submit?auth=YouShallNotPass', postdata);
 }
