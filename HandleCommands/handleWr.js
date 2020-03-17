@@ -15,7 +15,7 @@ async function handleWr (message) {
     message.react('💬');
     const botMsg = await message.channel.send('💬 Searching World Record, please hold on.');
     try {
-        const messageVals = await message.content.slice(4).split(',').map(i => i.trim());
+        const messageVals = await message.content.replace(/?wr /i, '').split(',').map(i => i.trim());
         if (messageVals.length !== 3) {
             await message.clearReactions();
             message.react('❌');
