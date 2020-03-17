@@ -19,7 +19,7 @@ async function handleIncomplete(message) {
     const botMsg = await message.channel.send('💬 Searching map data, please hold on.');
 
     try {
-        const messageVals = message.content.replace(/!incomplete /i, '').split(',').map(i => i.trim());
+        const messageVals = message.content.replace(/?incomplete /i, '').split(',').map(i => i.trim());
         if (messageVals.length !== 2) {
             await message.clearReactions();
             message.react('❌');
