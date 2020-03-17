@@ -13,8 +13,8 @@ function newSubmit(discord) {
             return;
         }
         try {
-            console.log(req.body);
-            await sendSubmit(discord, req);
+            console.log(req);
+            await sendSubmit(discord, req.body);
             const guild = discord.guilds.get(process.env.DiscordGUILD);
             roleUpdate(guild);
             const wrCache = await getWrCache();
