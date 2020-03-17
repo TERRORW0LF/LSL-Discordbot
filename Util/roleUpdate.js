@@ -33,12 +33,11 @@ async function roleUpdate(guild) {
             }
         }
         for (var property in users) {
+            console.log(String(property);
             const user = await getUser(guild, String(property));
-            if (!user.user) console.log(user);
             if (!user.user) continue;
             const roleStr = await getNewRole(Number(users[property].points));
             if (!roleStr) {
-                console.log('no new role');
                 const userRole = await getCurRole(roles, user);
                 if (userRole.size) await user.removeRoles(userRole);
                 continue;
@@ -47,7 +46,6 @@ async function roleUpdate(guild) {
             //if (user.roles.find(r => r.name === roleStr)) continue;
             var curRole = await getCurRole(roles, user);
             if (curRole.size) await user.removeRoles(curRole);
-            console.log(roleStr);
             var newRole = roles.find(r => r.name === roleStr);
             await user.addRole(newRole);
         }
