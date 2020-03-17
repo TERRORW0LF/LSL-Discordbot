@@ -43,7 +43,7 @@ async function roleUpdate(guild) {
                 continue;
             }
 
-            if (user.roles.find(r => r.name === roleStr)) continue;
+            //if (user.roles.find(r => r.name === roleStr)) continue;
             var curRole = await getCurRole(roles, user);
             if (curRole.size) await user.removeRoles(curRole);
             console.log(roleStr);
