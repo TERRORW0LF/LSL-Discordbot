@@ -1,5 +1,4 @@
 const { google } = require('googleapis');
-const key = require('./creds.json');
 
 module.exports = {
     getGoogleAuth,
@@ -28,9 +27,9 @@ async function getGoogleAuth() {
 
 async function setClient() {
     jwtClient = new google.auth.JWT(
-        key.client_email,
+        process.env.gCredsEMAIL,
         null,
-        key.private_key,
+        process.env.gCredsKEY,
         ['https://www.googleapis.com/auth/spreadsheets']
     );
     return;
