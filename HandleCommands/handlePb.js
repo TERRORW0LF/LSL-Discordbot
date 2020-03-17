@@ -16,7 +16,7 @@ async function handlePb (message) {
     const botMsg = await message.channel.send('💬 Searching personal Best, please hold on.');
     try {
         const userStr = message.author.username;
-        const messageVals = await message.content.slice(4).split(',').map(i => i.trim());
+        const messageVals = await message.content.replace(/?pb /i, '').split(',').map(i => i.trim());
         if (messageVals.length !== 3) {
             await message.clearReactions();
             message.react('❌');
