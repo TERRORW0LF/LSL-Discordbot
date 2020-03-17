@@ -15,7 +15,7 @@ function newSubmit(discord) {
         try {
             await sendSubmit(discord, req.body);
             const guild = discord.guilds.get(process.env.DiscordGUILD);
-            //roleUpdate(guild);
+            roleUpdate(guild);
             const wrCache = await getWrCache();
             const pbCache = await getPbCache();
             if (!wrCache[req.body.season][req.body.mode][req.body.map] || Number(req.body.time) < Number(wrCache[req.body.season][req.body.mode][req.body.map]['time'])) {
