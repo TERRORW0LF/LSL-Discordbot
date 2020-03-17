@@ -16,7 +16,7 @@ async function handleDelete(message) {
     const botMsg = await message.channel.send('💬 Processing deletion. Please hold on.');
 
     try {
-        const messageVals = message.content.replace(/?delete /i, '').split(',').map(i => i.trim());
+        const messageVals = message.content.replace(/\?delete /i, '').split(',').map(i => i.trim());
         if (messageVals.length !== 2) {
             await message.clearReactions();
             message.react('❌');
