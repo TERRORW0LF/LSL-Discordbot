@@ -35,20 +35,27 @@ async function roleUpdate(guild) {
         for (var property in users) {
             const user = await getUser(guild, String(property));
             if (!user.user) continue;
+            console.log('Get roleStr');
             const roleStr = await getNewRole(Number(users[property].points));
             if (!roleStr) {
+                console.log('no new, Get current roles');
                 const userRole = await getCurRole(roles, user);
+                console.log('no new, Remove current roles');
                 if (userRole.size) await user.removeRoles(userRole);
+                console.log('no new, finished');
                 continue;
             }
 
             //if (user.roles.find(r => r.name === roleStr)) continue;
+            console.log('Get current roles');
             var curRole = await getCurRole(roles, user);
+            console.log('remove current roles');
             if (curRole.size) await user.removeRoles(curRole);
             console.log('find new role');
-            var newRole = roles.find(r => r.name === roleStr);
-            console.log('found new role');
+            var newRole = await roles.find(r => r.name === roleStr);
+            console.log('add new role');
             await user.addRoles(newRole);
+            console.log('finished');
         }
     } catch (err) {
         console.log('An error occured in roleUpdate: '+err.message);
