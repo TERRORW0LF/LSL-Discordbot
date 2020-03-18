@@ -48,7 +48,7 @@ async function roleUpdate(guild) {
             var newRole = await roles.find(r => r.name === roleStr);
             console.log('add new role');
             console.log(`${user.user.tag}`);
-            roles.forEach((key, value, map) => { console.log(key.name); });
+            user.roles.forEach((key, value, map) => { console.log(key.name); });
             console.log(`${newRole.name}`);
             await user.addRoles(newRole);
             console.log('finished');
