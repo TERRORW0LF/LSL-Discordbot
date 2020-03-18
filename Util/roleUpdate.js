@@ -45,7 +45,9 @@ async function roleUpdate(guild) {
             //if (user.roles.find(r => r.name === roleStr)) continue;
             var curRole = await getCurRole(roles, user);
             if (curRole.size) await user.removeRoles(curRole);
+            console.log('find new role');
             var newRole = roles.find(r => r.name === roleStr);
+            console.log('found new role');
             await user.addRoles(newRole);
         }
     } catch (err) {
