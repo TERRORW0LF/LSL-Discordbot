@@ -67,7 +67,11 @@ function getCurRole(roles, user) {
     return user.roles.filter(r => {
         var match = false;
         roles.forEach((key, value, map) => {
-            if (key.name === r.name) match = true;
+            if (key.name === r.name) {
+                csonole.log(`${key.name} - ${r.name)}`);
+                match = true;
+                break;
+            }
         });
         return match;
     });
