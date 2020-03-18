@@ -82,3 +82,7 @@ function getCurRole(roles, user) {
         return match;
     });
 }
+
+function Sleep(milliseconds) {
+   return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
