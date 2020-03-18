@@ -71,7 +71,6 @@ function getCurRole(roles, user) {
             if (key.name === r.name) {
                 csonole.log(`${key.name} - ${r.name}`);
                 match = true;
-                break;
             }
         });
         return match;
