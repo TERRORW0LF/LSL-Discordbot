@@ -16,13 +16,12 @@ const handleMessage = require('./HandleCommands/messages');
 client.on('ready', () => {
     console.log('Discord bot up and running!');
 });
-const P = process.env.PORT || 1337;
-const http = require('http');
-http.createServer(function (req, res) {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Hello World\n');
+
+process.on('unhandledRejection', error => {
+	console.error('Unhandled promise rejection:', error);
 });
-// const P = process.env.PORT ||  3000;
+
+const P = process.env.PORT ||  3000;
 
 (async function init () {
     try {
