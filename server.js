@@ -45,7 +45,7 @@ const P = process.env.PORT ||  3000;
         app.get('/delete', newDelete(client));
 
         app.listen(P, () => console.log('app running on PORT: ', P));
-        //pingSelf();
+        pingSelf();
     } catch (err) {
         console.log('An error occurred in server.js: ' + err.message);
         console.log(err.stack);
@@ -56,6 +56,6 @@ const P = process.env.PORT ||  3000;
 function pingSelf () {
     if (!process.env.PORT) return;
     setInterval(async () => {
-        axios.get(`GET PING WEBSITE`);
-    }, 1.680000);
+        axios.get(`https://discord-lsl.herokuapp.com/`);
+    }, 1700000);
 }
