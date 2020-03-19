@@ -18,8 +18,13 @@ client.on('ready', () => {
     console.log('Discord bot up and running!');
 });
 
-process.on('unhandledRejection', error => {
-	console.error('Unhandled promise rejection:', error);
+process.on('unhandledRejection', err => {
+	console.error('Unhandled promise rejection:', err);
+});
+
+process.on('uncaughtException', err => {
+  console.error('Uncaught exception: ', err)
+  process.exit(1);
 });
 
 const P = process.env.PORT ||  3000;
@@ -44,6 +49,15 @@ const P = process.env.PORT ||  3000;
         client.on('message', handleMessage);
         app.post('/submit', newSubmit(client));
         app.get('/delete', newDelete(client));
+		app.get('/ping', (req, res) => {
+      	    if(req.query.auth !== process.env.herokuAUTH) {
+                res.sendStatus(403);
+                return;
+            }
+      	    console.log('\nping\n')
+      	    res.sendStatus(200);
+      	    return;
+        });
 
         app.listen(P, () => console.log('app running on PORT: ', P));
         pingSelf();
@@ -57,6 +71,6 @@ const P = process.env.PORT ||  3000;
 function pingSelf () {
     if (!process.env.PORT) return;
     setInterval(async () => {
-        axios.get(`https://discord-lsl.herokuapp.com/`);
+        axios.get(`https://discord-lsl.herokuapp.com/ping?auth=${process.env.herokuAUTH}`);
     }, 1700000);
 }
