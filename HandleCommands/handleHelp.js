@@ -2,7 +2,7 @@ module.exports = handleHelp;
 
 async function handleHelp(message) {
     try {
-        switch(message.content.toLowerCase().replace('?', '!')) {
+        switch (message.content.toLowerCase()) {
             case '!help':
                 message.channel.send('Help:', {
                     embed: {
