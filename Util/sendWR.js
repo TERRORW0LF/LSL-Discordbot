@@ -76,6 +76,6 @@ function getBM(user) {
         'had a good run.',
         'stop sandbagging!'
     ];
-    const msg = Math.round(Math.random()*bm.length-1);
+    const msg = Math.round(Math.random()*(bm.length-1));
     return `${user} ${bm[msg]}`
 }
