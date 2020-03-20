@@ -15,7 +15,6 @@ function newSubmit(discord) {
         try {
             await sendSubmit(discord, req.body);
             const guild = discord.guilds.get(process.env.DiscordGUILD);
-            if (req.body.season === 'season3') roleUpdate(guild);
             const wrCache = await getWrCache();
             const pbCache = await getPbCache();
             if (!wrCache[req.body.season][req.body.mode][req.body.map] || Number(req.body.time) < Number(wrCache[req.body.season][req.body.mode][req.body.map]['time'])) {
@@ -28,6 +27,7 @@ function newSubmit(discord) {
                 console.log(`New PB: ${req.body.season}, ${req.body.mode}, ${req.body.map}, ${req.body.user}, ${req.body.time}, ${req.body.link}`);
                 await updatePbCache(req.body);
             }
+            if (req.body.season === 'season3') roleUpdate(guild);
             res.sendStatus(200);
         } catch (err) {
             console.log('An error occurred in newSubmit: ' + err.message);
