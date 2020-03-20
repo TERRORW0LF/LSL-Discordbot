@@ -83,7 +83,7 @@ async function handlePb (message) {
             return;
         }
         const pb = cache[season][mode][map][user];
-        message.clearReactions();
+        await message.clearReactions();
         message.react('✅');
         botMsg.clearReactions();
         botMsg.edit('✅ Personal Best found!');
