@@ -33,6 +33,7 @@ The code in this project will most likely not be usefull for anything else.
   - Change `setCache` to `updateCache` in `newDelete` and `newDeleteDiscord`.
   - Send a message when a run gets deleted.
 - Redo `!delete` so a user can pick from the last 5 runs submitted for the given map.
+- Add `mode` and `combined` to `!rank`.
 - Check for new runs on startup. (Add an announced column in Record Log modified).
 - Unify embeds even more, so the bot has an even clearer structure.
 
