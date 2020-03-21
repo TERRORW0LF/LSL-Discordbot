@@ -120,11 +120,9 @@ async function setPbCache() {
 function updatePbCache(data) {
     var map = cache[data.season][data.mode][data.map];
     if (!map) map = {};
-    var user = map[data.user];
-    if (!user) user = {};
-    user.user = data.user;
-    user.time = data.time;
-    user.link = data.link;
-    user.date = data.date;
-    console.log('PbCache Updated');
+    if (!map[data.user]) map[data.user] = {};
+    map[data.user].user = data.user;
+    map[data.user].time = data.time;
+    map[data.user].link = data.link;
+    map[data.user].date = data.date;
 }
