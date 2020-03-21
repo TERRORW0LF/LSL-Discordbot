@@ -38,16 +38,15 @@ async function roleUpdate(guild) {
             const roleStr = await getNewRole(Number(users[property].points));
             if (!roleStr) {
                 const userRole = await getCurRole(roles, user);
-                if (userRole.size) await user.removeRoles(userRole);
+                if (userRole.size) await user.removeRole(userRole);
                 continue;
             }
 
             if (user.roles.find(r => r.name === roleStr)) continue;
             var curRole = await getCurRole(roles, user);
-            if (curRole.size) await user.removeRoles(curRole);
+            if (curRole.size) await user.removeRole(curRole);
             var newRole = await roles.find(r => r.name === roleStr);
-            user.roles.forEach((key, value, map) => { console.log(key.name); });
-            await user.addRoles(newRole);
+            await user.addRole(newRole);
         }
     } catch (err) {
         console.log('An error occured in roleUpdate: '+err.message);
