@@ -35,17 +35,20 @@ async function roleUpdate(guild) {
         for (var property in users) {
             const user = await getUser(guild, String(property));
             if (!user.user) continue;
-            console.log(`${user.user.tag}`);
             const roleStr = await getNewRole(Number(users[property].points));
             if (!roleStr) {
                 const userRole = await getCurRole(roles, user);
-                if (userRole.size) await user.removeRole(userRole.find(role => roleArray.includes(role.name)));
+                if (userRole.size) {
+                    console.log(`${user.user.tag}`);
+                    await user.removeRole(userRole.find(true));
+                }
                 continue;
             }
 
             if (user.roles.find(r => r.name === roleStr)) continue;
+            console.log(`${user.user.tag}`);
             var curRole = await getCurRole(roles, user);
-            if (curRole.size) await user.removeRole(curRole.find(role => roleArray.includes(role.name)));
+            if (curRole.size) await user.removeRole(curRole.find(true));
             var newRole = await roles.find(r => r.name === roleStr);
             await user.addRole(newRole);
         }
