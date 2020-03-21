@@ -126,4 +126,5 @@ function updatePbCache(data) {
     user.time = data.time;
     user.link = data.link;
     user.date = data.date;
+    console.log('PbCache Updated');
 }
