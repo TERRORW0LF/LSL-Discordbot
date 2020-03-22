@@ -21,7 +21,10 @@ async function handleIncomplete(message) {
     try {
         const messageVals = message.content.replace(/!incomplete /i, '').split(',').map(i => i.trim());
         if (messageVals.length !== 2) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ To many or not enough parameters! Type \'!help incomplete\' for an overview of the required parameters.');
             isIncompleting = false;
@@ -29,7 +32,10 @@ async function handleIncomplete(message) {
         }
         const season = getSeasonOptions(messageVals[0]);
         if (!season) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ No season found for \'' + messageVals[0] + '\'.');
             isIncompleting = false;
@@ -37,7 +43,10 @@ async function handleIncomplete(message) {
         }
         const mode = getModeOptions(messageVals[1]);
         if (!mode) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ No mode found for \'' + messageVals[1] + '\'.');
             isIncompleting = false;
@@ -52,7 +61,10 @@ async function handleIncomplete(message) {
         for (var map of complete) completeStr += map + '\n';
         for (var map of incomplete) incompleteStr += map + '\n';
         if (!completeStr.length) completeStr = 'No Maps';
-        await message.clearReactions();
+        (await message.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         message.react('✅');
         botMsg.edit('✅ Map data collected!');
         if (!incompleteStr.length) {
@@ -126,7 +138,10 @@ async function handleIncomplete(message) {
         });
         isIncompleting = false;
     } catch (err) {
-        await message.clearReactions();
+        (await message.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         message.react('❌');
         botMsg.edit('❌ An error occurred while handling your command. Informing staff.');
         console.log('An error occured in handleIncomplete: '+err.message);
