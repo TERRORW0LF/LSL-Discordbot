@@ -14,12 +14,15 @@ async function handleSubmit(message) {
     if(isSubmitting) return;
     isSubmitting = true;
 
-    message.react('💬');
+    await message.react('💬');
     const botMsg = await message.channel.send('💬 Processing submission. Please hold on.');
     try {
         const messageVals = message.content.replace(/!submit /i, '').split(',').map(i => i.trim());
         if (messageVals.length !== 5) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ To many or no enough Parameters! Type \'!help submit\' for an overview of the required parameters.');
             isSubmitting = false;
@@ -27,7 +30,10 @@ async function handleSubmit(message) {
         }
         const season = await getSeasonOptions(messageVals[0]);
         if (season === undefined) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ No season found for \'' + messageVals[0] + '\'.');
             isSubmitting = false;
@@ -35,7 +41,10 @@ async function handleSubmit(message) {
         }
         const mode = await getModeOptions(messageVals[1]);
         if (mode === undefined) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ No mode found for \'' + messageVals[1] + '\'.');
             isSubmitting = false;
@@ -43,7 +52,10 @@ async function handleSubmit(message) {
         }
         const time = await isTime(messageVals[3]);
         if (Number(time) <= -1) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             if (time === -1) botMsg.edit('❌ Incorrect time format \'' + messageVals[3] + '\'. Time must be split by decimal point (.).');
             else if (time === -2) botMsg.edit('❌Incorrect time format \'' + messageVals[3] + '\'. Time can only have one (1) decimal point (.).');
@@ -56,9 +68,15 @@ async function handleSubmit(message) {
         const opts = await getMapOptions(messageVals[2]);
         var map;
         if (!opts.length) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
-            botMsg.clearReactions();
+            (await botMsg.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             botMsg.edit('❌ No map found for \'' + messageVals[2] + '\'.');
             isSubmitting = false;
             return;
@@ -68,9 +86,15 @@ async function handleSubmit(message) {
             } else {
                 map = await getUserReaction(message, botMsg, opts);
                 if (!map) {
-                    await message.clearReactions();
+                    (await message.reactions).forEach(async(key, value, map) => {
+                        if (!key.me) return;
+                        await key.remove();
+                    });
                     message.react('⌛');
-                    botMsg.clearReactions();
+                    (await botMsg.reactions).forEach(async(key, value, map) => {
+                        if (!key.me) return;
+                        await key.remove();
+                    });
                     botMsg.edit('⌛ Timeout while selecting map! No run submitted.');
                     isSubmitting = false;
                     return;
@@ -81,21 +105,39 @@ async function handleSubmit(message) {
         resp = await axios.post(submitUrl);
 
         if (resp.status === 200) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('✅');
-            botMsg.clearReactions();
+            (await botMsg.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             botMsg.edit(`✅ New run submitted by ${message.author}`);
         } else {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
-            botMsg.clearReactions();
+            (await botMsg.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             botMsg.edit('❌ Not able to submit your run. Please try again.');
         }
         isSubmitting = false;
     } catch (err) {
-        await message.clearReactions();
+        (await message.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         message.react('❌');
-        botMsg.clearReactions();
+        (await botMsg.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         botMsg.edit('❌ An error occurred while handling your command. Informing staff.');
         console.log('Error in handleSubmission: ' + err.message);
         console.log(err.stack);
