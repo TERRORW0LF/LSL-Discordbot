@@ -29,7 +29,10 @@ async function handleDelete(message) {
         }
         const season = getSeasonOptions(messageVals[0]);
         if (season === undefined) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ No season found for \'' + messageVals[0] + '\'.');
             isDeleting = false;
@@ -59,7 +62,10 @@ async function handleDelete(message) {
                     return [cols[0][row], cols[1][row], cols[2][row], cols[3][row], cols[4][row]];
                 }
             }
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ No run found belonging to ' + message.author + ' for \'' + link + '\'.');
             isDeleting = false;
@@ -94,14 +100,20 @@ async function handleDelete(message) {
             resource: resourceVals,
         }, async (err, res) => {
             if (err) throw err;
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('✅');
             botMsg.edit('✅ Sucessfully deleted run!');
         });
         await newDelete2(message);
         isDeleting = false;
     } catch (err) {
-        await message.clearReactions();
+        (await message.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         message.react('❌');
         botMsg.edit('❌ An error occurred while handling your command. Informing staff.');
         console.log('Error in handleDeletion: ' + err.message);
