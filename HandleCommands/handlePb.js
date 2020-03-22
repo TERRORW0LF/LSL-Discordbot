@@ -122,7 +122,7 @@ async function handlePb (message) {
         });
         message.react('✅');
         (await botMsg.reactions).forEach(async(key, value, map) => {
-            //if (!key.me) return;
+            if (!key.me) return;
             await key.remove();
         });
         botMsg.edit('✅ Personal Best found!');
