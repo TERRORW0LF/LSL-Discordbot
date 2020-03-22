@@ -18,7 +18,10 @@ async function handleDelete(message) {
     try {
         const messageVals = message.content.replace(/!delete /i, '').split(',').map(i => i.trim());
         if (messageVals.length !== 2) {
-            await message.clearReactions();
+            (await message.reactions).forEach((key, value, map) => {
+                if (!key.me) continue;
+                key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ To many or not enough parameters! Type \'!help delete\' for an overview of the required parameters.');
             isDeleting = false;
