@@ -329,6 +329,10 @@ async function handleHelp(message) {
                 break;
         }
     } catch(err) {
+        (await message.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         message.react('❌');
         message.channel.send('❌ An error occurred while handling your command. Informing staff.');
         console.log('Error in handleHelp: ' + err.message);
