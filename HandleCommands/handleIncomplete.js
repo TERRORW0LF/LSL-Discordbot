@@ -15,7 +15,7 @@ async function handleIncomplete(message) {
     if (isIncompleting) return;
     isIncompleting = true;
 
-    message.react('💬');
+    await message.react('💬');
     const botMsg = await message.channel.send('💬 Searching map data, please hold on.');
 
     try {
