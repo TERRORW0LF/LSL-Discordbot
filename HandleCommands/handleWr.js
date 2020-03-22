@@ -12,12 +12,15 @@ async function handleWr (message) {
     if (isWring) return;
     isWring = true;
     
-    message.react('💬');
+    await message.react('💬');
     const botMsg = await message.channel.send('💬 Searching World Record, please hold on.');
     try {
         const messageVals = await message.content.replace(/!wr /i, '').split(',').map(i => i.trim());
         if (messageVals.length !== 3) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ To many or not enough parameters! Type \'!help wr\' for an overview of the required parameters.');
             isWring = false;
@@ -25,7 +28,10 @@ async function handleWr (message) {
         }
         const season = getSeasonOptions(messageVals[0]);
         if (!season) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ No season found for \'' + messageVals[0] + '\'.');
             isWring = false;
@@ -33,7 +39,10 @@ async function handleWr (message) {
         }
         const mode = getModeOptions(messageVals[1]);
         if (!mode) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ No mode found for \'' + messageVals[1] + '\'.');
             isWring = false;
@@ -42,9 +51,15 @@ async function handleWr (message) {
         var map;
         const opts = await getMapOptions(messageVals[2]);
         if (!opts.length) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
-            botMsg.clearReactions();
+            (await botMsg.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             botMsg.edit('❌ No map found for \'' + messageVals[2] + '\'.');
             isWring = false;
             return;
@@ -54,9 +69,15 @@ async function handleWr (message) {
             } else {
                 map = await getUserReaction(message, botMsg, opts);
                 if (!map) {
-                    await message.clearReactions();
+                    (await message.reactions).forEach(async(key, value, map) => {
+                        if (!key.me) return;
+                        await key.remove();
+                    });
                     message.react('⌛');
-                    botMsg.clearReactions();
+                    (await botMsg.reactions).forEach(async(key, value, map) => {
+                        if (!key.me) return;
+                        await key.remove();
+                    });
                     botMsg.edit('⌛ Timeout while selecting map! No World Record requested.');
                     isWring = false;
                     return;
@@ -65,17 +86,30 @@ async function handleWr (message) {
         }
         const cache = await getWrCache();
         if (!cache[season][mode][map]) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
-            botMsg.clearReactions();
+            (await botMsg.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             botMsg.edit('❌ No Word Record found for \''+season+' '+mode+' '+map+'\'. Go and set a record!');
             isWring = false;
             return;
         }
         const wr = cache[season][mode][map];
         const userStr = wr.user.split('#')[0];
-        await message.clearReactions();
+        (await message.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         message.react('✅');
+        (await botMsg.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         botMsg.edit('✅ World Record found!');
 
         message.channel.send('', {
@@ -132,9 +166,15 @@ async function handleWr (message) {
         isWring = false;
 
     } catch (err) {
-        await message.clearReactions();
+        (await message.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         message.react('❌');
-        botMsg.clearReactions();
+        (await botMsg.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         botMsg.edit('❌ An error occurred while handling your command. Informing staff.');
         console.log('Error in handleWr: ' + err.message);
         console.log(err.stack);
