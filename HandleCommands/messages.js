@@ -42,7 +42,8 @@ async function handleMessage(message) {
                 message.channel.send('1.0');
                 break;
             default:
-                message.channel.send('Unknown command. use \'!help\' for an overview of this bots available commands.')
+                message.react('❌');
+                message.channel.send('❌ Unknown command. use \'!help\' for an overview of this bots available commands.')
                 return;
         }
     } catch(e) {
