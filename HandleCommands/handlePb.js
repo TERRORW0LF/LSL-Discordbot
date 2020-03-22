@@ -12,13 +12,16 @@ async function handlePb (message) {
     if (isPbing) return;
     isPbing = true;
 
-    message.react('💬');
+    await message.react('💬');
     const botMsg = await message.channel.send('💬 Searching personal Best, please hold on.');
     try {
         const userStr = message.author.username;
         const messageVals = await message.content.replace(/!pb /i, '').split(',').map(i => i.trim());
         if (messageVals.length !== 3) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ To many or not enough parameters! Type \'!help pb\' for an overview of the required parameters.');
             isPbing = false;
@@ -26,7 +29,10 @@ async function handlePb (message) {
         }
         const season = getSeasonOptions(messageVals[0]);
         if (!season) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ No season found for \'' + messageVals[0] + '\'.');
             isPbing = false;
@@ -34,7 +40,10 @@ async function handlePb (message) {
         }
         const mode = getModeOptions(messageVals[1]);
         if (!mode) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ No mode found for \'' + messageVals[1] + '\'.');
             isPbing = false;
@@ -44,7 +53,10 @@ async function handlePb (message) {
         var map;
         const opts = await getMapOptions(messageVals[2]);
         if (!opts.length) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.clearReactions();
             botMsg.edit('❌ No map found for \'' + messageVals[2] + '\'.');
@@ -56,7 +68,10 @@ async function handlePb (message) {
             } else {
                 map = await getUserReaction(message, botMsg, opts);
                 if (!map) {
-                    await message.clearReactions();
+                    (await message.reactions).forEach(async(key, value, map) => {
+                        if (!key.me) return;
+                        await key.remove();
+                    });
                     message.react('⌛');
                     botMsg.clearReactions();
                     botMsg.edit('⌛ Timeout while selecting map! No Personal Best requested.');
@@ -67,7 +82,10 @@ async function handlePb (message) {
         }
         const cache = await getPbCache();
         if (!cache[season][mode][map]) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.clearReactions();
             botMsg.edit('❌ No Personal Best found for \''+season+' '+mode+' '+map+'\'. Go and set a time!');
@@ -75,7 +93,10 @@ async function handlePb (message) {
             return;
         }
         if (!cache[season][mode][map][user]) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.clearReactions();
             botMsg.edit('❌ No Personal Best found for \''+season+' '+mode+' '+map+'\'. Go and set a time!');
@@ -83,7 +104,10 @@ async function handlePb (message) {
             return;
         }
         const pb = cache[season][mode][map][user];
-        await message.clearReactions();
+        (await message.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         message.react('✅');
         botMsg.clearReactions();
         botMsg.edit('✅ Personal Best found!');
@@ -142,7 +166,10 @@ async function handlePb (message) {
         isPbing = false;
 
     } catch (err) {
-        await message.clearReactions();
+        (await message.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         message.react('❌');
         botMsg.clearReactions();
         botMsg.edit('❌ An error occurred while handling your command. Informing staff.');
