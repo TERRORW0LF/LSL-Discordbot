@@ -20,7 +20,7 @@ async function handleDelete(message) {
         if (messageVals.length !== 2) {
             (await message.reactions).forEach((key, value, map) => {
                 if (!key.me) continue;
-                key.remove();
+                await key.remove();
             });
             message.react('❌');
             botMsg.edit('❌ To many or not enough parameters! Type \'!help delete\' for an overview of the required parameters.');
