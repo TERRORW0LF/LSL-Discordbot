@@ -58,7 +58,10 @@ async function handlePb (message) {
                 await key.remove();
             });
             message.react('❌');
-            botMsg.clearReactions();
+            (await botMsg.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });            
             botMsg.edit('❌ No map found for \'' + messageVals[2] + '\'.');
             isPbing = false;
             return;
@@ -73,7 +76,10 @@ async function handlePb (message) {
                         await key.remove();
                     });
                     message.react('⌛');
-                    botMsg.clearReactions();
+                    (await botMsg.reactions).forEach(async(key, value, map) => {
+                        if (!key.me) return;
+                        await key.remove();
+                    });
                     botMsg.edit('⌛ Timeout while selecting map! No Personal Best requested.');
                     isPbing = false;
                     return;
@@ -87,7 +93,10 @@ async function handlePb (message) {
                 await key.remove();
             });
             message.react('❌');
-            botMsg.clearReactions();
+            (await botMsg.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             botMsg.edit('❌ No Personal Best found for \''+season+' '+mode+' '+map+'\'. Go and set a time!');
             isPbing = false;
             return;
@@ -98,7 +107,10 @@ async function handlePb (message) {
                 await key.remove();
             });
             message.react('❌');
-            botMsg.clearReactions();
+            (await botMsg.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             botMsg.edit('❌ No Personal Best found for \''+season+' '+mode+' '+map+'\'. Go and set a time!');
             isPbing = false;
             return;
@@ -109,7 +121,10 @@ async function handlePb (message) {
             await key.remove();
         });
         message.react('✅');
-        botMsg.clearReactions();
+        (await botMsg.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         botMsg.edit('✅ Personal Best found!');
 
         message.channel.send('', {
@@ -171,7 +186,10 @@ async function handlePb (message) {
             await key.remove();
         });
         message.react('❌');
-        botMsg.clearReactions();
+        (await botMsg.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         botMsg.edit('❌ An error occurred while handling your command. Informing staff.');
         console.log('Error in handlePb: ' + err.message);
         console.log(err.stack);
