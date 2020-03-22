@@ -19,7 +19,7 @@ async function handleDelete(message) {
         const messageVals = message.content.replace(/!delete /i, '').split(',').map(i => i.trim());
         if (messageVals.length !== 2) {
             (await message.reactions).forEach((key, value, map) => {
-                if (!key.me) continue;
+                if (!key.me) return;
                 await key.remove();
             });
             message.react('❌');
