@@ -12,7 +12,7 @@ async function handleDelete(message) {
     if (isDeleting) return;
     isDeleting = true;
 
-    message.react('💬');
+    await message.react('💬');
     const botMsg = await message.channel.send('💬 Processing deletion. Please hold on.');
 
     try {
