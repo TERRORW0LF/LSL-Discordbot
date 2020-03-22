@@ -11,13 +11,16 @@ async function handleRank(message) {
     if (isRanking) return;
     isRanking = true;
 
-    message.react('💬');
+    await message.react('💬');
     const botMsg = await message.channel.send('💬 Searching map data, please hold on.');
 
     try {
         const messageVals = message.content.replace(/!rank /i, '').split(',').map(i => i.trim());
         if (messageVals.length !== 3) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ To many or no enough Parameters! Type \'!help rank\' for an overview of the required parameters.');
             isRanking = false;
@@ -25,7 +28,10 @@ async function handleRank(message) {
         }
         const season = await getSeasonOptions(messageVals[0]);
         if (season === undefined) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ No season found for \'' + messageVals[0] + '\'.');
             isRanking = false;
@@ -33,7 +39,10 @@ async function handleRank(message) {
         }
         const mode = await getModeOptions(messageVals[1]);
         if (mode === undefined) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
             botMsg.edit('❌ No mode found for \'' + messageVals[1] + '\'.');
             isRanking = false;
@@ -42,9 +51,15 @@ async function handleRank(message) {
         const opts = await getMapOptions(messageVals[2]);
         var map;
         if (!opts.length) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
-            botMsg.clearReactions();
+            (await botMsg.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             botMsg.edit('❌ No map found for \'' + messageVals[2] + '\'.');
             isRanking = false;
             return;
@@ -54,9 +69,15 @@ async function handleRank(message) {
             } else {
                 map = await getUserReaction(message, botMsg, opts);
                 if (!map) {
-                    await message.clearReactions();
+                    (await message.reactions).forEach(async(key, value, map) => {
+                        if (!key.me) return;
+                        await key.remove();
+                    });
                     message.react('⌛');
-                    botMsg.clearReactions();
+                    (await botMsg.reactions).forEach(async(key, value, map) => {
+                        if (!key.me) return;
+                        await key.remove();
+                    });
                     botMsg.edit('⌛ Timeout while selecting map! No Rank requested.');
                     isRanking = false;
                     return;
@@ -65,8 +86,15 @@ async function handleRank(message) {
         }
         const pbCache = await getPbCache();
         if (!pbCache[season][mode][map] || !pbCache[season][mode][map][message.author.tag]) {
-            await message.clearReactions();
+            (await message.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             message.react('❌');
+            (await botMsg.reactions).forEach(async(key, value, map) => {
+                if (!key.me) return;
+                await key.remove();
+            });
             botMsg.edit(`❌ No run found for '${season} ${mode} ${map}'. Go and set a time!`);
             isRanking = false;
             return;
@@ -80,8 +108,15 @@ async function handleRank(message) {
             return Math.round(Number(a)*100) - Math.round(Number(b)*100);
         });
         const rank = timeArray.indexOf(time) + 1;
-        await message.clearReactions();
-        message.react('✅')
+        (await message.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
+        message.react('✅');
+        (await botMsg.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         botMsg.edit('✅ Rank found!');
         message.channel.send('', {
             embed: {
@@ -135,8 +170,15 @@ async function handleRank(message) {
         });
         isRanking = false;
     } catch (err) {
-        await message.clearReactions();
+        (await message.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         message.react('❌');
+        (await botMsg.reactions).forEach(async(key, value, map) => {
+            if (!key.me) return;
+            await key.remove();
+        });
         botMsg.edit('❌ An error occured while handling your command. Informing staff.');
         console.log('Error in handleRank: '+err.message);
         console.log(err.stack);
