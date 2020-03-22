@@ -7,7 +7,7 @@ module.exports = roleUpdate;
 let roleArray = ['Surfer', 'Super Surfer', 'Epic Surfer', 'Legendary Surfer', 'Mythic Surfer'];
 
 async function roleUpdate(guild) {
-    //try {
+    try {
         const rolesAll = await guild.roles;
         const roles = await rolesAll.filter(r => roleArray.includes(r.name));
         var users = {};
@@ -52,10 +52,10 @@ async function roleUpdate(guild) {
             var newRole = await roles.find(r => r.name === roleStr);
             await user.addRole(newRole);
         }
-    /*} catch (err) {
+    } catch (err) {
         console.log('An error occured in roleUpdate: '+err.message);
         console.log(err.stack);
-    }*/
+    }
 }
 
 function getNewRole(points) {
