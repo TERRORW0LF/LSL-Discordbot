@@ -44,7 +44,7 @@ async function handleRank(message) {
 			const sheets = await google.sheets('v4');
 			const response = (await sheets.spreadsheets.values.get({
             	auth: token,
-            	spreadsheetId: process.env.gSheetS1,
+            	spreadsheetId: process.env.gSheetS3,
             	range: 'Points Sheet!G3:H'
         	})).data;
 			const rows = await response.values;
@@ -119,12 +119,13 @@ async function handleRank(message) {
             return;
         }
 		if (messageVals.length === 2) {
-			mode === 'Standard' ? const range = 'A3:B' : const range = 'D3:E';
+			var range;
+			mode === 'Standard' ? range = 'A3:B' : range = 'D3:E';
         	const token  = await getGoogleAuth();
 			const sheets = await google.sheets('v4');
 			const response = (await sheets.spreadsheets.values.get({
             	auth: token,
-            	spreadsheetId: process.env.gSheetS1,
+            	spreadsheetId: process.env.gSheetS3,
             	range: `Points Sheet!${range}`
         	})).data;
 			const rows = await response.values;
