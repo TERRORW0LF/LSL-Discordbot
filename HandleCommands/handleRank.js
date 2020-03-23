@@ -1,4 +1,5 @@
 const { getPbCache } = require('../Util/pbCache');
+const getUserReaction = require('../Util/UserReaction');
 const getSeasonOptions = require('../Options/seasonOptions');
 const getModeOptions = require('../Options/modeOptions');
 const getMapOptions = require('../Options/mapOptions');
