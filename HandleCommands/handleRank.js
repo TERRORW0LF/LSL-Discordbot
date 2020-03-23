@@ -2,6 +2,8 @@ const { getPbCache } = require('../Util/pbCache');
 const getSeasonOptions = require('../Options/seasonOptions');
 const getModeOptions = require('../Options/modeOptions');
 const getMapOptions = require('../Options/mapOptions');
+const { getGoogleAuth } = require('../google-auth');
+const { google } = require('googleapis');
 
 module.exports = handleRank;
 
@@ -16,7 +18,7 @@ async function handleRank(message) {
 
     try {
         const messageVals = message.content.replace(/!rank /i, '').split(',').map(i => i.trim());
-        if (messageVals.length !== 3) {
+        if (messageVals.length < 1 || messageVals.length > 3) {
             (await message.reactions).forEach(async(key, value, map) => {
                 if (!key.me) return;
                 await key.remove();
@@ -37,6 +39,74 @@ async function handleRank(message) {
             isRanking = false;
             return;
         }
+        if (messageVals.length === 1) {
+        	const token  = await getGoogleAuth();
+			const sheets = await google.sheets('v4');
+			const response = (await sheets.spreadsheets.values.get({
+            	auth: token,
+            	spreadsheetId: process.env.gSheetS1,
+            	range: 'Points Sheet!G3:H'
+        	})).data;
+			const rows = await response.values;
+			for (i=0; i<rows.length; i++) {
+				const row = rows[i];
+				if (row[1] === message.author.tag) {
+					const rank = i+1;
+					const points = row[0];
+					(await message.reactions).forEach(async(key, value, map) => {
+            			if (!key.me) return;
+            			await key.remove();
+        			});
+					message.react('✅');
+					botMsg.edit('✅ Rank found!');
+					message.channel.send('', {
+            			embed: {
+                			title: `Combined rank for ${message.author.username}`,
+                			url: `https://github.com/TERRORW0LF/LSL-Discordbot`,
+                			color: 3010349,
+                			author: {
+                    			name: 'LSL-discordbot',
+                    			icon_url: 'https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/BotIco.jpg',
+                    			url: 'https://github.com/TERRORW0LF/LSL-Discordbot',
+                			},
+							fields: [{
+								name: 'season',
+								value: `${season.replace('season', 'season ')}`,
+								inline: true
+							},
+							{
+								name: 'mode',
+								value: 'combined',
+								inline: true
+							},
+				   		    {
+								name: 'user',
+								value: `${message.auther.username}`,
+								inline: true
+							},
+							{
+								name: 'points',
+								value: `${points}`,
+								inline: true
+							},
+							{
+								name: 'rank',
+								value: `${rank}`,
+								inline: true
+							}],
+							timestamp: new Date(),
+                			footer: {
+                    			icon_url: 'https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/BotIco.jpg',
+                    			text: 'Rank requested',
+                			},
+						}
+					});
+					break;
+				}
+			}
+			isRanking = false;
+			return;
+        }
         const mode = await getModeOptions(messageVals[1]);
         if (mode === undefined) {
             (await message.reactions).forEach(async(key, value, map) => {
@@ -47,6 +117,75 @@ async function handleRank(message) {
             botMsg.edit('❌ No mode found for \'' + messageVals[1] + '\'.');
             isRanking = false;
             return;
+        }
+		if (messageVals.length === 2) {
+			mode === 'Standard' ? const range = 'A3:B' : const range = 'D3:E';
+        	const token  = await getGoogleAuth();
+			const sheets = await google.sheets('v4');
+			const response = (await sheets.spreadsheets.values.get({
+            	auth: token,
+            	spreadsheetId: process.env.gSheetS1,
+            	range: `Points Sheet!${range}`
+        	})).data;
+			const rows = await response.values;
+			for (i=0; i<rows.length; i++) {
+				const row = rows[i];
+				if (row[1] === message.author.tag) {
+					const rank = i+1;
+					const points = row[0];
+					(await message.reactions).forEach(async(key, value, map) => {
+            			if (!key.me) return;
+            			await key.remove();
+        			});
+					message.react('✅');
+					botMsg.edit('✅ Rank found!');
+					message.channel.send('', {
+            			embed: {
+                			title: `Combined rank for ${message.author.username}`,
+                			url: `https://github.com/TERRORW0LF/LSL-Discordbot`,
+                			color: 3010349,
+                			author: {
+                    			name: 'LSL-discordbot',
+                    			icon_url: 'https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/BotIco.jpg',
+                    			url: 'https://github.com/TERRORW0LF/LSL-Discordbot',
+                			},
+							fields: [{
+								name: 'season',
+								value: `${season.replace('season', 'season ')}`,
+								inline: true
+							},
+							{
+								name: 'mode',
+								value: `${mode}`,
+								inline: true
+							},
+				   		    {
+								name: 'user',
+								value: `${message.auther.username}`,
+								inline: true
+							},
+							{
+								name: 'points',
+								value: `${points}`,
+								inline: true
+							},
+							{
+								name: 'rank',
+								value: `${rank}`,
+								inline: true
+							}],
+							timestamp: new Date(),
+                			footer: {
+                    			icon_url: 'https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/BotIco.jpg',
+                    			text: 'Rank requested',
+                			},
+						}
+					});
+					break;
+				}
+			}
+			isRanking = false;
+			return;
         }
         const opts = await getMapOptions(messageVals[2]);
         var map;
