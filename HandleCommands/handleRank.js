@@ -17,7 +17,7 @@ async function handleRank(message) {
     const botMsg = await message.channel.send('💬 Searching map data, please hold on.');
 
     try {
-        const messageVals = message.content.replace(/!rank /i, '').split(',').map(i => i.trim());
+        const messageVals = message.content.replace(/!rank/i, '').split(',').map(i => i.trim());
 		console.log(messageVals);
 		console.log(messageVals.length);
         if (messageVals.length < 1 || messageVals.length > 3) {
