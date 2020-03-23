@@ -116,7 +116,7 @@ async function handleRank(message) {
                 	await key.remove();
             	});
             	message.react('❌');
-				botMsg.edit(`❌ No combined rank found for ${season}`);
+				botMsg.edit(`❌ No combined rank found for ${season.replace('season', 'season ')}`);
 			}
 			isRanking = false;
 			return;
@@ -207,7 +207,7 @@ async function handleRank(message) {
                		await key.remove();
             	});
            		message.react('❌');
-				botMsg.edit(`❌ No ${mode} rank found for ${season}`);
+				botMsg.edit(`❌ No ${mode} rank found for ${season.replace('season', 'season ')}`);
 			}
 			isRanking = false;
 			return;
