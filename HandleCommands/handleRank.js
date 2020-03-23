@@ -20,7 +20,7 @@ async function handleRank(message) {
         const messageVals = message.content.replace(/!rank/i, '').split(',').map(i => i.trim());
 		console.log(messageVals);
 		console.log(messageVals.length);
-        if (messageVals.length < 1 || messageVals.length > 3) {
+        if (messageVals.length < 1 || messageVals.length > 3 || messageVals[0] === '') {
             (await message.reactions).forEach(async(key, value, map) => {
                 if (!key.me) return;
                 await key.remove();
