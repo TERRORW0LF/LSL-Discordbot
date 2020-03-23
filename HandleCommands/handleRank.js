@@ -52,9 +52,11 @@ async function handleRank(message) {
             	range: 'Points Sheet!G3:H'
         	})).data;
 			const rows = await response.values;
+			var found = false;
 			for (i=0; i<rows.length; i++) {
 				const row = rows[i];
 				if (row[1] === message.author.tag) {
+					found = true;
 					const rank = i+1;
 					const points = row[0];
 					(await message.reactions).forEach(async(key, value, map) => {
@@ -108,6 +110,14 @@ async function handleRank(message) {
 					break;
 				}
 			}
+			if (!found) {
+				(await message.reactions).forEach(async(key, value, map) => {
+                	if (!key.me) return;
+                	await key.remove();
+            	});
+            	message.react('❌');
+				botMsg.edit(`❌ No combined rank found for ${season}`);
+			}
 			isRanking = false;
 			return;
         }
@@ -133,9 +143,11 @@ async function handleRank(message) {
             	range: `Points Sheet!${range}`
         	})).data;
 			const rows = await response.values;
+			var found = false;
 			for (i=0; i<rows.length; i++) {
 				const row = rows[i];
 				if (row[1] === message.author.tag) {
+					found = true;
 					const rank = i+1;
 					const points = row[0];
 					(await message.reactions).forEach(async(key, value, map) => {
@@ -188,6 +200,14 @@ async function handleRank(message) {
 					});
 					break;
 				}
+			}
+			if (!found) {
+				(await message.reactions).forEach(async(key, value, map) => {
+               		if (!key.me) return;
+               		await key.remove();
+            	});
+           		message.react('❌');
+				botMsg.edit(`❌ No ${mode} rank found for ${season}`);
 			}
 			isRanking = false;
 			return;
