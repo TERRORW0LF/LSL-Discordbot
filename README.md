@@ -10,7 +10,7 @@ The code in this project will most likely not be usefull for anything else.
   - `!help [command]` sends a detailed information about the given command.
   - `!version` sends the current version of the bot.
   - `!incomplete` sends all completed and incompleted maps.
-  - `!rank` sends the current rank the the user on the given map.
+  - `!rank` sends the current rank of the user on the given season, mode, or map.
   - `!submit` submits a run to the google Form corresponding to the given season.
   - `!delete` deletes a run from the google Spreadsheet corresponding to the given season.
   - `!wr` sends the current wr corresponding to the given parameters.
@@ -33,7 +33,6 @@ The code in this project will most likely not be usefull for anything else.
   - Change `setCache` to `updateCache` in `newDelete` and `newDeleteDiscord`.
   - Send a message when a run gets deleted.
 - Redo `!delete` so a user can pick from the last 5 runs submitted for the given map.
-- Add `mode` and `combined` to `!rank`.
 - Check for new runs on startup. (Add an announced column in Record Log modified).
 - Unify embeds even more, so the bot has an even clearer structure.
 
