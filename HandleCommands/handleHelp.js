@@ -239,15 +239,15 @@ async function handleHelp(message) {
                         },
                         {
                             name: '[season]',
-                            value: 'The surf season of the run as a number. If no mode and map are provided your current combined rank for that season will be returned. ex: 1'
+                            value: 'The surf season of the run as a number. ex: 1\nIf no mode and map are provided your current combined rank for that season will be returned.'
                         },
                         {
                             name: '[mode] (optional)',
-                            value: 'The mode you want to look up. If no map is provided your current rank for that mode will be returned. opts: grav / standard'
+                            value: 'The mode you want to look up. opts: grav / standard\nIf no map is provided your current rank for that mode will be returned.'
                         },
                         {
                             name: '[map] (optional)',
-                            value: 'The map of the run. If a mode and a map are provided your current rank for that map will be returned. ex: hanamura'
+                            value: 'The map of the run. ex: hanamura\nIf a mode and a map are provided your current rank for that map will be returned.'
                         },
                         {
                             name: 'Example of !rank:',
