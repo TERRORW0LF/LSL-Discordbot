@@ -39,12 +39,16 @@ async function handleRank(message) {
             isRanking = false;
             return;
         }
+		var sheetId;
+		if (season === 'season1') sheetId = process.env.gSheetS1;
+		else if (season === 'season2') sheetId = process.env.gSheetS2;
+		else if (season === 'season3') sheetId = process.env.gSheetS3;
         if (messageVals.length === 1) {
         	const token  = await getGoogleAuth();
 			const sheets = await google.sheets('v4');
 			const response = (await sheets.spreadsheets.values.get({
             	auth: token,
-            	spreadsheetId: process.env.gSheetS3,
+            	spreadsheetId: sheetId,
             	range: 'Points Sheet!G3:H'
         	})).data;
 			const rows = await response.values;
@@ -81,7 +85,7 @@ async function handleRank(message) {
 							},
 				   		    {
 								name: 'user',
-								value: `${message.auther.username}`,
+								value: `${message.author.username}`,
 								inline: true
 							},
 							{
@@ -142,7 +146,7 @@ async function handleRank(message) {
 					botMsg.edit('✅ Rank found!');
 					message.channel.send('', {
             			embed: {
-                			title: `Combined rank for ${message.author.username}`,
+                			title: `${mode} rank for ${message.author.username}`,
                 			url: `https://github.com/TERRORW0LF/LSL-Discordbot`,
                 			color: 3010349,
                 			author: {
@@ -162,7 +166,7 @@ async function handleRank(message) {
 							},
 				   		    {
 								name: 'user',
-								value: `${message.auther.username}`,
+								value: `${message.author.username}`,
 								inline: true
 							},
 							{
