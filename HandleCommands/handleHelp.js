@@ -43,8 +43,8 @@ async function handleHelp(message) {
                             value: 'Look up a personal best.'
                         },
                         {
-                            name: '!rank [season], [mode], [map]',
-                            value: 'Look up the current rank on a map.'
+                            name: '!rank [season], ([mode]), ([map])',
+                            value: 'Look up your current rank on a season, a mode, or a map.'
                         },
                         {
                             name: '!incomplete [season], [mode]',
@@ -235,23 +235,23 @@ async function handleHelp(message) {
                         },
                         fields: [{
                             name: 'Command structure:',
-                            value: '!rank [season], [mode], [map]'
+                            value: '!rank [season], ([mode]), ([map])'
                         },
                         {
                             name: '[season]',
-                            value: 'The surf season of the run as a number. ex: 1'
+                            value: 'The surf season of the run as a number. If no mode and map are provided your current combined rank for that season will be returned. ex: 1'
                         },
                         {
-                            name: '[mode]',
-                            value: 'The mode of the run. opts: grav / standard'
+                            name: '[mode] (optional)',
+                            value: 'The mode you want to look up. If no map is provided your current rank for that mode will be returned. opts: grav / standard'
                         },
                         {
-                            name: '[map]',
-                            value: 'The map of the run. ex: hanamura'
+                            name: '[map] (optional)',
+                            value: 'The map of the run. If a mode and a map are provided your current rank for that map will be returned. ex: hanamura'
                         },
                         {
                             name: 'Example of !rank:',
-                            value: '!rank 3, grav, hanamura'
+                            value: '!rank 3\n!rank 3, grav\n!rank 3, grav, hanamura'
                         }],
                         timestamp: new Date(),
                         footer: {
