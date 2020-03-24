@@ -39,7 +39,7 @@ async function handleMessage(message) {
                 handleHelp(message);
                 break;
             case '!version':
-                message.channel.send('1.0');
+                message.channel.send('1.1');
                 break;
             default:
                 message.react('❌');
