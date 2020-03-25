@@ -102,7 +102,8 @@ async function handleSubmit(message) {
             }
         }
         const submitUrl = await getSubmitUrl(message, season, mode, map, time, link);
-        resp = await axios.post(submitUrl);
+        console.log(submitUrl);
+        var resp = await axios.post(submitUrl);
 
         if (resp.status === 200) {
             (await message.reactions).forEach(async(key, value, map) => {
