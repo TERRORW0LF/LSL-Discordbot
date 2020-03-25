@@ -72,7 +72,7 @@ async function handleRank(message) {
                 			url: `https://github.com/TERRORW0LF/LSL-Discordbot`,
                 			color: 3010349,
                 			author: {
-                    			name: 'LSL-discordbot',
+                        		name: 'LSL-discordbot',
                     			icon_url: 'https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/BotIco.jpg',
                     			url: 'https://github.com/TERRORW0LF/LSL-Discordbot',
                 			},
