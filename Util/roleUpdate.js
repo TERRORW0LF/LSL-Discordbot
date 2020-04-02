@@ -8,7 +8,7 @@ let roleArray = ['Surfer', 'Super Surfer', 'Epic Surfer', 'Legendary Surfer', 'M
 
 async function roleUpdate(guild, season) {
     try {
-        if season != "season3" return;
+        if (season != "season3") return;
         const rolesAll = await guild.roles;
         const roles = await rolesAll.filter(r => roleArray.includes(r.name));
         var users = {};
