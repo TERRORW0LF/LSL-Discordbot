@@ -107,7 +107,7 @@ async function handleDelete(message) {
             message.react('✅');
             botMsg.edit('✅ Sucessfully deleted run!');
         });
-        await newDelete2(message);
+        await newDelete2(message, season);
         isDeleting = false;
     } catch (err) {
         (await message.reactions).forEach(async(key, value, map) => {
