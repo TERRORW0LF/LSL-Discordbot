@@ -15,7 +15,7 @@ function newDelete(client) {
             const guild = client.guilds.get(process.env.DiscordGUILD);
             setWrCache();
             setPbCache();
-            roleUpdate(guild);
+            roleUpdate(guild, req.body.season);
         } catch (err) {
             console.log('An error occured in newDelete: '+err.message);
             console.log(err.stack);
