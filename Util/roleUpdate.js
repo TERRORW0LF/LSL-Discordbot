@@ -4,7 +4,7 @@ const getUser = require('./getUser');
 
 module.exports = roleUpdate;
 
-let roleArray = ['Surfer', 'Super Surfer', 'Epic Surfer', 'Legendary Surfer', 'Mythic Surfer'];
+let roleArray = ['Surfer - S3', 'Super Surfer - S3', 'Epic Surfer - S3', 'Legendary Surfer - S3', 'Mythic Surfer - S3'];
 
 async function roleUpdate(guild, season) {
     try {
@@ -39,6 +39,7 @@ async function roleUpdate(guild, season) {
             const roleStr = await getNewRole(Number(users[property].points));
             if (!roleStr) {
                 const userRole = await getCurRole(roles, user);
+                console.log(`${user.user.tag} - ${userRole} - None`);
                 if (userRole.size) {
                     await user.removeRole(userRole.find(r => {return true;}));
                 }
@@ -49,6 +50,7 @@ async function roleUpdate(guild, season) {
             var curRole = await getCurRole(roles, user);
             if (curRole.size) await user.removeRole(curRole.find(r => {return true;}));
             var newRole = await roles.find(r => r.name === roleStr);
+            console.log(`${user.user.tag} - ${curRole} - ${newRole}`);
             await user.addRole(newRole);
         }
         console.log('\nRoleUpdate done\n');
@@ -60,11 +62,11 @@ async function roleUpdate(guild, season) {
 
 function getNewRole(points) {
     if (points < 300) return;
-    if (points < 1000) return 'Surfer';
-    if (points < 2000) return 'Super Surfer';
-    if (points < 4000) return 'Epic Surfer';
-    if (points < 5500) return 'Legendary Surfer';
-    return 'Mythic Surfer';
+    if (points < 1000) return 'Surfer - S3';
+    if (points < 2000) return 'Super Surfer - S3';
+    if (points < 4000) return 'Epic Surfer - S3';
+    if (points < 5500) return 'Legendary Surfer - S3';
+    return 'Mythic Surfer - S3';
 }
 
 function getCurRole(roles, user) {
