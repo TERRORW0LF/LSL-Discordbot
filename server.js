@@ -48,7 +48,7 @@ const P = process.env.PORT ||  3000;
         `);
         client.on('message', handleMessage);
         app.post('/submit', newSubmit(client));
-        app.get('/delete', newDelete(client));
+        app.post('/delete', newDelete(client));
 		app.get('/ping', (req, res) => {
       	    if(req.query.auth !== process.env.herokuAUTH) {
                 res.sendStatus(403);
