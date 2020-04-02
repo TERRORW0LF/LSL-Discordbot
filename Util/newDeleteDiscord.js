@@ -4,12 +4,12 @@ const { setPbCache } = require('./pbCache');
 
 module.exports = newDelete2;
 
-function newDelete2(message) {
+function newDelete2(message, season) {
     try {
         const guild = message.guild;
         setWrCache();
         setPbCache();
-        roleUpdate(guild);
+        roleUpdate(guild, season);
     } catch (err) {
         console.log('An error occured in newDelete: '+err.message);
         console.log(err.stack);
