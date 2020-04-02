@@ -6,8 +6,9 @@ module.exports = roleUpdate;
 
 let roleArray = ['Surfer', 'Super Surfer', 'Epic Surfer', 'Legendary Surfer', 'Mythic Surfer'];
 
-async function roleUpdate(guild) {
+async function roleUpdate(guild, season) {
     try {
+        if season != "season3" return;
         const rolesAll = await guild.roles;
         const roles = await rolesAll.filter(r => roleArray.includes(r.name));
         var users = {};
@@ -50,6 +51,7 @@ async function roleUpdate(guild) {
             var newRole = await roles.find(r => r.name === roleStr);
             await user.addRole(newRole);
         }
+        console.log('\nRoleUpdate done\n');
     } catch (err) {
         console.log('An error occured in roleUpdate: '+err.message);
         console.log(err.stack);
