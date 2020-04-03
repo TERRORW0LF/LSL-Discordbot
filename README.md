@@ -38,6 +38,11 @@ The code in this project will most likely not be usefull for anything else.
 - Unify embeds even more, so the bot has an even clearer structure.
 
 
+## MOM! There's a bug in my code!
+- `roleUpdate` currently loops through every player 2 or 3 times, causing a massive performance problem on seasons with more than 20 players.
+- Theoretically possible but not seen: To many submits/deletes at the same time could cause `roleUpdates` to crash, due to discord enforcing a short wait after a great amount of roleAdd/delete requests.
+
+
 ## Warning:
 - This is my first time using JavaScript, so the code in here is not optimal in any way or form.
 - When a user deletes a message that is still getting processed the bot will throw an error.
