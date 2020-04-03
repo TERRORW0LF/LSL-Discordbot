@@ -56,6 +56,7 @@ async function roleUpdate(guild, season) {
             }
         }
         await stanUsers.sort((a, b) => b[1] - a[1]);
+        console.log(stanUsers);
         const firstStan = await getUser(guild, stanUsers[0][0]);
         if (firstStan.user) {
             if (!firstStan.roles.find(r => r.name === `Rank 1 Standard - S${season}`)) firstStan.addRole(roleStanFirst);
