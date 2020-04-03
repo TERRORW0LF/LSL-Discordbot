@@ -27,7 +27,6 @@ function newSubmit(discord) {
                 console.log(`New PB: ${req.body.season}, ${req.body.mode}, ${req.body.map}, ${req.body.user}, ${req.body.time}, ${req.body.link}`);
                 await updatePbCache(req.body);
             }
-            console.log('Do roleUpdate');
             roleUpdate(guild, req.body.season);
             res.sendStatus(200);
         } catch (err) {
