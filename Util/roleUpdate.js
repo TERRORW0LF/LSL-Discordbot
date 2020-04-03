@@ -46,11 +46,9 @@ async function roleUpdate(guild, season) {
             if (row[4]) {
                 if (!users[row[4]]) users[row[4]] = {};
                 if (!users[row[4]].points) users[row[4]].points = Number(row[3]);
-                console.log(`${users[row[4]].points}`);
                 if (users[row[4]].points < Number(row[3])) users[row[4]].points = Number(row[3]);
             }
         }
-        console.log(users);
         for (var property in users) {
             const user = await getUser(guild, String(property));
             if (!user.user) continue;
