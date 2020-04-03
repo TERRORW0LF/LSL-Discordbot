@@ -4,11 +4,29 @@ const getUser = require('./getUser');
 
 module.exports = roleUpdate;
 
-let roleArray = ['Surfer - S3', 'Super Surfer - S3', 'Epic Surfer - S3', 'Legendary Surfer - S3', 'Mythic Surfer - S3'];
+let roleArray1 = ['Surfer - S1', 'Super Surfer - S1', 'Epic Surfer - S1', 'Legendary Surfer - S1', 'Mythic Surfer - S1'];
+let roleArray2 = ['Surfer - S2', 'Super Surfer - S2', 'Epic Surfer - S2', 'Legendary Surfer - S2', 'Mythic Surfer - S2'];
+let roleArray3 = ['Surfer - S3', 'Super Surfer - S3', 'Epic Surfer - S3', 'Legendary Surfer - S3', 'Mythic Surfer - S3'];
 
 async function roleUpdate(guild, season) {
     try {
-        if (season != "season3") return;
+        var roleArray;
+        var sheetId;
+        if (season == "season1") {
+            season = 1;
+            roleArray = roleArray1;
+            sheetId = process.env.gSheetS1;
+        } else if (season == "season2") {
+            season = 2;
+            roleArray = roleArray2;
+            sheetId = process.env.gSheetS2;
+        } else if (season == "season3") {
+            season = 3;
+            roleArray = roleArray3;
+            sheetId = process.env.gSheetS3;
+        } else return;
+        console.log(season);
+        console.log(roleArray);
         const rolesAll = await guild.roles;
         const roles = await rolesAll.filter(r => roleArray.includes(r.name));
         var users = {};
@@ -16,7 +34,7 @@ async function roleUpdate(guild, season) {
         const sheet = google.sheets('v4');
         const data = (await sheet.spreadsheets.values.get({
             auth: token,
-            spreadsheetId: process.env.gSheetS3,
+            spreadsheetId: sheetId,
             range: 'Points Sheet!A3:E'
         })).data;
         const rows = await data.values;
@@ -36,7 +54,7 @@ async function roleUpdate(guild, season) {
         for (var property in users) {
             const user = await getUser(guild, String(property));
             if (!user.user) continue;
-            const roleStr = await getNewRole(Number(users[property].points));
+            const roleStr = await getNewRole(Number(users[property].points), season);
             if (!roleStr) {
                 const userRole = await getCurRole(roles, user);
                 if (userRole.size) {
@@ -60,13 +78,13 @@ async function roleUpdate(guild, season) {
     }
 }
 
-function getNewRole(points) {
+function getNewRole(points, season) {
     if (points < 300) return;
-    if (points < 1000) return 'Surfer - S3';
-    if (points < 2000) return 'Super Surfer - S3';
-    if (points < 4000) return 'Epic Surfer - S3';
-    if (points < 5500) return 'Legendary Surfer - S3';
-    return 'Mythic Surfer - S3';
+    if (points < 1000) return `Surfer - S${season}`;
+    if (points < 2000) return `Super Surfer - S${season}`;
+    if (points < 4000) return `Epic Surfer - S${season}`;
+    if (points < 5500) return `Legendary Surfer - S${season}`;
+    return `Mythic Surfer - S${season}`;
 }
 
 function getCurRole(roles, user) {
