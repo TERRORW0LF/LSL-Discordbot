@@ -43,13 +43,13 @@ async function roleUpdate(guild, season) {
         for (i=0;i<rows.length;i++) {
             const row = rows[i];
             if (row[1]) {
-                stanUsers.push([].push(row[1]).push(Number(row[0])));
+                stanUsers.push([].push(row[1], Number(row[0])));
                 if (!users[row[1]]) users[row[1]] = {};
                 if (!users[row[1]].points) users[row[1]].points = Number(row[0]);
                 if (users[row[1]].points < Number(row[0])) users[row[1]].points = Number(row[0]);
             }
             if (row[4]) {
-                gravUsers.push([].push(row[4]).push(Number(row[3])));
+                gravUsers.push([].push(row[4], Number(row[3])));
                 if (!users[row[4]]) users[row[4]] = {};
                 if (!users[row[4]].points) users[row[4]].points = Number(row[3]);
                 if (users[row[4]].points < Number(row[3])) users[row[4]].points = Number(row[3]);
