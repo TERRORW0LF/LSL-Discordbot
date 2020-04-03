@@ -55,6 +55,7 @@ async function roleUpdate(guild, season) {
                 if (users[row[4]].points < Number(row[3])) users[row[4]].points = Number(row[3]);
             }
         }
+        console.log(stanUsers);
         await stanUsers.sort((a, b) => b[1] - a[1]);
         console.log(stanUsers);
         const firstStan = await getUser(guild, stanUsers[0][0]);
