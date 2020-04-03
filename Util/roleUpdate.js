@@ -1,4 +1,3 @@
-//something's wrong, I can feel it!
 const { getGoogleAuth } = require('../google-auth'); 
 const { google } = require('googleapis');
 const getUser = require('./getUser');
@@ -50,7 +49,7 @@ async function roleUpdate(guild, season) {
                 if (users[row[1]].points < Number(row[0])) users[row[1]].points = Number(row[0]);
             }
             if (row[4]) {
-                gravUsers.push([].push(row[4].push(Number(row[3])));
+                gravUsers.push([].push(row[4]).push(Number(row[3])));
                 if (!users[row[4]]) users[row[4]] = {};
                 if (!users[row[4]].points) users[row[4]].points = Number(row[3]);
                 if (users[row[4]].points < Number(row[3])) users[row[4]].points = Number(row[3]);
