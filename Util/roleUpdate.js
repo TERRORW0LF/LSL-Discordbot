@@ -25,9 +25,6 @@ async function roleUpdate(guild, season) {
             roleArray = roleArray3;
             sheetId = process.env.gSheetS3;
         } else return;
-        console.log(season);
-        console.log(roleArray);
-        return;
         const rolesAll = await guild.roles;
         const roles = await rolesAll.filter(r => roleArray.includes(r.name));
         var users = {};
@@ -56,6 +53,7 @@ async function roleUpdate(guild, season) {
             const user = await getUser(guild, String(property));
             if (!user.user) continue;
             const roleStr = await getNewRole(Number(users[property].points), season);
+            console.log(roleStr);
             if (!roleStr) {
                 const userRole = await getCurRole(roles, user);
                 if (userRole.size) {
