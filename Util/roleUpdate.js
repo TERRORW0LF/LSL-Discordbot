@@ -66,10 +66,10 @@ async function roleUpdate(guild, season) {
             }
 
             if (user.roles.find(r => r.name === roleStr)) continue;
-            var curRole = await getCurRole(roles, user);
-            if (curRole.size) await user.removeRole(curRole.find(r => {return true;}));
+            const userRole = await getCurRole(roles, user);
+            if (userRole.size) await user.removeRole(userRole.find(r => {return true;}));
             var newRole = await roles.find(r => r.name === roleStr);
-            console.log(`${user.user.tag} - ${curRole.values().next().value.name} - ${newRole.name}`);
+            console.log(`${user.user.tag} - ${userRole.values().next().value.name} - ${newRole.name}`);
             await user.addRole(newRole);
         }
         console.log('\nRoleUpdate done\n');
