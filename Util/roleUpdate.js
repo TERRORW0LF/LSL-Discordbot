@@ -27,7 +27,11 @@ async function roleUpdate(guild, season) {
         } else return;
         const rolesAll = await guild.roles;
         const roles = await rolesAll.filter(r => roleArray.includes(r.name));
+        const roleStanFirst = await rolesAll.find(r => r.name === `Rank 1 Standard - S${season}`);
+        const roleGravFirst = await rolesAll.find(r => r.name === `Rank 1 Gravspeed - S${season}`);
         var users = {};
+        var stanUsers = [];
+        var gravUsers = [];
         const token = await getGoogleAuth();
         const sheet = google.sheets('v4');
         const data = (await sheet.spreadsheets.values.get({
@@ -39,14 +43,44 @@ async function roleUpdate(guild, season) {
         for (i=0;i<rows.length;i++) {
             const row = rows[i];
             if (row[1]) {
+                stanUsers.push([].push(row[1]).push(Number(row[0])));
                 if (!users[row[1]]) users[row[1]] = {};
                 if (!users[row[1]].points) users[row[1]].points = Number(row[0]);
                 if (users[row[1]].points < Number(row[0])) users[row[1]].points = Number(row[0]);
             }
             if (row[4]) {
+                gravUsers.push([].push(row[4].push(Number(row[3])));
                 if (!users[row[4]]) users[row[4]] = {};
                 if (!users[row[4]].points) users[row[4]].points = Number(row[3]);
                 if (users[row[4]].points < Number(row[3])) users[row[4]].points = Number(row[3]);
+            }
+        }
+        await stanUsers.sort((a, b) => b[1] - a[1]);
+        const firstStan = await getUser(guild, stanUsers[0][0]);
+        if (firstStan.user) {
+            if (!firstStan.roles.find(r => r.name === `Rank 1 Standard - S${season}`)) firstStan.addRole(roleStanFirst);
+        }
+        stanUsers.shift();
+        for (var user of stanUsers) {
+            const disUser = await getUser(guild, user[0]);
+            if (!disUser.user) continue;
+            if (disUser.roles.find(r => r.name === `Rank 1 Standard - S${season}`)) {
+                disUser.removeRole(roleStanFirst);
+                break;
+            }
+        }
+        await gravUsers.sort((a, b) => b[1] - a[1]);
+        const firstGrav = await getUser(guild, gravUsers[0][0]);
+        if (firstGrav.user) {
+            if (!firstGrav.roles.find(r => r.name === `Rank 1 Gravspeed - S${season}`)) firstGrav.addRole(roleGravFirst);
+        }
+        gravUsers.shift();
+        for (var user of gravUsers) {
+            const disUser = await getUser(guild, user[0]);
+            if (!disUser.user) continue;
+            if (disUser.roles.find(r => r.name === `Rank 1 Gravspeed - S${season}`)) {
+                disUser.removeRole(roleGravFirst);
+                break;
             }
         }
         for (var property in users) {
