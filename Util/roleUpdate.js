@@ -43,19 +43,18 @@ async function roleUpdate(guild, season) {
         for (i=0;i<rows.length;i++) {
             const row = rows[i];
             if (row[1]) {
-                stanUsers.push([].push(row[1], Number(row[0])));
+                stanUsers.push([row[1], Number(row[0])]);
                 if (!users[row[1]]) users[row[1]] = {};
                 if (!users[row[1]].points) users[row[1]].points = Number(row[0]);
                 if (users[row[1]].points < Number(row[0])) users[row[1]].points = Number(row[0]);
             }
             if (row[4]) {
-                gravUsers.push([].push(row[4], Number(row[3])));
+                gravUsers.push([row[4], Number(row[3])]);
                 if (!users[row[4]]) users[row[4]] = {};
                 if (!users[row[4]].points) users[row[4]].points = Number(row[3]);
                 if (users[row[4]].points < Number(row[3])) users[row[4]].points = Number(row[3]);
             }
         }
-        console.log(stanUsers);
         await stanUsers.sort((a, b) => b[1] - a[1]);
         console.log(stanUsers);
         const firstStan = await getUser(guild, stanUsers[0][0]);
