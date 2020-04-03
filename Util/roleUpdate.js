@@ -46,6 +46,7 @@ async function roleUpdate(guild, season) {
             if (row[4]) {
                 if (!users[row[4]]) users[row[4]] = {};
                 if (!users[row[4]].points) users[row[4]].points = row[3];
+                console.log(users[row[4]);
                 if (users[row[4]].points < row[3]) users[row[4]].points = row[3];
             }
         }
