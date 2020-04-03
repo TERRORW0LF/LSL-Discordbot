@@ -27,6 +27,7 @@ async function roleUpdate(guild, season) {
         } else return;
         console.log(season);
         console.log(roleArray);
+        return;
         const rolesAll = await guild.roles;
         const roles = await rolesAll.filter(r => roleArray.includes(r.name));
         var users = {};
