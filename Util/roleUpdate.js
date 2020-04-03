@@ -40,21 +40,21 @@ async function roleUpdate(guild, season) {
             const row = rows[i];
             if (row[1]) {
                 if (!users[row[1]]) users[row[1]] = {};
-                if (!users[row[1]].points) users[row[1]].points = row[0];
-                if (users[row[1]].points < row[0]) users[row[1]].points = row[0];
+                if (!users[row[1]].points) users[row[1]].points = Number(row[0]);
+                if (users[row[1]].points < Number(row[0])) users[row[1]].points = Number(row[0]);
             }
             if (row[4]) {
                 if (!users[row[4]]) users[row[4]] = {};
-                if (!users[row[4]].points) users[row[4]].points = row[3];
+                if (!users[row[4]].points) users[row[4]].points = Number(row[3]);
                 console.log(`${users[row[4]].points}`);
-                if (users[row[4]].points < row[3]) users[row[4]].points = row[3];
+                if (users[row[4]].points < Number(row[3])) users[row[4]].points = Number(row[3]);
             }
         }
         console.log(users);
         for (var property in users) {
             const user = await getUser(guild, String(property));
             if (!user.user) continue;
-            const roleStr = await getNewRole(Number(users[property].points), season);
+            const roleStr = await getNewRole(users[property].points, season);
             if (!roleStr) {
                 const userRole = await getCurRole(roles, user);
                 if (userRole.size) {
