@@ -54,7 +54,7 @@ const P = process.env.PORT ||  3000;
                 res.sendStatus(403);
                 return;
             }
-      	    console.log('\nping\n')
+      	    console.log('\nping\n');
       	    res.sendStatus(200);
       	    return;
         });
