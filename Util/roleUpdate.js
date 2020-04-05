@@ -38,8 +38,14 @@ async function roleUpdate(guild, season) {
             range: 'Points Sheet!A3:E'
         })).data;
         const rows = await data.values;
-        if (rows[0][1]) users[rows[0][1]].stan = true;
-        if (rows[0][4]) users[rows[0][4]].grav = true;
+        if (rows[0][1]) {
+            if (!users[rows[0][1]]) users[rows[0][1]] = {};
+            users[rows[0][1]].stan = true;
+        }
+        if (rows[0][4]) {
+            if (!users[rows[0][4]]) users[rows[0][4]] = {}
+            users[rows[0][4]].grav = true;
+        }
         for (var i=0;i<rows.length;i++) {
             const row = rows[i];
             if (row[1]) {
