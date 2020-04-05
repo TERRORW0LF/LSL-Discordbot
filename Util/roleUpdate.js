@@ -38,7 +38,9 @@ async function roleUpdate(guild, season) {
             range: 'Points Sheet!A3:E'
         })).data;
         const rows = await data.values;
-        for (i=0;i<rows.length;i++) {
+        if (rows[0][1]) users[rows[0][1]].stan = true;
+        if (rows[0][4]) users[rows[0][4]].grav = true;
+        for (var i=0;i<rows.length;i++) {
             const row = rows[i];
             if (row[1]) {
                 if (!users[row[1]]) users[row[1]] = {};
@@ -51,30 +53,18 @@ async function roleUpdate(guild, season) {
                 if (users[row[4]].points < Number(row[3])) users[row[4]].points = Number(row[3]);
             }
         }
-        var newGrav = true, firstStan = true, newStan = true;
-        var firstGrav = false;
-        var i = 0;
+        var newStan = true, newGrav = true;
         for (var property in users) {
-            i++;
-            if (i === 2) {
-                firstStan = false;
-                firstGrav = true;
-            }
-            if (i === 3) firstGrav = false;
             const user = await getUser(guild, String(property));
             if (!user.user) continue;
-            if (firstStan) {
+            if (users[property].stan) {
                 if (!user.roles.find(r => r.name === `Rank 1 Standard - S${season}`)) user.addRole(roleStanFirst);
                 else newStan = false;
-            } else {
-                if (newStan && user.roles.find(r => r.name === `Rank 1 Standard - S${season}`)) user.removeRole(roleStanFirst);
-            }
-            if (firstGrav) {
+            } else if(newStan && user.roles.find(r => r.name === `Rank 1 Standard - S${season}`)) user.removeRole(roleStanFirst);
+            if (users[property].grav) {
                 if (!user.roles.find(r => r.name === `Rank 1 Gravspeed - S${season}`)) user.addRole(roleGravFirst);
                 else newGrav = false;
-            } else {
-                if (newGrav && user.roles.find(r => r.name === `Rank 1 Gravspeed - S${season}`)) user.removeRole(roleGravFirst);
-            }
+            } else if(newGrav && user.roles.find(r => r.name === `Rank 1 Gravspeed - S${season}`)) user.removeRole(roleGravFirst);
             const roleStr = await getNewRole(users[property].points, season);
             if (!roleStr) {
                 const userRole = await getCurRole(roles, user);
