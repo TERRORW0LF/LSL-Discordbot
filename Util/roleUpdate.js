@@ -51,7 +51,7 @@ async function roleUpdate(guild, season) {
                 if (users[row[4]].points < Number(row[3])) users[row[4]].points = Number(row[3]);
             }
         }
-        var newGrav, firstStan, newStan = true;
+        var newGrav = true, firstStan = true, newStan = true;
         var firstGrav = false;
         var i = 0;
         for (var property in users) {
