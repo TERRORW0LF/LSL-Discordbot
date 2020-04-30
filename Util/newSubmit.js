@@ -18,7 +18,7 @@ function newSubmit(discord) {
             const wrCache = await getWrCache();
             const pbCache = await getPbCache();
             if (!wrCache[req.body.season][req.body.mode][req.body.map] || Number(req.body.time) < Number(wrCache[req.body.season][req.body.mode][req.body.map]['time'])) {
-                console.log(`New Record: ${req.body.season}, ${req.body.mode}, ${req.body.map}, ${req.body.time}, ${req.body.link}`);
+                console.log(`New Record: ${req.body.season}, ${req.body.mode}, ${req.body.map}, &{req.body.user}, ${req.body.time}, ${req.body.link}`);
                 const data = await getOldWrData(wrCache, req.body);
                 await sendWr(discord, data);
                 await updateWrCache(req.body);
