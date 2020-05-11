@@ -140,7 +140,7 @@ async function handleRank(message) {
 			const sheets = await google.sheets('v4');
 			const response = (await sheets.spreadsheets.values.get({
             	auth: token,
-            	spreadsheetId: process.env.gSheetS3,
+            	spreadsheetId: sheetId,
             	range: `Points Sheet!${range}`
         	})).data;
 			const rows = await response.values;
