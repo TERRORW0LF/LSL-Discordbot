@@ -11,7 +11,7 @@ module.exports = handleMessage;
 async function handleMessage(message) {
     try {
         if(!message.content.startsWith('!') || message.author.bot) return;
-        if (message.content === '!pl') {
+        if (message.content === '!pl' && message.channel.id === '709692915710033930') {
             message.channel.send(`${message.guild.members.get('136146736077996032')}`);
             return;
         }
