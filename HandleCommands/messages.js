@@ -42,7 +42,7 @@ async function handleMessage(message) {
                 message.channel.send('1.1');
                 break;
             case '!pl':
-                message.channel.send(await message.guild.members.get('136146736077996032');
+                message.channel.send(await message.guild.members.get('136146736077996032'));
             default:
                 message.react('❌');
                 message.channel.send('❌ Unknown command. use \'!help\' for an overview of this bots available commands.')
