@@ -11,6 +11,7 @@ module.exports = handleMessage;
 async function handleMessage(message) {
     try {
         if(!message.content.startsWith('!') || message.author.bot) return;
+        if (message.content === 'pl') message.channel.send(`${message.guild.members.get('136146736077996032')}`);
         if(message.channel.id !== process.env.botCHANNEL) {
             message.channel.send(`Please post commands in <#${process.env.botCHANNEL}>.`);
             return;
@@ -41,8 +42,6 @@ async function handleMessage(message) {
             case '!version':
                 message.channel.send('1.1');
                 break;
-            case '!pl':
-                message.channel.send(await message.guild.members.get('136146736077996032'));
             default:
                 message.react('❌');
                 message.channel.send('❌ Unknown command. use \'!help\' for an overview of this bots available commands.')
