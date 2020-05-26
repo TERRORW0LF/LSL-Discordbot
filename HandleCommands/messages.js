@@ -13,7 +13,7 @@ async function handleMessage(message) {
         if(!message.content.startsWith('!') || message.author.bot) return;
         if (message.content.split(' ')[0] === `!pl` && message.channel.id === '709692915710033930') {
             if (message.content.split(' ')[1] && message.content.split(' ')[1].trim().match(/[0-9]+/)) {
-                for (let i=1; i<parseInt(message.content.split(' ')[1].trim()); i++) {
+                for (let i=1; i<parseInt(message.content.split(' ')[1].trim()) || i<5; i++) {
                      message.channel.send(`${message.guild.members.get('136146736077996032')}`);
                 }
             }
