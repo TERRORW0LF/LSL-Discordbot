@@ -11,8 +11,8 @@ module.exports = handleMessage;
 async function handleMessage(message) {
     try {
         if(!message.content.startsWith('!') || message.author.bot) return;
-        if (message.content === `!pl ${/[0-9]*/}` && message.channel.id === '709692915710033930') {
-            if (message.content.split(' ')[1]) {
+        if (message.content.split(' ')[0] === `!pl` && message.channel.id === '709692915710033930') {
+            if (message.content.split(' ')[1].trim() == /[0-9]*/) {
                 for (let i; i=1; i<parseInt(message.content.split(' ')[1])) {
                      message.channel.send(`${message.guild.members.get('136146736077996032')}`);
                 }
