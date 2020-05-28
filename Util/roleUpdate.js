@@ -7,24 +7,30 @@ module.exports = roleUpdate;
 let roleArray1 = ['Surfer - S1', 'Super Surfer - S1', 'Epic Surfer - S1', 'Legendary Surfer - S1', 'Mythic Surfer - S1'];
 let roleArray2 = ['Surfer - S2', 'Super Surfer - S2', 'Epic Surfer - S2', 'Legendary Surfer - S2', 'Mythic Surfer - S2'];
 let roleArray3 = ['Surfer - S3', 'Super Surfer - S3', 'Epic Surfer - S3', 'Legendary Surfer - S3', 'Mythic Surfer - S3'];
+let roleArray4 = ['Surfer - S4', 'Super Surfer - S4', 'Epic Surfer - S4', 'Legendary Surfer - S4', 'Mythic Surfer - S4'];
 
 async function roleUpdate(guild, season) {
     try {
         var roleArray;
         var sheetId;
-        if (season == "season1") {
+        if (season == 'season1') {
             season = 1;
             roleArray = roleArray1;
             sheetId = process.env.gSheetS1;
-        } else if (season == "season2") {
+        } else if (season == 'season2') {
             season = 2;
             roleArray = roleArray2;
             sheetId = process.env.gSheetS2;
-        } else if (season == "season3") {
+        } else if (season == 'season3') {
             season = 3;
             roleArray = roleArray3;
             sheetId = process.env.gSheetS3;
-        } else return;
+        } else if (season == 'season4') {
+            season = 4;
+            roleArray = roleArray4;
+            sheetId = process.env.gSheetS4;
+        }
+        else return;
         const rolesAll = await guild.roles;
         const roles = await rolesAll.filter(r => roleArray.includes(r.name));
         const roleStanFirst = await rolesAll.find(r => r.name === `Rank 1 Standard - S${season}`);
