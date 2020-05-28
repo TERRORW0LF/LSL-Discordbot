@@ -24,6 +24,10 @@ async function setWrCache() {
         season3: {
             Gravspeed: {},
             Standard: {}
+        },
+        season4: {
+            Gravspeed: {},
+            Standard: {}
         }
     };
     const gravs1 = struc.season1.Gravspeed;
@@ -32,6 +36,8 @@ async function setWrCache() {
     const stans2 = struc.season2.Standard;
     const gravs3 = struc.season3.Gravspeed;
     const stans3 = struc.season3.Standard;
+    const gravs4 = struc.season3.Gravspeed;
+    const stans4 = struc.season3.Standard;
     try {
         const response1 = (await sheets.spreadsheets.values.get({
             auth: token,
@@ -51,6 +57,12 @@ async function setWrCache() {
             range: 'Leaderboard!A7:K'
         })).data;
         const rows3 = await response3.values;
+        const response4 = (await sheets.spreadsheets.values.get({
+            auth: token,
+            spreadsheetId: process.env.gSheetS3,
+            range: 'Leaderboard!A7:K'
+        })).data;
+        const rows4 = await response3.values;
         for (i=0; i < rows1.length; i++) {
             const row = rows1[i];
             if (row[1] !== '0.00') {
@@ -85,7 +97,7 @@ async function setWrCache() {
                 gravs2[row[6]].date = row[10];
             }
         }
-        for (i=0; i < rows1.length; i++) {
+        for (i=0; i < rows3.length; i++) {
             const row = rows3[i];
             if (row[1] !== '0.00') {
                 if (!stans3[row[0]]) stans3[row[0]] = {};
@@ -100,6 +112,23 @@ async function setWrCache() {
                 gravs3[row[6]].time = Number(row[7]);
                 gravs3[row[6]].link = row[9];
                 gravs3[row[6]].date = row[10];
+            }
+        }
+        for (i=0; i < rows4.length; i++) {
+            const row = rows4[i];
+            if (row[1] !== '0.00') {
+                if (!stans4[row[0]]) stans4[row[0]] = {};
+                stans4[row[0]].user = row[2];
+                stans4[row[0]].time = Number(row[1]);
+                stans4[row[0]].link = row[3];
+                stans4[row[0]].date = row[4];
+            }
+            if (row[7] !== '0.00') {
+                if (!gravs4[row[6]]) gravs4[row[6]] = {};
+                gravs4[row[6]].user = row[8];
+                gravs4[row[6]].time = Number(row[7]);
+                gravs4[row[6]].link = row[9];
+                gravs4[row[6]].date = row[10];
             }
         }
         cache = await struc;
