@@ -42,6 +42,7 @@ async function handleDelete(message) {
         if (season === 'season1') id = process.env.gSheetS1;
         else if (season === 'season2') id = process.env.gSheetS2;
         else if (season === 'season3') id = process.env.gSheetS3;
+        else if (season === 'season4') id = process.env.gSheetS4;
         const sid = process.env.gSheetLOGID;
         const link = messageVals[1];
 
