@@ -26,6 +26,10 @@ async function setPbCache() {
         season3: {
             Gravspeed: {},
             Standard: {}
+        },
+        season4: {
+            Gravspeed: {},
+            Standard: {}
         }
     };
     const gravs1 = struc.season1.Gravspeed;
@@ -34,6 +38,8 @@ async function setPbCache() {
     const stans2 = struc.season2.Standard;
     const gravs3 = struc.season3.Gravspeed;
     const stans3 = struc.season3.Standard;
+    const gravs4 = struc.season4.Gravspeed;
+    const stans4 = struc.season4.Standard;
     try {
         const response1 = (await sheets.spreadsheets.values.get({
             auth: token,
@@ -53,6 +59,12 @@ async function setPbCache() {
             range: 'PB Times!A4:K'
         })).data;
         const rows3 = await response3.values;
+        const response4 = (await sheets.spreadsheets.values.get({
+            auth: token,
+            spreadsheetId: process.env.gSheetS4,
+            range: 'PB Times!A4:K'
+        })).data;
+        const rows4 = await response4.values;
         for (i=0; i < rows1.length; i++) {
             const row = rows1[i];
             if (row[8] !== '' && row[8] !== undefined) {
@@ -108,6 +120,25 @@ async function setPbCache() {
                 stans3[row[1]][row[0]].time = row[2];
                 stans3[row[1]][row[0]].link = row[4];
                 stans3[row[1]][row[0]].date = row[3].split(' ')[0];
+            }
+        }
+        for (i=0; i < rows4.length; i++) {
+            const row = rows4[i];
+            if (row[8] !== '' && row[8] !== undefined) {
+                if (!gravs4[row[7]]) gravs4[row[7]] = {};
+                if (!gravs4[row[7]][row[6]]) gravs4[row[7]][row[6]] = {};
+                gravs4[row[7]][row[6]].user = row[6];
+                gravs4[row[7]][row[6]].time = row[8];
+                gravs4[row[7]][row[6]].link = row[10];
+                gravs4[row[7]][row[6]].date = row[9].split(' ')[0];
+            }
+            if (row[2] !== '') {
+                if (!stans4[row[1]]) stans4[row[1]] = {};
+                if (!stans4[row[1]][row[0]]) stans4[row[1]][row[0]] = {};
+                stans4[row[1]][row[0]].user = row[0];
+                stans4[row[1]][row[0]].time = row[2];
+                stans4[row[1]][row[0]].link = row[4];
+                stans4[row[1]][row[0]].date = row[3].split(' ')[0];
             }
         }
         cache = await struc;
