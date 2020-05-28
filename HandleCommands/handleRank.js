@@ -44,6 +44,7 @@ async function handleRank(message) {
 		if (season === 'season1') sheetId = process.env.gSheetS1;
 		else if (season === 'season2') sheetId = process.env.gSheetS2;
 		else if (season === 'season3') sheetId = process.env.gSheetS3;
+	    else if (season === 'season4') sheetId = process.env.gSheetS4;
         if (messageVals.length === 1) {
         	const token  = await getGoogleAuth();
 			const sheets = await google.sheets('v4');
