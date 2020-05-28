@@ -158,6 +158,9 @@ function getSubmitUrl(message, season, mode, map, time, link) {
         case 'season3':
             submiturl+=`${process.env.gFormS3}`;
             break;
+        case 'season4':
+            submiturl+=`${process.env.gFormS4}`;
+            break;
     }
     submiturl+=`&entry.${process.env.gFormMODE}=${mode}`;
     submiturl+=`&entry.${process.env.gFormMAP}=${map}`;
