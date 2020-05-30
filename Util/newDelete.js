@@ -16,6 +16,7 @@ function newDelete(client) {
             setWrCache();
             setPbCache();
             roleUpdate(guild, req.body.season);
+            client.channels.get('641654895086141440').send('Google sheets delete received');
         } catch (err) {
             console.log('An error occured in newDelete: '+err.message);
             console.log(err.stack);
