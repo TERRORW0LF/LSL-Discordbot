@@ -36,8 +36,8 @@ async function setWrCache() {
     const stans2 = struc.season2.Standard;
     const gravs3 = struc.season3.Gravspeed;
     const stans3 = struc.season3.Standard;
-    const gravs4 = struc.season3.Gravspeed;
-    const stans4 = struc.season3.Standard;
+    const gravs4 = struc.season4.Gravspeed;
+    const stans4 = struc.season4.Standard;
     try {
         const response1 = (await sheets.spreadsheets.values.get({
             auth: token,
