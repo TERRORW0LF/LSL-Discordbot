@@ -59,7 +59,7 @@ async function setWrCache() {
         const rows3 = await response3.values;
         const response4 = (await sheets.spreadsheets.values.get({
             auth: token,
-            spreadsheetId: process.env.gSheetS3,
+            spreadsheetId: process.env.gSheetS4,
             range: 'Leaderboard!A7:K'
         })).data;
         const rows4 = await response3.values;
