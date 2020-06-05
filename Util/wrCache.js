@@ -62,7 +62,7 @@ async function setWrCache() {
             spreadsheetId: process.env.gSheetS4,
             range: 'Leaderboard!A7:K'
         })).data;
-        const rows4 = await response3.values;
+        const rows4 = await response4.values;
         for (i=0; i < rows1.length; i++) {
             const row = rows1[i];
             if (row[1] !== '0.00') {
