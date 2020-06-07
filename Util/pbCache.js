@@ -150,7 +150,7 @@ async function setPbCache() {
 
 function updatePbCache(data) {
     var map = cache[data.season][data.mode][data.map];
-    if (!map) map = {};
+    if (!map) map = cache[data.season][data.mode][data.map] = {};
     if (!map[data.user]) map[data.user] = {};
     map[data.user].user = data.user;
     map[data.user].time = data.time;
