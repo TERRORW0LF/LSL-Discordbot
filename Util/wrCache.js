@@ -131,7 +131,7 @@ async function setWrCache() {
                 gravs4[row[6]].date = row[10];
             }
         }
-        cache = await struc;
+        cache = struc;
     } catch (err) {
         console.log('An error occurred in wrCache[setWrCache]: ' + err.message);
         console.log(err.stack);
@@ -140,7 +140,7 @@ async function setWrCache() {
 
 function updateWrCache(data) {
     var map = cache[data.season][data.mode][data.map];
-    if (!map) map = {};
+    if (!map) map = cache[data.season][data.mode][data.map] = {};
     map.user = data.user;
     map.time = data.time;
     map.link = data.link;
