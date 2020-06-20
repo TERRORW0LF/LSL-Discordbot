@@ -67,30 +67,34 @@ async function roleUpdate(guild, season) {
         }
         var newStan = true, newGrav = true;
         for (var property in users) {
-            const user = await getUser(guild, String(property));
-            if (!user.user) continue;
-            if (users[property].stan) {
-                if (!user.roles.find(r => r.name === `Rank 1 Standard - S${season}`)) user.addRole(roleStanFirst);
-                else newStan = false;
-            } else if(newStan && user.roles.find(r => r.name === `Rank 1 Standard - S${season}`)) user.removeRole(roleStanFirst);
-            if (users[property].grav) {
-                if (!user.roles.find(r => r.name === `Rank 1 Gravspeed - S${season}`)) user.addRole(roleGravFirst);
-                else newGrav = false;
-            } else if(newGrav && user.roles.find(r => r.name === `Rank 1 Gravspeed - S${season}`)) user.removeRole(roleGravFirst);
-            const roleStr = await getNewRole(users[property].points, season);
-            if (!roleStr) {
-                const userRole = await getCurRole(roles, user);
-                if (userRole.size) {
-                    await user.removeRole(userRole.find(r => {return true;}));
+            try {
+                const user = await getUser(guild, String(property));
+                if (!user.user) continue;
+                if (users[property].stan) {
+                    if (!user.roles.find(r => r.name === `Rank 1 Standard - S${season}`)) user.addRole(roleStanFirst);
+                    else newStan = false;
+                } else if(newStan && user.roles.find(r => r.name === `Rank 1 Standard - S${season}`)) user.removeRole(roleStanFirst);
+                if (users[property].grav) {
+                    if (!user.roles.find(r => r.name === `Rank 1 Gravspeed - S${season}`)) user.addRole(roleGravFirst);
+                    else newGrav = false;
+                } else if(newGrav && user.roles.find(r => r.name === `Rank 1 Gravspeed - S${season}`)) user.removeRole(roleGravFirst);
+                const roleStr = await getNewRole(users[property].points, season);
+                if (!roleStr) {
+                    const userRole = await getCurRole(roles, user);
+                    if (userRole.size) {
+                        await user.removeRole(userRole.find(r => {return true;}));
+                    }
+                    continue;
                 }
-                continue;
-            }
 
-            if (user.roles.find(r => r.name === roleStr)) continue;
-            const userRole = await getCurRole(roles, user);
-            if (userRole.size) await user.removeRole(userRole.find(r => {return true;}));
-            var newRole = await roles.find(r => r.name === roleStr);
-            await user.addRole(newRole);
+                if (user.roles.find(r => r.name === roleStr)) continue;
+                const userRole = await getCurRole(roles, user);
+                if (userRole.size) await user.removeRole(userRole.find(r => {return true;}));
+                var newRole = await roles.find(r => r.name === roleStr);
+                await user.addRole(newRole);
+            } catch (err) {
+                console.log(`Role update failed for user: ${property}`);
+            }
         }
         console.log('\nRoleUpdate done\n');
     } catch (err) {
