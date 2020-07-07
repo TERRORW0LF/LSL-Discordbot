@@ -10,11 +10,11 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.2",
-    "discord.js": "11.5.1",
+    "discord.js": "^12.2.0",
     "express": "^4.17.1",
     "dotenv": "^8.2.0",
     "string-similarity": "^4.0.1",
-    "googleapis": "^47.0.0",
-    "google-auth-library": "5.10.0"
+    "googleapis": "^52.1.0",
+    "google-auth-library": "^6.0.3"
   }
 }

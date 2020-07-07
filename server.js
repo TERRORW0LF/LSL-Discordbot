@@ -4,15 +4,18 @@ const axios = require('axios');
 const path = require('path'); 
 const express = require('express');
 const app = express();
-const Discord = require('discord.js');
-const client = new Discord.Client();
 
 const { setGoogleAuth } = require('./google-auth');
+const { setDiscordClient, getDiscordClient } = require('./Discord-auth');
 const newSubmit = require('./Util/newSubmit');
 const newDelete = require('./Util/newDelete');
 const { setPbCache } = require('./Util/pbCache');
 const { setWrCache } = require('./Util/wrCache');
 const handleMessage = require('./HandleCommands/messages');
+
+const client = getDiscordClient();
+
+console.log(client);
 
 client.on('ready', () => {
     console.log('Discord bot up and running!');
@@ -35,7 +38,7 @@ const P = process.env.PORT ||  3000;
 
         if (!process.env.PORT) require('dotenv').config();
         await Promise.all([
-            client.login(process.env.discordTOKEN),
+            setDiscordClient(),
             setGoogleAuth(),
             setWrCache(),
             setPbCache()
@@ -46,6 +49,7 @@ const P = process.env.PORT ||  3000;
             ::WR cached::
             ::PB cached::
         `);
+        console.log(client);
         client.on('message', handleMessage);
         app.post('/submit', newSubmit(client));
         app.post('/delete', newDelete(client));
