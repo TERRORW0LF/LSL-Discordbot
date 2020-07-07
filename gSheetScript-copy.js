@@ -15,7 +15,7 @@ function formSubmit(e) {
     };
   const postdata = {
     "method": "post",
-    "contentType": "application/json"
+    "contentType": "application/json",
     "payload": JSON.Stringify(msg),
     "muteHttpExceptions": true
   };
