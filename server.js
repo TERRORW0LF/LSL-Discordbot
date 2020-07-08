@@ -1,24 +1,26 @@
 'use strict';
 
 const axios = require('axios');
-const path = require('path'); 
+const path = require('path');
 const express = require('express');
 const app = express();
 
 const { setGoogleAuth } = require('./google-auth');
-const { setDiscordClient, getDiscordClient } = require('./Discord-auth');
+const { setDiscordClient, getDiscordClient } = require('./discord-auth');
 const newSubmit = require('./Util/newSubmit');
 const newDelete = require('./Util/newDelete');
 const { setPbCache } = require('./Util/pbCache');
 const { setWrCache } = require('./Util/wrCache');
 const handleMessage = require('./HandleCommands/messages');
 
-const client = getDiscordClient();
+let client;
+getDiscordClient().then((value) => {
+    client = value;
+    console.log(client);
 
-console.log(client);
-
-client.on('ready', () => {
-    console.log('Discord bot up and running!');
+    client.on('ready', () => {
+        console.log('Discord bot up and running!');
+    });
 });
 
 process.on('unhandledRejection', err => {
