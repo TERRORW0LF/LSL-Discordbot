@@ -14,8 +14,6 @@ async function getDiscordClient() {
 
 async function setDiscordClient() {
     client = new Discord.Client();
-    await client.login('Njc5NzU0NTUwMTgxMjMyNjQy.XlWNTQ.K1mBPKfr85HocuXdOgHgDZbbWNM');
+    await client.login(process.env.discordTOKEN);
     return client;
 }
-
-//process.env.discordTOKEN
