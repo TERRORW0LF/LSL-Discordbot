@@ -1,0 +1,64 @@
+{
+    "commandList": [
+        {
+            "group": "basic",
+            "regex": "(.*)( )*help",
+            "help": "help / <command-group> help",
+            "path": ""
+        },
+        {
+            "group": "lookup",
+            "regex": "(wr|world-record|world record) (.+) (.+)( .+)+",
+            "help": "wr <season> <mode> <map>",
+            "path": ""
+        },
+        {
+            "group": "lookup",
+            "regex": "(pb|personal-best|personal best) (.+) (.+)( .+)+",
+            "help": "pb <season> <mode> <map>",
+            "path": ""
+        },
+        {
+            "group": "lookup",
+            "regex": "(rank|standing|position) (.+)$",
+            "help": "rank <season>",
+            "path": ""
+        },
+        {
+            "group": "lookup",
+            "regex": "(rank|standing|position) (.+) (.+)$",
+            "help": "rank <season> <mode>",
+            "path": ""
+        },
+        {
+            "group": "lookup",
+            "regex": "(rank|standing|position) (.+) (.+) ( .+)+",
+            "help": "rank <season> <mode> <map>",
+            "path": ""
+        },
+        {
+            "group": "lookup",
+            "regex": "(incomplete|complete) (.+) (.+)$",
+            "help": "incomplete <season> <mode>",
+            "path": ""
+        },
+        {
+            "group": "submit",
+            "regex": "(submit|sub) (.+) (.+) ( .+)+",
+            "help": "submit <season> <mode> <map>",
+            "path": ""
+        },
+        {
+            "group": "submit",
+            "regex": "(delete|del) (.+) (.+)$",
+            "help": "delete <season> <link>",
+            "path": ""
+        },
+        {
+            "group": "submit",
+            "regex": "(delete|del) (.+) (.+) ( .+)+",
+            "help": "delete <season> <mode> <map>",
+            "path": ""
+        }
+    ]
+}
