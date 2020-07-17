@@ -4,8 +4,9 @@ const axios = require('axios');
 const path = require('path');
 const express = require('express');
 const app = express();
-const Discord = require('discord.js')
+const Discord = require('discord.js');
 
+const commands = require('./commands.json');
 const { setGoogleAuth } = require('./google-auth');
 const newSubmit = require('./Util/newSubmit');
 const newDelete = require('./Util/newDelete');
@@ -35,7 +36,16 @@ client.on('ready', () => {
     // Discord events
     client.on('message', msg => {
         if (msg.content.startsWith(prefix) && !msg.author.bot) {
-            
+            let answered = false;
+            for (let command of commands.commandList) {
+                let pattern = new RegExp(command.regex);
+                if (pattern.test(msg.content.toLowerCase().trim())) {
+                    // Implement permission handling (channel / role)
+                    require(`./${command.path}`).run();
+                    answered = true;
+                }
+            }
+            if (!answered) msg.channel.send("❌ No such command found or missing permission.")
         }
     });
 
