@@ -4,61 +4,61 @@
             "group": "basic",
             "regex": "(.*)( )*help",
             "help": "help / <command-group> help",
-            "path": ""
+            "path": "Commands/Basic/help.js"
         },
         {
             "group": "lookup",
             "regex": "(wr|world-record|world record) (.+) (.+)( .+)+",
             "help": "wr <season> <mode> <map>",
-            "path": ""
+            "path": "Commands/Lookup/worldRecord.js"
         },
         {
             "group": "lookup",
             "regex": "(pb|personal-best|personal best) (.+) (.+)( .+)+",
             "help": "pb <season> <mode> <map>",
-            "path": ""
+            "path": "Commands/Lookup/personalBest.js"
         },
         {
             "group": "lookup",
             "regex": "(rank|standing|position) (.+)$",
             "help": "rank <season>",
-            "path": ""
+            "path": "Commands/Lookup/rankSeason.js"
         },
         {
             "group": "lookup",
             "regex": "(rank|standing|position) (.+) (.+)$",
             "help": "rank <season> <mode>",
-            "path": ""
+            "path": "Commands/Lookup/rankMode.js"
         },
         {
             "group": "lookup",
             "regex": "(rank|standing|position) (.+) (.+) ( .+)+",
             "help": "rank <season> <mode> <map>",
-            "path": ""
+            "path": "Commands/Lookup/rankMap.js"
         },
         {
             "group": "lookup",
             "regex": "(incomplete|complete) (.+) (.+)$",
             "help": "incomplete <season> <mode>",
-            "path": ""
+            "path": "Commands/Lookup/incomplete.js"
         },
         {
             "group": "submit",
             "regex": "(submit|sub) (.+) (.+) ( .+)+",
             "help": "submit <season> <mode> <map>",
-            "path": ""
+            "path": "Comamnds/Submit/submit.js"
         },
         {
             "group": "submit",
             "regex": "(delete|del) (.+) (.+)$",
             "help": "delete <season> <link>",
-            "path": ""
+            "path": "Commands/Submit/deleteLink.js"
         },
         {
             "group": "submit",
             "regex": "(delete|del) (.+) (.+) ( .+)+",
             "help": "delete <season> <mode> <map>",
-            "path": ""
+            "path": "Commands/Submit/deleteMap.js"
         }
     ]
 }
