@@ -2,11 +2,10 @@ module.exports = run;
 
 function run(msg, client, regexGroups) {
     const commands = require('../../commands.json'),
-          commandGroup = regexGroups[1];
-          console.log(commandGroup);
+          commandGroup = regexGroups[1].trim();
     let answer = 'Command list:```';
     for (let command of commands.commandList) {
-        if (commandGroup && commandGroup.trim() !== command.group) continue; // if a group is given skip commands from other groups
+        if (commandGroup && commandGroup !== command.group) continue; // if a group is given skip commands from other groups
         const group = `[${command.group}] `,
               name = `${command.name}`,
               help = command.help;
