@@ -12,7 +12,6 @@ const newSubmit = require('./Util/newSubmit');
 const newDelete = require('./Util/newDelete');
 const { setPbCache } = require('./Util/pbCache');
 const { setWrCache } = require('./Util/wrCache');
-const handleMessage = require('./HandleCommands/messages');
 
 const prefix = '!';
 
@@ -38,14 +37,14 @@ client.on('ready', () => {
         if (msg.content.startsWith(prefix) && !msg.author.bot) {
             let answered = false;
             for (let command of commands.commandList) {
-                let pattern = new RegExp(command.regex);
-                if (pattern.test(msg.content.toLowerCase().trim())) {
+                let pattern = new RegExp(command.regex, "i");
+                if (pattern.test(msg.content.trim())) {
                     // Implement permission handling (channel / role)
-                    require(`./${command.path}`).run();
+                    require(`./${command.path}`).run(msg, client, pattern.exec(msg.content.trim()));
                     answered = true;
                 }
             }
-            if (!answered) msg.channel.send("❌ No such command found or missing permission.")
+            if (!answered) msg.channel.send("❌ No matching command found.")
         }
     });
 
