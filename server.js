@@ -35,14 +35,14 @@ client.on('ready', () => {
 
     // Discord events
     client.on('message', msg => {
-        if (msg.content.startsWith(prefix) && !msg.author.bot) {
+        if (msg.content.startsWith(prefix) && !msg.author.bot && msg.guild.id === '678275066064142347') {
             let answered = false;
             for (let command of commands.commandList) {
                 let pattern = new RegExp(command.regex, "i");
-                if (pattern.test(msg.content.trim())) {
+                if (pattern.test(msg.content.replace(prefix, '').trim())) {
                     // Implement permission handling (channel / role)
                     const run = require(`./${command.path}`);
-                    run(msg, client, pattern.exec(msg.content.trim()));
+                    run(msg, client, pattern.exec(msg.content.replace(prefix, '').trim()));
                     answered = true;
                 }
             }

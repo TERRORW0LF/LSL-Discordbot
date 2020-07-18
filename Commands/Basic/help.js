@@ -6,7 +6,7 @@ function run(msg, client, regexGroups) {
           console.log(commandGroup);
     let answer = 'Command list:```';
     for (let command of commands.commandList) {
-        if (commandGroup && commandGroup !== command.group) continue; // if a group is given skip commands from other groups
+        if (commandGroup && commandGroup.trim() !== command.group) continue; // if a group is given skip commands from other groups
         const group = `[${command.group}] `,
               name = `${command.name}`,
               help = command.help;
