@@ -13,6 +13,7 @@ const newDelete = require('./Util/newDelete');
 const { setPbCache } = require('./Util/pbCache');
 const { setWrCache } = require('./Util/wrCache');
 
+if (!process.env.PORT) require('dotenv').config();
 const prefix = '!';
 
 // Process unhandled errors
@@ -40,7 +41,8 @@ client.on('ready', () => {
                 let pattern = new RegExp(command.regex, "i");
                 if (pattern.test(msg.content.trim())) {
                     // Implement permission handling (channel / role)
-                    require(`./${command.path}`).run(msg, client, pattern.exec(msg.content.trim()));
+                    const run = require(`./${command.path}`);
+                    run(msg, client, pattern.exec(msg.content.trim()));
                     answered = true;
                 }
             }
@@ -61,11 +63,10 @@ const P = process.env.PORT ||  3000;
     try {
         // Start Webhooks listener.
         app.use(express.json());
-        if (!process.env.PORT) require('dotenv').config();
         await Promise.all([
-            setGoogleAuth(),
-            setWrCache(),
-            setPbCache()
+            //setGoogleAuth(),
+            //setWrCache(),
+            //setPbCache()
         ]);
         console.log(`
             ::gAuth set::
