@@ -10,8 +10,6 @@ const commands = require('./commands.json');
 const { setGoogleAuth } = require('./google-auth');
 const newSubmit = require('./Util/newSubmit');
 const newDelete = require('./Util/newDelete');
-const { setPbCache } = require('./Util/pbCache');
-const { setWrCache } = require('./Util/wrCache');
 
 if (!process.env.PORT) require('dotenv').config();
 const prefix = '!';
@@ -63,16 +61,8 @@ const P = process.env.PORT ||  3000;
     try {
         // Start Webhooks listener.
         app.use(express.json());
-        await Promise.all([
-            //setGoogleAuth(),
-            //setWrCache(),
-            //setPbCache()
-        ]);
-        console.log(`
-            ::gAuth set::
-            ::WR cached::
-            ::PB cached::
-        `);
+        await setGoogleAuth();
+        console.log(`Google JWT created.`);
 
         app.listen(P, () => console.log('app running on PORT: ', P));
 

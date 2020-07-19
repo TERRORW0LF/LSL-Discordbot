@@ -1,10 +1,11 @@
-const getGoogleAuth = require('../google-auth');
+const { getGoogleAuth } = require('../google-auth');
 const { google } = require('googleapis');
 
 module.exports = { clearMsg, getAllSubmits };
 
 async function clearMsg(botMsg, msg) {
     for (let reaction in msg.reactions.cache) {
+        console.log('hey');
         if (reaction.me) reaction.remove();
     }
     for (let reaction in botMsg.reactions.cache) {

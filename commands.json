@@ -45,7 +45,7 @@
         {
             "group": "lookup",
             "name": "incomplete",
-            "regex": "incomplete|complete (.+) (.+)$",
+            "regex": "(incomplete|complete) (.+) (.+)$",
             "help": "incomplete <season> <mode>",
             "path": "Commands/Lookup/incomplete.js"
         },

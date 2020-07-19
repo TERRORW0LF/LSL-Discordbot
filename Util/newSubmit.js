@@ -1,8 +1,6 @@
 const sendSubmit = require('./sendSubmit');
 const sendWr = require('./sendWR');
 const roleUpdate = require('./roleUpdate');
-const { getWrCache, updateWrCache }  = require('./wrCache');
-const { getPbCache, updatePbCache } = require('./pbCache');
 
 module.exports = newSubmit;
 

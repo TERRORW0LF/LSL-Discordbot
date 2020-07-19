@@ -1,6 +1,4 @@
 const roleUpdate = require('./roleUpdate');
-const { setWrCache } = require('./wrCache');
-const { setPbCache } = require('./pbCache');
 
 module.exports = newDelete2;
 

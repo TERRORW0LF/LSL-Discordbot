@@ -11,17 +11,18 @@ let mapOptions = ['Hanamura','Horizon Lunar Colony','Paris','Temple of Anubis','
 
 async function run(msg, client, regexGroups) {
     await msg.react('💬');
-    const botMsg = await mesg.channel.send('💬 Searching map data, please hold on.');
+    const botMsg = await msg.channel.send('💬 Searching map data, please hold on.');
 
     try {
-        const season = getSeasonOptions(regexGroups[1]),
-              mode = getModeOptions(regexGroups[2]);
+        const season = getSeasonOptions(regexGroups[2]),
+              mode = getModeOptions(regexGroups[3]);
         if (!season || !mode) {
             clearMsg(botMsg, msg);
+            msg.react('❌');
             botMsg.edit('❌ Incorrect season or mode.');
             return;
         }
-        const sheet = process.env[`gSheetIdS${season.replace('season', '')}`],
+        const sheet = process.env[`gSheetS${season.replace('season', '')}`],
               submits = (await getAllSubmits(sheet, 'Record Log!A2:F')).filter(submit => submit.name === msg.author.tag);
         // BUILD DATABASE BEFORE CONTINUING!
         const complete = mapOptions.filter(map => submits.some(submit => submit.stage === map)),
@@ -34,9 +35,9 @@ async function run(msg, client, regexGroups) {
         else botMsg.edit(`**Completed:**\n${complete.join(', ')}\n\n**Pending:**\n${incomplete.join(', ')}`);
     } catch (err) {
         clearMsg(botMsg, msg);
-        message.react('❌');
+        msg.react('❌');
         botMsg.edit('❌ An error occurred while handling your command. Informing staff.');
-        console.log('An error occured in handleIncomplete: '+err.message);
+        console.log('An error occured in incomplete: '+err.message);
         console.log(err.stack);
     }
 }
