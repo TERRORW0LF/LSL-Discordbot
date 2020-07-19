@@ -4,12 +4,12 @@ const { google } = require('googleapis');
 module.exports = { clearMsg, getAllSubmits };
 
 async function clearMsg(botMsg, msg) {
-    for (let reaction in msg.reactions.cache) {
-        console.log('hey');
-        if (reaction.me) reaction.remove();
+    console.log(msg.reactions.cache);
+    for (let [key, value] of msg.reactions.cache) {
+        if (value.me) value.remove();
     }
-    for (let reaction in botMsg.reactions.cache) {
-        if (reaction.me) reaction.remove();
+    for (let [key, value] of botMsg.reactions.cache) {
+        if (value.me) value.remove();
     }
 }
 
