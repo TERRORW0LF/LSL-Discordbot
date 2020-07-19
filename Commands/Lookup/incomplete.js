@@ -19,7 +19,18 @@ async function run(msg, client, regexGroups) {
     const botMsg = await mesg.channel.send('💬 Searching map data, please hold on.');
 
     try {
-        
+        const season = regexGroups[1],
+              mode = regexGroup[2];
+        season = getSeasonOptions(season);
+        mode = getModeOptions(mode);
+        // Make a "clearReactions" function (accessible from everywhere)
+        if (!season || !mode) {
+            botMsg.edit('❌ Incorrect season or mode.');
+            return;
+        }
+        // Build draft of database pbs.
+        // BUILD DATABASE BEFORE CONTINUING!
+        // send maps. Use code field, picture modified with canvas, or stylized normal message.
         isIncompleting = false;
     } catch (err) {
         (await message.reactions).forEach(async(key, value, map) => {
