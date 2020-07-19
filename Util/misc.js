@@ -1,7 +1,7 @@
 const getGoogleAuth = require('../google-auth');
 const { google } = require('googleapis');
 
-module.exports = clearMsg, getAllSubmits;
+module.exports = { clearMsg, getAllSubmits };
 
 async function clearMsg(botMsg, msg) {
     for (let reaction in msg.reactions.cache) {
@@ -22,7 +22,7 @@ async function getAllSubmits(sheet, sheetrange) {
         majorDimension: 'ROWS'
     })).data;
     let output = [];
-    for (row of response) {
+    for (let row of response) {
         output.push({
             date: row[0],
             name: row[1],

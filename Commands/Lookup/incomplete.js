@@ -1,7 +1,6 @@
-const { getPbCache } = require('../../Util/pbCache');
 const getSeasonOptions = require('../../Options/seasonOptions');
 const getModeOptions = require('../../Options/modeOptions');
-const clearMsg = require('../../Util/misc');
+const { clearMsg, getAllSubmits } = require('../../Util/misc');
 
 module.exports = run;
 
@@ -22,16 +21,22 @@ async function run(msg, client, regexGroups) {
             botMsg.edit('❌ Incorrect season or mode.');
             return;
         }
-        // Make only one structure containing all submitted runs. Filter structure from there.
+        const sheet = process.env[`gSheetIdS${season.replace('season', '')}`],
+              submits = (await getAllSubmits(sheet, 'Record Log!A2:F')).filter(submit => submit.name === msg.author.tag);
         // BUILD DATABASE BEFORE CONTINUING!
+        const complete = mapOptions.filter(map => submits.some(submit => submit.stage === map)),
+              incomplete = mapOptions.filter(map => !complete.some(map2 => map === map2));
         // send maps. Use code field, picture modified with canvas, or stylized normal message.
-        isIncompleting = false;
+        clearMsg(botMsg, msg);
+        msg.react('✅');
+        if (!complete) botMsg.edit('You have not completed any maps.');
+        else if (!incomplete) botMsg.edit('You have completed every map.');
+        else botMsg.edit(`**Completed:**\n${complete.join(', ')}\n\n**Pending:**\n${incomplete.join(', ')}`);
     } catch (err) {
         clearMsg(botMsg, msg);
         message.react('❌');
         botMsg.edit('❌ An error occurred while handling your command. Informing staff.');
         console.log('An error occured in handleIncomplete: '+err.message);
         console.log(err.stack);
-        isIncompleting = false;
     }
 }
