@@ -6,11 +6,15 @@ const { getEmojiFromNum, getNumFromEmoji, reactionFilter } = require('./reaction
 module.exports = { clearMsg, getAllSubmits, getUserReaction };
 
 async function clearMsg(botMsg, msg) {
-    for (let [key, value] of msg.reactions.cache) {
-        if (value.me) value.remove();
+    if (msg) {
+        for (let [key, value] of msg.reactions.cache) {
+            if (value.me) value.remove();
+        }
     }
-    for (let [key, value] of botMsg.reactions.cache) {
-        if (value.me) value.remove();
+    if (botMsg) {
+        for (let [key, value] of botMsg.reactions.cache) {
+            if (value.me) value.remove();
+        }
     }
 }
 
@@ -44,24 +48,14 @@ async function getUserReaction(msg, botMsg, opts) {
         reactOpts.push(emoji);
         botMsg.react(emoji);
     }
-    for (let [key, value] of msg.reactions.cache) {
-        if (!value.me) return;
-        value.remove();
-    };
+    clearMsg(undefined, msg);
     msg.react('❔');
     botMsg.edit('❔ React to select the corresponding map!' + opts.map((o, i) => '```'+reactOpts[i]+' '+o+'```').join(''));
     const userChoice = await botMsg.awaitReactions(reactionFilter(reactOpts, msg.author.id), {max: 1, time: 15000});
     if (!userChoice || !userChoice.first()) return;
     const opt = getNumFromEmoji(userChoice.first().emoji.name);
     const map = opts[opt - 1];
-    for (let [key, value] of msg.reactions.cache) {
-        if (!value.me) return;
-        value.remove();
-    };
-    for (let [key, value] of botMsg.reactions.cache) {
-        if (!value.me) return;
-        value.remove();
-    };
+    clearMsg(botMsg, msg);
 
     return map;
 }
