@@ -6,8 +6,8 @@ const { getAllSubmits, getUserReaction, clearMsg } = require('../../Util/misc');
 module.exports = run;
 
 async function run(msg, client, regexGroups) {
-    await message.react('💬');
-    const botMsg = await message.channel.send('💬 Searching World Record, please hold on.');
+    await msg.react('💬');
+    const botMsg = await msg.channel.send('💬 Searching World Record, please hold on.');
     try {
         const season = getSeasonOptions(regexGroups[2]),
               mode = getModeOptions(regexGroups[3]),
@@ -25,7 +25,7 @@ async function run(msg, client, regexGroups) {
             botMsg.edit('⌛ No map selected.');
             return;
         }
-        const wr = (await getAllSubmits(process.env[`gSheetS${season.replace('season', '')}`])).filter(run => run.category === mode && run.stage === map).sort((a, b) => a -b)[0];
+        const wr = (await getAllSubmits(process.env[`gSheetS${season.replace('season', '')}`], 'Record Log!A2:F')).filter(run => run.category === mode && run.stage === map).sort((a, b) => a -b)[0];
         if (!wr) {
             clearMsg(botMsg, msg);
             msg.react('❌');
@@ -34,7 +34,7 @@ async function run(msg, client, regexGroups) {
         }
         clearMsg(botMsg, msg);
         msg.react('✅');
-        botMsg.edit(`✅ **World Record found!**\n**User:** ${wr.name}\n**Time:** ${wr.time}\n**Submitted:** ${wr.date}\n${wr.proof}`);
+        botMsg.edit(`✅ **World Record found!**\n**User:** ${wr.name.split('#')[0]}\n**Time:** ${wr.time}\n**Submitted:** ${wr.date}\n${wr.proof}`);
     } catch (err) {
         clearMsg(botMsg, msg);
         msg.react('❌');
