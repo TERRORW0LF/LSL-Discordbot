@@ -1,185 +1,47 @@
 const getSeasonOptions = require('../../Options/seasonOptions');
 const getModeOptions = require('../../Options/modeOptions');
 const getMapOptions = require('../../Options/mapOptions');
-const { getUserReaction } = require('../../Util/misc');
+const { clearMsg, getAllSubmits, getUserReaction } = require('../../Util/misc');
 
 module.exports = run;
 
 async function run(msg, client, regexGroups) {
     await msg.react('💬');
-    const botMsg = message.channel.send('💬 Searching personal Best, please hold on.');
+    const botMsg = await msg.channel.send('💬 Searching personal Best, please hold on.');
     try {
-        const userStr = message.author.username;
-        if (messageVals.length !== 3) {
-            (await message.reactions).forEach(async(key, value, map) => {
-                if (!key.me) return;
-                await key.remove();
-            });
-            message.react('❌');
-            (await botMsg).edit('❌ To many or not enough parameters! Type \'!help pb\' for an overview of the required parameters.');
+        const season = getSeasonOptions(regexGroups[2]);
+        const mode = getModeOptions(regexGroups[3]);
+        const opts = await getMapOptions(regexGroups[4]);
+        if (!season || !mode || !opts.length) {
+            clearMsg(botMsg, msg);
+            msg.react('❌');
+            botMsg.edit('❌ Incorrect season, mode or map');
             return;
         }
-        const season = getSeasonOptions(messageVals[0]);
-        if (!season) {
-            (await message.reactions).forEach(async(key, value, map) => {
-                if (!key.me) return;
-                await key.remove();
-            });
-            message.react('❌');
-            botMsg.edit('❌ No season found for \'' + messageVals[0] + '\'.');
+        const map = opts.length === 1 ? opts[0] : await getUserReaction(msg, botMsg, opts);
+        if (!map) {
+            clearMsg(botMsg, msg);
+            msg.react('⌛');
+            botMsg.edit('⌛ No map selected.');
             return;
         }
-        const mode = getModeOptions(messageVals[1]);
-        if (!mode) {
-            (await message.reactions).forEach(async(key, value, map) => {
-                if (!key.me) return;
-                await key.remove();
-            });
-            message.react('❌');
-            botMsg.edit('❌ No mode found for \'' + messageVals[1] + '\'.');
+        const user = msg.author.tag,
+              runs = (await getAllSubmits(process.env[`gSheetS${season.replace('season', '')}`], 'Record Log!A2:F')).filter(run => run.category === mode && run.stage === map).sort((runA, runB) => runA.time - runB.time),
+              pb = runs.filter(run => run.name === user)[0]
+        if (!pb) {
+            clearMsg(botMsg, msg);
+            msg.react('❌');
+            botMsg.edit('❌ No personal best found.');
             return;
         }
-        const user = message.author.tag;
-        var map;
-        const opts = await getMapOptions(messageVals[2]);
-        if (!opts.length) {
-            (await message.reactions).forEach(async(key, value, map) => {
-                if (!key.me) return;
-                await key.remove();
-            });
-            message.react('❌');
-            (await botMsg.reactions).forEach(async(key, value, map) => {
-                if (!key.me) return;
-                await key.remove();
-            });            
-            botMsg.edit('❌ No map found for \'' + messageVals[2] + '\'.');
-            return;
-        } else {
-            if (opts.length === 1) {
-                map = opts[0];
-            } else {
-                map = await getUserReaction(message, botMsg, opts);
-                if (!map) {
-                    (await message.reactions).forEach(async(key, value, map) => {
-                        if (!key.me) return;
-                        await key.remove();
-                    });
-                    message.react('⌛');
-                    (await botMsg.reactions).forEach(async(key, value, map) => {
-                        if (!key.me) return;
-                        await key.remove();
-                    });
-                    botMsg.edit('⌛ Timeout while selecting map! No Personal Best requested.');
-                    return;
-                }
-            }
-        }
-        const cache = await getPbCache();
-        if (!cache[season][mode][map]) {
-            (await message.reactions).forEach(async(key, value, map) => {
-                if (!key.me) return;
-                await key.remove();
-            });
-            message.react('❌');
-            (await botMsg.reactions).forEach(async(key, value, map) => {
-                if (!key.me) return;
-                await key.remove();
-            });
-            botMsg.edit('❌ No Personal Best found for \''+season+' '+mode+' '+map+'\'. Go and set a time!');
-            return;
-        }
-        if (!cache[season][mode][map][user]) {
-            (await message.reactions).forEach(async(key, value, map) => {
-                if (!key.me) return;
-                await key.remove();
-            });
-            message.react('❌');
-            (await botMsg.reactions).forEach(async(key, value, map) => {
-                if (!key.me) return;
-                await key.remove();
-            });
-            botMsg.edit('❌ No Personal Best found for \''+season+' '+mode+' '+map+'\'. Go and set a time!');
-            isPbing = false;
-            return;
-        }
-        const pb = cache[season][mode][map][user];
-        (await message.reactions).forEach(async(key, value, map) => {
-            if (!key.me) return;
-            await key.remove();
-        });
-        message.react('✅');
-        (await botMsg.reactions).forEach(async(key, value, map) => {
-            if (!key.me) return;
-            await key.remove();
-        });
-        botMsg.edit('✅ Personal Best found!');
-
-        message.channel.send('', {
-            embed: {
-                title: `Personal Best for ${userStr}`,
-                url: `${pb.link}`,
-                color: 3010349,
-                author: {
-                    name: 'LSL-discordbot',
-                    icon_url: 'https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/BotIco.jpg',
-                    url: 'https://github.com/TERRORW0LF/LSL-Discordbot',
-                },
-                thumbnail: {
-                    url: `https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/${map.split(' ').join('%20')}.jpg`,
-                },
-                fields: [{
-                    name: 'Season',
-                    value: `${season.replace('season', 'season ')}`,
-                    inline: true,
-                },
-                {
-                    name: 'Mode',
-                    value: `${mode}`,
-                    inline: true,
-                },
-                {
-                    name: 'Map',
-                    value: `${map}`,
-                    inline: true,
-                },
-                {
-                    name: 'User',
-                    value: `${userStr}`,
-                    inline: true,
-                },
-                {
-                    name: 'Time',
-                    value: `${pb.time}`,
-                    inline: true,
-                },
-                {
-                    name: 'Date',
-                    value: `${pb.date}`,
-                    inline: true,
-                },],
-                timestamp: new Date(),
-                footer: {
-                    icon_url: 'https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/BotIco.jpg',
-                    text: 'PB requested',
-                },
-            },
-        });
-        message.channel.send(`${pb.link}`);
-        isPbing = false;
-
+        const rank = runs.indexOf(pb);
+        msg.react('✅');
+        botMsg.edit(`✅ **Personal Best found!**\n**Time:** ${pb.time}\n**Rank:** ${rank}\n**Submitted:** ${pb.date}\n${pb.proof}`);
     } catch (err) {
-        (await message.reactions).forEach(async(key, value, map) => {
-            if (!key.me) return;
-            await key.remove();
-        });
-        message.react('❌');
-        (await botMsg.reactions).forEach(async(key, value, map) => {
-            if (!key.me) return;
-            await key.remove();
-        });
-        botMsg.edit('❌ An error occurred while handling your command. Informing staff.');
-        console.log('Error in handlePb: ' + err.message);
+        clearMsg(botMsg, msg);
+        msg.react('❌');
+        botMsg.edit('❌ An error occurred while handling your command.');
+        console.log('Error in pb: ' + err.message);
         console.log(err.stack);
-        isPbing = false;
     }
 }
