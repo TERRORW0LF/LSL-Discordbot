@@ -1,8 +1,7 @@
 const getSeasonOptions = require('../../Options/seasonOptions');
 const getModeOptions = require('../../Options/modeOptions');
 const getMapOptions = require('../../Options/mapOptions');
-const getUserReaction = require('../../Util/UserReaction');
-const { getPbCache } = require('../../Util/pbCache');
+const { getUserReaction } = require('../../Util/misc');
 
 module.exports = handlePb;
 

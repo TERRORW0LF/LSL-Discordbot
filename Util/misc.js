@@ -1,7 +1,9 @@
 const { getGoogleAuth } = require('../google-auth');
 const { google } = require('googleapis');
 
-module.exports = { clearMsg, getAllSubmits };
+const { getEmojiFromNum, getNumFromEmoji, reactionFilter } = require('./reactionEmj');
+
+module.exports = { clearMsg, getAllSubmits, getUserReaction };
 
 async function clearMsg(botMsg, msg) {
     for (let [key, value] of msg.reactions.cache) {
@@ -33,4 +35,33 @@ async function getAllSubmits(sheet, sheetrange) {
         });
     }
     return output;
+}
+
+async function getUserReaction(msg, botMsg, opts) {
+    const reactOpts = [];
+    for (i = 1; i <= opts.length; i++) {
+        const emoji = getEmojiFromNum(i);
+        reactOpts.push(emoji);
+        botMsg.react(emoji);
+    }
+    for (let [key, value] of msg.reactions.cache) {
+        if (!value.me) return;
+        value.remove();
+    };
+    msg.react('❔');
+    botMsg.edit('❔ React to select the corresponding map!' + opts.map((o, i) => '```'+reactOpts[i]+' '+o+'```').join(''));
+    const userChoice = await botMsg.awaitReactions(reactionFilter(reactOpts, msg.author.id), {max: 1, time: 15000});
+    if (!userChoice || !userChoice.first()) return;
+    const opt = getNumFromEmoji(userChoice.first().emoji.name);
+    const map = opts[opt - 1];
+    for (let [key, value] of msg.reactions.cache) {
+        if (!value.me) return;
+        value.remove();
+    };
+    for (let [key, value] of botMsg.reactions.cache) {
+        if (!value.me) return;
+        value.remove();
+    };
+
+    return map;
 }
