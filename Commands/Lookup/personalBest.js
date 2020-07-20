@@ -11,7 +11,7 @@ async function run(msg, client, regexGroups) {
     try {
         const season = getSeasonOptions(regexGroups[2]);
         const mode = getModeOptions(regexGroups[3]);
-        const opts = await getMapOptions(regexGroups[4]);
+        const opts = getMapOptions(regexGroups[4]);
         if (!season || !mode || !opts.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
@@ -34,7 +34,7 @@ async function run(msg, client, regexGroups) {
             botMsg.edit('❌ No personal best found.');
             return;
         }
-        const rank = runs.indexOf(pb);
+        const rank = runs.indexOf(pb)+1;
         msg.react('✅');
         botMsg.edit(`✅ **Personal Best found!**\n**Time:** ${pb.time}\n**Rank:** ${rank}\n**Submitted:** ${pb.date}\n${pb.proof}`);
     } catch (err) {
