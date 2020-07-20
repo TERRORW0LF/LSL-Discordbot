@@ -3,70 +3,70 @@
         {
             "group": "basic",
             "name": "help",
-            "regex": "(.*)\\s?help|commands",
+            "regex": "(.*)\\s?(help|commands)$",
             "help": "help / <command-group> help",
             "path": "Commands/Basic/help.js"
         },
         {
             "group": "lookup",
             "name": "world record",
-            "regex": "wr|world-record|world record (.+) (.+)( .+)+",
+            "regex": "(wr|world-record|world record) (\\d+) (\\S+) (.+)",
             "help": "wr <season> <mode> <map>",
             "path": "Commands/Lookup/worldRecord.js"
         },
         {
             "group": "lookup",
             "name": "personal best",
-            "regex": "pb|personal-best|personal best (.+) (.+)( .+)+",
+            "regex": "(pb|personal-best|personal best) (\\d+) (\\S+) (.+)",
             "help": "pb <season> <mode> <map>",
             "path": "Commands/Lookup/personalBest.js"
         },
         {
             "group": "lookup",
             "name": "rank season",
-            "regex": "rank|standing|position (.+)$",
+            "regex": "(rank|standing|position) (\\S+)$",
             "help": "rank <season>",
             "path": "Commands/Lookup/rankSeason.js"
         },
         {
             "group": "lookup",
             "name": "rank mode",
-            "regex": "rank|standing|position (.+) (.+)$",
+            "regex": "(rank|standing|position) (\\S+) (\\S+)$",
             "help": "rank <season> <mode>",
             "path": "Commands/Lookup/rankMode.js"
         },
         {
             "group": "lookup",
             "name": "rank map",
-            "regex": "rank|standing|position (.+) (.+) ( .+)+",
+            "regex": "(rank|standing|position) (\\S+) (\\S+) (.+)",
             "help": "rank <season> <mode> <map>",
             "path": "Commands/Lookup/rankMap.js"
         },
         {
             "group": "lookup",
             "name": "incomplete",
-            "regex": "(incomplete|complete) (.+) (.+)$",
+            "regex": "(incomplete|complete) (\\S+) (\\S+)$",
             "help": "incomplete <season> <mode>",
             "path": "Commands/Lookup/incomplete.js"
         },
         {
             "group": "submit",
             "name": "submit",
-            "regex": "submit|sub (.+) (.+) ( .+)+",
-            "help": "submit <season> <mode> <map>",
+            "regex": "(submit|sub) (\\d+) (.+) (\\d+\\.\\d{2}) (https://\\S+)$",
+            "help": "submit <season> <mode> <map> <time> <proof>",
             "path": "Comamnds/Submit/submit.js"
         },
         {
             "group": "submit",
             "name": "delete link",
-            "regex": "delete|del (.+) (.+)$",
+            "regex": "(delete|del) (\\d+) (https://\\S+)$",
             "help": "delete <season> <link>",
             "path": "Commands/Submit/deleteLink.js"
         },
         {
             "group": "submit",
             "name": "delete map",
-            "regex": "delete|del (.+) (.+) ( .+)+",
+            "regex": "(delete|del) (\\d+) (\\S+) (.+)",
             "help": "delete <season> <mode> <map>",
             "path": "Commands/Submit/deleteMap.js"
         }

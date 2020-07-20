@@ -3,27 +3,20 @@ const getModeOptions = require('../../Options/modeOptions');
 const getMapOptions = require('../../Options/mapOptions');
 const { getUserReaction } = require('../../Util/misc');
 
-module.exports = handlePb;
+module.exports = run;
 
-let isPbing = false;
-
-async function handlePb (message) {
-    if (isPbing) return;
-    isPbing = true;
-
-    await message.react('💬');
-    const botMsg = await message.channel.send('💬 Searching personal Best, please hold on.');
+async function run(msg, client, regexGroups) {
+    await msg.react('💬');
+    const botMsg = message.channel.send('💬 Searching personal Best, please hold on.');
     try {
         const userStr = message.author.username;
-        const messageVals = await message.content.replace(/!pb /i, '').split(',').map(i => i.trim());
         if (messageVals.length !== 3) {
             (await message.reactions).forEach(async(key, value, map) => {
                 if (!key.me) return;
                 await key.remove();
             });
             message.react('❌');
-            botMsg.edit('❌ To many or not enough parameters! Type \'!help pb\' for an overview of the required parameters.');
-            isPbing = false;
+            (await botMsg).edit('❌ To many or not enough parameters! Type \'!help pb\' for an overview of the required parameters.');
             return;
         }
         const season = getSeasonOptions(messageVals[0]);
@@ -34,7 +27,6 @@ async function handlePb (message) {
             });
             message.react('❌');
             botMsg.edit('❌ No season found for \'' + messageVals[0] + '\'.');
-            isPbing = false;
             return;
         }
         const mode = getModeOptions(messageVals[1]);
@@ -45,7 +37,6 @@ async function handlePb (message) {
             });
             message.react('❌');
             botMsg.edit('❌ No mode found for \'' + messageVals[1] + '\'.');
-            isPbing = false;
             return;
         }
         const user = message.author.tag;
@@ -62,7 +53,6 @@ async function handlePb (message) {
                 await key.remove();
             });            
             botMsg.edit('❌ No map found for \'' + messageVals[2] + '\'.');
-            isPbing = false;
             return;
         } else {
             if (opts.length === 1) {
@@ -80,7 +70,6 @@ async function handlePb (message) {
                         await key.remove();
                     });
                     botMsg.edit('⌛ Timeout while selecting map! No Personal Best requested.');
-                    isPbing = false;
                     return;
                 }
             }
@@ -97,7 +86,6 @@ async function handlePb (message) {
                 await key.remove();
             });
             botMsg.edit('❌ No Personal Best found for \''+season+' '+mode+' '+map+'\'. Go and set a time!');
-            isPbing = false;
             return;
         }
         if (!cache[season][mode][map][user]) {
