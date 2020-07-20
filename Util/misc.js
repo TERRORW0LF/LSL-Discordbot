@@ -4,7 +4,6 @@ const { google } = require('googleapis');
 module.exports = { clearMsg, getAllSubmits };
 
 async function clearMsg(botMsg, msg) {
-    console.log(msg.reactions.cache);
     for (let [key, value] of msg.reactions.cache) {
         if (value.me) value.remove();
     }
@@ -14,7 +13,7 @@ async function clearMsg(botMsg, msg) {
 }
 
 async function getAllSubmits(sheet, sheetrange) {
-    const token = getGoogleAuth();
+    const token = await getGoogleAuth();
     const client = google.sheets('v4');
     const response = (await client.spreadsheets.values.get({
         auth: token,
@@ -23,7 +22,7 @@ async function getAllSubmits(sheet, sheetrange) {
         majorDimension: 'ROWS'
     })).data;
     let output = [];
-    for (let row of response) {
+    for (let row of response.values) {
         output.push({
             date: row[0],
             name: row[1],
