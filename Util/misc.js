@@ -1,9 +1,9 @@
 const { getGoogleAuth } = require('../google-auth');
 const { google } = require('googleapis');
 
-const { getEmojiFromNum, getNumFromEmoji, reactionFilter } = require('./reactionEmj');
+const { getEmojiFromNum, getNumFromEmoji,  reactionFilter } = require('./reactionEmj');
 
-module.exports = { clearMsg, getAllSubmits, getUserReaction };
+module.exports = { clearMsg, getAllSubmits, getMapPoints, getUserReaction };
 
 async function clearMsg(botMsg, msg) {
     if (msg) {
@@ -58,4 +58,14 @@ async function getUserReaction(msg, botMsg, opts) {
     clearMsg(botMsg, msg);
 
     return map;
+}
+
+function getMapPoints(map, mode) {
+    let points;
+    if (['Gibraltar', 'Havana', 'Rialto', 'Route66'].includes(map)) points = 80;
+    else if (['Lijiang Control Center', 'Hollywood', 'Eichenwalde', 'Busan MEKA Base'].includes(map)) points = 70;
+    else if (['Volskaya Industries', 'Paris', 'Numbani', 'Nepal Shrine', 'Nepal Sanctum', 'Lijiang Night Market', 'King\'s Row', 'Junktertown', 'Horizon Lunar Colony', 'Hanamura', 'Dorado'].includes(map)) points = 60;
+    else if (['Temple of Anubis', 'Oasis University', 'Oasis City Center', 'Nepal Village', 'Lijiang Garden', 'Ilios Well', 'Illios Ruins', 'Illios Lighthouse', 'Busan Sanctuary', 'Busan Downtown', 'Blizzard World'].includes(map)) points = 50;
+    else points = 40;
+    return mode === 'Standard' ? points : points/2;
 }
