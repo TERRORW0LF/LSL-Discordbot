@@ -1,88 +1,50 @@
 const { google } = require('googleapis');
+const assert = require('assert').strict;
 
 const { getGoogleAuth } = require('../../google-auth');
 const getSeasonOptions = require('../../Options/seasonOptions');
+const { clearMsg, getAllSubmits, getUserReaction } = require('../../Util/misc');
 
-module.exports = handleDelete;
+module.exports = run;
 
-let isDeleting = false;
-
-async function handleDelete(message) {
-    if (isDeleting) return;
-    isDeleting = true;
-
-    await message.react('💬');
-    const botMsg = await message.channel.send('💬 Processing deletion. Please hold on.');
-
+async function run(msg, client, regexGroups) {
+    await msg.react('💬');
+    const botMsg = await msg.channel.send('💬 Processing deletion. Please hold on.');
     try {
-        const messageVals = message.content.replace(/!delete /i, '').split(',').map(i => i.trim());
-        if (messageVals.length !== 2) {
-            (await message.reactions).forEach(async(key, value, map) => {
-                if (!key.me) return;
-                await key.remove();
-            });
-            message.react('❌');
-            botMsg.edit('❌ To many or not enough parameters! Type \'!help delete\' for an overview of the required parameters.');
-            isDeleting = false;
+        const season = getSeasonOptions(regexGroups[2]),
+              link = regexGroups[3];
+        if (!season) {
+            clearMsg(botMsg, msg);
+            msg.react('❌');
+            botMsg.edit('❌ Incorrect season.');
             return;
         }
-        const season = getSeasonOptions(messageVals[0]);
-        if (season === undefined) {
-            (await message.reactions).forEach(async(key, value, map) => {
-                if (!key.me) return;
-                await key.remove();
-            });
-            message.react('❌');
-            botMsg.edit('❌ No season found for \'' + messageVals[0] + '\'.');
-            isDeleting = false;
+        let runs;
+        const sheet = process.env[`gSheetS${season.replace('season', '')}`];
+        if (msg.member.roles.cache.has('574732901208424449') || msg.member.roles.cache.has('574523898784251908')) {
+            runs = (await getAllSubmits(sheet, 'Record Log!A2:F')).filter(run => run.proof === link);
+        } else {
+            runs = (await getAllSubmits(sheet, 'Record Log!A2:F')).filter(run => run.proof === link && run.name === msg.author.tag);
+        }
+        if (!runs.length) {
+            clearMsg(botMsg, msg);
+            msg.react('❌');
+            botMsg.edit('❌ No run found.');
             return;
         }
-        let id;
-        if (season === 'season1') id = process.env.gSheetS1;
-        else if (season === 'season2') id = process.env.gSheetS2;
-        else if (season === 'season3') id = process.env.gSheetS3;
-        else if (season === 'season4') id = process.env.gSheetS4;
-        const sid = process.env.gSheetLOGID;
-        const link = messageVals[1];
-
-        let row;
-        const token = await getGoogleAuth();
-        const client = google.sheets('v4');
-        const response = (await client.spreadsheets.values.get({
-            auth: token,
-            spreadsheetId: id,
-            range: 'Record Log!B:F',
-            majorDimension: 'COLUMNS'
-        })).data;
-        const deleteVals = await async function() {
-            const cols = await response.values;
-            if (cols[2].includes(link)) {
-                row = cols[2].indexOf(link);
-                if (cols[0][row] === message.author.tag || message.member.roles.has('574732901208424449') || message.member.roles.has('574523898784251908')) {
-                    return [cols[0][row], cols[1][row], cols[2][row], cols[3][row], cols[4][row]];
-                }
-            }
-            (await message.reactions).forEach(async(key, value, map) => {
-                if (!key.me) return;
-                await key.remove();
-            });
-            message.react('❌');
-            botMsg.edit('❌ No run found belonging to ' + message.author + ' for \'' + link + '\'.');
-            isDeleting = false;
-            return;
-        }();
-        if (!deleteVals) {
-            isDeleting = false;
-            return;
-        }
+        const run = runs.length === 1 ? runs[0] : await getUserReaction(msg, botMsg, runs.slice(0, 4)),
+              row = runs.findIndex(value => !assert.deepStrictEqual(run, value)),
+              client = google.sheets('v4'),
+              token = await getGoogleAuth(),
+              sid = process.env.gSheetLOGID;
         let requests = [];
         requests.push({
             deleteDimension: {
                 range: {
                     sheetId: parseInt(sid),
                     dimension: 'ROWS',
-                    startIndex: row,
-                    endIndex: row + 1,
+                    startIndex: row + 1,
+                    endIndex: row + 2,
                 },
             },
         });
@@ -92,32 +54,23 @@ async function handleDelete(message) {
                 dimension: 'ROWS',
                 length: 1,
             },
-        })
+        });
         const resourceVals = {requests};
         await client.spreadsheets.batchUpdate({
             auth: token,
-            spreadsheetId: id,
+            spreadsheetId: sheet,
             resource: resourceVals,
         }, async (err, res) => {
             if (err) throw err;
-            (await message.reactions).forEach(async(key, value, map) => {
-                if (!key.me) return;
-                await key.remove();
-            });
-            message.react('✅');
+            clearMsg(botMsg, msg);
+            msg.react('✅');
             botMsg.edit('✅ Sucessfully deleted run!');
         });
-        //await newDelete2(message, season);
-        isDeleting = false;
     } catch (err) {
-        (await message.reactions).forEach(async(key, value, map) => {
-            if (!key.me) return;
-            await key.remove();
-        });
-        message.react('❌');
-        botMsg.edit('❌ An error occurred while handling your command. Informing staff.');
-        console.log('Error in handleDeletion: ' + err.message);
+        clearMsg(botMsg, msg)
+        msg.react('❌');
+        botMsg.edit('❌ An error occurred while handling your command.');
+        console.log('Error in deleteLink: ' + err.message);
         console.log(err.stack);
-        isDeleting = false;
     }
 }
