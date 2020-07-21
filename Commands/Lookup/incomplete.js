@@ -10,7 +10,7 @@ let mapOptions = ['Hanamura','Horizon Lunar Colony','Paris','Temple of Anubis','
 'Nepal Village','Nepal Sanctum','Nepal Shrine','Oasis City Center','Oasis University','Oasis Gardens'];
 
 async function run(msg, client, regexGroups) {
-    msg.react('💬');
+    await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Searching map data, please hold on.');
 
     try {

@@ -6,7 +6,7 @@ const { getAllSubmits, getUserReaction, clearMsg } = require('../../Util/misc');
 module.exports = run;
 
 async function run(msg, client, regexGroups) {
-    msg.react('💬');
+    await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Searching World Record, please hold on.');
     try {
         const season = getSeasonOptions(regexGroups[2]),
