@@ -1,7 +1,7 @@
 const getSeasonOptions = require('../../Options/seasonOptions');
 const getModeOptions = require('../../Options/modeOptions');
 const getMapOptions = require('../../Options/mapOptions');
-const { clearMsg, getAllSubmits, getUserReaction } = require('../../Util/misc');
+const { clearMsg, getAllSubmits, getMapPoints, getUserReaction } = require('../../Util/misc');
 
 module.exports = run;
 
@@ -34,9 +34,10 @@ async function run(msg, client, regexGroups) {
             botMsg.edit('❌ No personal best found.');
             return;
         }
-        const rank = runs.indexOf(pb)+1;
+        const rank = runs.indexOf(pb)+1,
+              points = round((runs.length/rank - 1)^2*getMapPoints(map, mode));
         msg.react('✅');
-        botMsg.edit(`✅ **Personal Best found!**\n**Time:** ${pb.time}\n**Rank:** ${rank}\n**Submitted:** ${pb.date}\n${pb.proof}`);
+        botMsg.edit(`✅ **Personal Best found!**\n**Time:** ${pb.time}\n**Rank:** ${rank}\n**Points:** ${points}\n**Submitted:** ${pb.date}\n${pb.proof}`);
     } catch (err) {
         clearMsg(botMsg, msg);
         msg.react('❌');
