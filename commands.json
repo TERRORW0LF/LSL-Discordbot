@@ -17,8 +17,8 @@
         {
             "group": "lookup",
             "name": "personal best",
-            "regex": "(pb|personal-best|personal best) (\\d+) (\\S+) (.+)",
-            "help": "pb <season> <mode> <map>",
+            "regex": "(pb|personal-best|personal best|rank|standing|position) (\\d+) (\\S+) (.+)",
+            "help": "pb|rank <season> <mode> <map>",
             "path": "Commands/Lookup/personalBest.js"
         },
         {
@@ -34,13 +34,6 @@
             "regex": "(rank|standing|position) (\\S+) (\\S+)$",
             "help": "rank <season> <mode>",
             "path": "Commands/Lookup/rankMode.js"
-        },
-        {
-            "group": "lookup",
-            "name": "rank map",
-            "regex": "(rank|standing|position) (\\S+) (\\S+) (.+)",
-            "help": "rank <season> <mode> <map>",
-            "path": "Commands/Lookup/rankMap.js"
         },
         {
             "group": "lookup",
