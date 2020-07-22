@@ -20,11 +20,12 @@ async function run(msg, client, regexGroups) {
             return;
         }
         let runs;
-        const sheet = process.env[`gSheetS${season.replace('season', '')}`];
+        const sheet = process.env[`gSheetS${season.replace('season', '')}`],
+              submits = await getAllSubmits(sheet, 'Record Log!A2:F');
         if (msg.member.roles.cache.has('574732901208424449') || msg.member.roles.cache.has('574523898784251908')) {
-            runs = (await getAllSubmits(sheet, 'Record Log!A2:F')).filter(run => run.proof === link);
+            runs = submits.filter(run => run.proof === link);
         } else {
-            runs = (await getAllSubmits(sheet, 'Record Log!A2:F')).filter(run => run.proof === link && run.name === msg.author.tag);
+            runs = submits.filter(run => run.proof === link && run.name === msg.author.tag);
         }
         if (!runs.length) {
             clearMsg(botMsg, msg);
@@ -33,10 +34,11 @@ async function run(msg, client, regexGroups) {
             return;
         }
         const run = runs.length === 1 ? runs[0] : await getUserReaction(msg, botMsg, runs.slice(0, 4)),
-              row = runs.findIndex(value => !assert.deepStrictEqual(run, value)),
+              row = submits.findIndex(value => { try {return !assert.deepStrictEqual(run, value);} catch(err) {return false}}),
               client = google.sheets('v4'),
               token = await getGoogleAuth(),
               sid = process.env.gSheetLOGID;
+        console.log(row);
         let requests = [];
         requests.push({
             deleteDimension: {
