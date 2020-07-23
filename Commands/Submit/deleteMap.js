@@ -19,7 +19,7 @@ async function run(msg, client, regexGroups) {
         if (!season || !mode || !opts.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
-            botMsg.edit('❌ Incorrect season, mode or map');
+            botMsg.edit('❌ Incorrect season, mode or map.');
             return;
         }
         const map = opts.length === 1 ? opts[0] : await getUserReaction(msg, botMsg, opts);
