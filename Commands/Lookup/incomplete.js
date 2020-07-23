@@ -24,10 +24,8 @@ async function run(msg, client, regexGroups) {
         }
         const sheet = process.env[`gSheetS${season.replace('season', '')}`],
               submits = (await getAllSubmits(sheet, 'Record Log!A2:F')).filter(submit => submit.name === msg.author.tag);
-        // BUILD DATABASE BEFORE CONTINUING!
         const complete = mapOptions.filter(map => submits.some(submit => submit.stage === map)),
               incomplete = mapOptions.filter(map => !complete.some(map2 => map === map2));
-        // send maps. Use code field, picture modified with canvas, or stylized normal message.
         clearMsg(botMsg, msg);
         msg.react('✅');
         if (!complete) botMsg.edit('You have not completed any maps.');

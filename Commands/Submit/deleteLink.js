@@ -38,7 +38,12 @@ async function run(msg, client, regexGroups) {
               client = google.sheets('v4'),
               token = await getGoogleAuth(),
               sid = process.env.gSheetLOGID;
-        console.log(row);
+        if (row === -1) {
+            clearMsg(botMsg, msg);
+            msg.react('❌');
+            botMsg.edit('❌ Assert broke. Please blame assert and not my incompetence to find a more suitable package.');
+            return;
+        }
         let requests = [];
         requests.push({
             deleteDimension: {
