@@ -43,7 +43,7 @@ async function run(msg, client, regexGroups) {
             botMsg.edit('❌ No run found.');
             return;
         }
-        const run = runs.length === 1 ? runs[0] : await getUserReaction(msg, botMsg, runs.slice(0, 4)),
+        const run = runs.length === 1 ? runs[0] : await getUserReaction(msg, botMsg, runs.slice(-5).reverse()),
               row = submits.findIndex(value => { try {return !assert.deepStrictEqual(value, run);} catch(err) {return false}}),
               client = google.sheets('v4'),
               token = await getGoogleAuth(),
@@ -78,7 +78,12 @@ async function run(msg, client, regexGroups) {
             spreadsheetId: sheet,
             resource: resourceVals,
         }, async (err, res) => {
-            if (err) throw err;
+            if (err) {
+                clearMsg(botMsg, msg);
+                msg.react('❌');
+                botMsg.edit('❌ Failed to delete run.');
+                return;
+            }
             clearMsg(botMsg, msg);
             msg.react('✅');
             botMsg.edit('✅ Sucessfully deleted run!');
