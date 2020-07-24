@@ -7,6 +7,7 @@ const app = express();
 const Discord = require('discord.js');
 
 const commands = require('./commands.json');
+const serverCfg = require('./Config/serverCfg.json');
 const { setGoogleAuth } = require('./google-auth');
 const newSubmit = require('./Util/newSubmit');
 const newDelete = require('./Util/newDelete');
@@ -38,7 +39,14 @@ client.on('ready', () => {
             for (let command of commands.commandList) {
                 let pattern = new RegExp(command.regex, "i");
                 if (pattern.test(msg.content.replace(prefix, '').trim())) {
-                    // Implement permission handling (channel / role)
+                    const permission = serverCfg[msg.guild.id].permissions[command.group];
+                    if (permission) {
+                        let hasPermission = false;
+                        for (role of permission) {
+                            if (msg.member.roles.cache.has(role)) hasPermission = true;
+                        }
+                        if (!hasPermission) break;
+                    }
                     const run = require(`./${command.path}`);
                     run(msg, client, pattern.exec(msg.content.replace(prefix, '').trim()));
                     answered = true;
