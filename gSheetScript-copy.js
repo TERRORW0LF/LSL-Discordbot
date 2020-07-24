@@ -7,7 +7,7 @@ function formSubmit(e) {
   const msg = {
       "user": submitVals[1],
       "map": submitVals[4],
-      "season": "season3",
+      "season": "season1",
       "mode": submitVals[5],
       "time": submitVals[2],
       "link": submitVals[3],
@@ -16,13 +16,21 @@ function formSubmit(e) {
   const postdata = {
     "method": "post",
     "contentType": "application/json",
-    "payload": JSON.Stringify(msg),
+    "payload": JSON.stringify(msg),
     "muteHttpExceptions": true
-  };
+  }
   UrlFetchApp.fetch('https://discord-lsl.herokuapp.com/submit?auth=YouShallNotPass', postdata);
+  UrlFetchApp.fetch('https://lsl-discordbot.herokuapp.com/submit?auth=YouShallNotPass', postdata);
 }
 
 function rowDelete(e) {
   if (e.changeType !== "REMOVE_ROW") return;
-  UrlFetchApp.fetch('https://discord-lsl.herokuapp.com/delete?auth=YouShallNotPass');
+  const postdata = {
+    "method": "post",
+    "contentType": "application/json",
+    "payload": JSON.stringify({"season": "season1"}),
+    "muteHttpExeptions": true
+  }
+  UrlFetchApp.fetch('https://discord-lsl.herokuapp.com/delete?auth=YouShallNotPass', postdata);
+  UrlFetchApp.fetch('https://lsl-discordbot.herokuapp.com/delete?auth=YouShallNotPass', postdata);
 }
