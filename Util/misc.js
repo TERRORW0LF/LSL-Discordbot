@@ -6,16 +6,8 @@ const { getEmojiFromNum, getNumFromEmoji,  reactionFilter } = require('./reactio
 module.exports = { clearMsg, getAllSubmits, getPoints, getMapPoints, getUserReaction };
 
 async function clearMsg(botMsg, msg) {
-    if (msg) {
-        for (let [key, value] of msg.reactions.cache) {
-            if (value.me) value.remove();
-        }
-    }
-    if (botMsg) {
-        for (let [key, value] of botMsg.reactions.cache) {
-            if (value.me) value.remove();
-        }
-    }
+    if (msg) msg.reactions.removeAll();
+    if (botMsg) botMsg.reactions.removeAll();
 }
 
 async function getAllSubmits(sheet, sheetrange) {
