@@ -29,7 +29,7 @@ function rowDelete(e) {
     "method": "post",
     "contentType": "application/json",
     "payload": JSON.stringify({"season": "season1"}),
-    "muteHttpExeptions": true
+    "muteHttpExceptions": true
   }
   UrlFetchApp.fetch('https://discord-lsl.herokuapp.com/delete?auth=YouShallNotPass', postdata);
   UrlFetchApp.fetch('https://lsl-discordbot.herokuapp.com/delete?auth=YouShallNotPass', postdata);
