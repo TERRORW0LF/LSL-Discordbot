@@ -2,9 +2,7 @@ const { google } = require("googleapis");
 const assert = require('assert').strict;
 
 const { clearMsg, getUserReaction, getAllSubmits } = require("../../Util/misc");
-const getSeasonOptions = require("../../Options/seasonOptions");
-const getModeOptions = require('../../Options/modeOptions');
-const getMapOptions = require('../../Options/mapOptions');
+const { getSeasonOptions, getModeOptions, getMapOptions } = require("../../options");
 const { getGoogleAuth } = require("../../google-auth");
 
 module.exports = run;
@@ -13,10 +11,11 @@ async function run(msg, client, regexGroups) {
     await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Processing deletion. Please hold on.');
     try {
-        const season = getSeasonOptions(regexGroups[2]),
-              mode = getModeOptions(regexGroups[3]),
-              opts = getMapOptions(regexGroups[4]);
-        if (!season || !mode || !opts.length) {
+        const guildId = msg.guild.id;
+              season = getSeasonOptions(regexGroups[2], guildId),
+              mode = getModeOptions(regexGroups[3], guildId),
+              opts = getMapOptions(regexGroups[4], guildId);
+        if (!season || !mode.length || !opts.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ Incorrect season, mode or map.');
@@ -30,7 +29,7 @@ async function run(msg, client, regexGroups) {
             return;
         }
         let runs;
-        const sheet = process.env[`gSheetS${season.replace('season', '')}`],
+        const sheet = process.env[`gSheetS${season}`],
               submits = await getAllSubmits(sheet, 'Record Log!A2:F');
         if (msg.member.roles.cache.has('574732901208424449') || msg.member.roles.cache.has('574523898784251908')) {
             runs = submits.filter(run => run.category === mode && run.stage === map);

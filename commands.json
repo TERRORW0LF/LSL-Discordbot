@@ -24,21 +24,21 @@
         {
             "group": "lookup",
             "name": "rank season",
-            "regex": "(rank|standing|position) (\\S+)$",
+            "regex": "(rank|standing|position) (\\d+)$",
             "help": "rank <season>",
             "path": "Commands/Lookup/rankSeason.js"
         },
         {
             "group": "lookup",
             "name": "rank mode",
-            "regex": "(rank|standing|position) (\\S+) (\\S+)$",
+            "regex": "(rank|standing|position) (\\d+) (\\S+)$",
             "help": "rank <season> <mode>",
             "path": "Commands/Lookup/rankMode.js"
         },
         {
             "group": "lookup",
             "name": "incomplete",
-            "regex": "(incomplete|complete) (\\S+) (\\S+)$",
+            "regex": "(incomplete|complete) (\\d+) (\\S+)$",
             "help": "incomplete <season> <mode>",
             "path": "Commands/Lookup/incomplete.js"
         },

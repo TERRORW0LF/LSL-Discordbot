@@ -1,4 +1,4 @@
-const getSeasonOptions = require("../../Options/seasonOptions");
+const { getSeasonOptions } = require('../../options');
 const { getPoints, clearMsg, getAllSubmits } = require("../../Util/misc");
 
 module.exports = run;
@@ -7,7 +7,8 @@ async function run(msg, client, regexGroups) {
     await msg.react('💬');
     botMsg = await msg.channel.send('💬 Collecting data, please hold on.');
     try {
-        const season = getSeasonOptions(regexGroups[2]);
+        const guildId = msg.guild.id;
+              season = getSeasonOptions(regexGroups[2], guildId);
         if (!season) {
             clearMsg(botMsg, msg);
             msg.react('❌');
@@ -16,8 +17,8 @@ async function run(msg, client, regexGroups) {
         }
         const user = msg.author.tag,
               username = msg.author.username,
-              pair = (await getPoints(process.env[`gSheetS${season.replace('season', '')}`], 'Points Sheet!G3:H')).find(pair => pair.name === user),
-              submits = await getAllSubmits(process.env[`gSheetS${season.replace('season', '')}`], 'Record Log!A2:F'),
+              pair = (await getPoints(process.env[`gSheetS${season}`], 'Points Sheet!G3:H')).find(pair => pair.name === user),
+              submits = await getAllSubmits(process.env[`gSheetS${season}`], 'Record Log!A2:F'),
               maps = submits.filter((submit) => submit.name === user);
         let length;
         for (let map of maps) {

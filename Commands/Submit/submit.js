@@ -1,9 +1,7 @@
 const { google } = require('googleapis');
 const axios = require('axios');
 
-const getSeasonOptions = require('../../Options/seasonOptions');
-const getModeOptions = require('../../Options/modeOptions');
-const getMapOptions = require('../../Options/mapOptions');
+const { getSeasonOptions, getModeOptions, getMapOptions } = require('../../options');
 const { clearMsg, getUserReaction } = require('../../Util/misc');
 
 module.exports = run;
@@ -12,12 +10,13 @@ async function run(msg, client, regexGroups) {
     await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Processing submission. Please hold on.');
     try {
-        const season = getSeasonOptions(regexGroups[2]),
-              mode = getModeOptions(regexGroups[3]),
-              opts = getMapOptions(regexGroups[4]),
+        const guildId = msg.guild.id;
+              season = getSeasonOptions(regexGroups[2], guildId),
+              mode = getModeOptions(regexGroups[3], guildId),
+              opts = getMapOptions(regexGroups[4], guildId),
               time = regexGroups[5],
               link = regexGroups[6];
-        if (!season || !mode || !opts.length) {
+        if (!season || !mode.length || !opts.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ Incorrect season, mode or map.');

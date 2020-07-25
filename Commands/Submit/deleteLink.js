@@ -2,7 +2,7 @@ const { google } = require('googleapis');
 const assert = require('assert').strict;
 
 const { getGoogleAuth } = require('../../google-auth');
-const getSeasonOptions = require('../../Options/seasonOptions');
+const { getSeasonOptions } = require('../../options');
 const { clearMsg, getAllSubmits, getUserReaction } = require('../../Util/misc');
 
 module.exports = run;
@@ -11,7 +11,8 @@ async function run(msg, client, regexGroups) {
     await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Processing deletion. Please hold on.');
     try {
-        const season = getSeasonOptions(regexGroups[2]),
+        const guildId = msg.guild.id;
+              season = getSeasonOptions(regexGroups[2], guildId),
               link = regexGroups[3];
         if (!season) {
             clearMsg(botMsg, msg);
@@ -20,7 +21,7 @@ async function run(msg, client, regexGroups) {
             return;
         }
         let runs;
-        const sheet = process.env[`gSheetS${season.replace('season', '')}`],
+        const sheet = process.env[`gSheetS${season}`],
               submits = await getAllSubmits(sheet, 'Record Log!A2:F');
         if (msg.member.roles.cache.has('574732901208424449') || msg.member.roles.cache.has('574523898784251908')) {
             runs = submits.filter(run => run.proof === link);

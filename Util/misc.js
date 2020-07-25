@@ -48,7 +48,6 @@ async function getUserReaction(msg, botMsg, opts) {
     const opt = getNumFromEmoji(userChoice.first().emoji.name);
     const map = opts[opt - 1];
     clearMsg(botMsg, msg);
-
     return map;
 }
 
@@ -64,8 +63,8 @@ function getMapPoints(map, mode) {
 
 async function getPoints(sheet, sheetRange) {
     const token = await getGoogleAuth(),
-          client = google.sheets('v4'),
-          rows = (await client.spreadsheets.values.get({
+        client = google.sheets('v4'),
+        rows = (await client.spreadsheets.values.get({
         auth: token,
         spreadsheetId: sheet,
         range: sheetRange,

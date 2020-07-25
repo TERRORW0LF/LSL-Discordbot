@@ -1,30 +1,27 @@
-const getSeasonOptions = require('../../Options/seasonOptions');
-const getModeOptions = require('../../Options/modeOptions');
+const { getSeasonOptions, getModeOptions } = require('../../options');
 const { clearMsg, getAllSubmits } = require('../../Util/misc');
+const serverCfg = require('../../Config/serverCfg.json');
 
 module.exports = run;
-
-let mapOptions = ['Hanamura','Horizon Lunar Colony','Paris','Temple of Anubis','Volskaya Industries','Dorado','Havana','Junkertown','Rialto',
-'Route 66','Gibraltar','Blizzard World','Eichenwalde','Hollywood',"King's Row",'Numbani', 'Busan Sanctuary','Busan MEKA Base',
-'Busan Downtown','Ilios Well','Ilios Ruins','Ilios Lighthouse','Lijiang Night Market','Lijiang Garden','Lijiang Control Center',
-'Nepal Village','Nepal Sanctum','Nepal Shrine','Oasis City Center','Oasis University','Oasis Gardens'];
 
 async function run(msg, client, regexGroups) {
     await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Searching map data, please hold on.');
 
     try {
-        const season = getSeasonOptions(regexGroups[2]),
-              mode = getModeOptions(regexGroups[3]);
-        if (!season || !mode) {
+        const guildId = msg.guild.id,
+              season = getSeasonOptions(regexGroups[2], guildId),
+              mode = getModeOptions(regexGroups[3], guildId);
+        if (!season || !mode.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ Incorrect season or mode.');
             return;
         }
-        const sheet = process.env[`gSheetS${season.replace('season', '')}`],
-              submits = (await getAllSubmits(sheet, 'Record Log!A2:F')).filter(submit => submit.name === msg.author.tag);
-        const complete = mapOptions.filter(map => submits.some(submit => submit.stage === map)),
+        let mapOptions = serverCfg[guildId].maps;
+        const sheet = process.env[`gSheetS${season}`],
+              submits = (await getAllSubmits(sheet, 'Record Log!A2:F')).filter(submit => submit.name === msg.author.tag),
+              complete = mapOptions.filter(map => submits.some(submit => submit.stage === map)),
               incomplete = mapOptions.filter(map => !complete.some(map2 => map === map2));
         clearMsg(botMsg, msg);
         msg.react('✅');

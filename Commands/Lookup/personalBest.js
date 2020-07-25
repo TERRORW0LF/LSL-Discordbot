@@ -1,6 +1,4 @@
-const getSeasonOptions = require('../../Options/seasonOptions');
-const getModeOptions = require('../../Options/modeOptions');
-const getMapOptions = require('../../Options/mapOptions');
+const { getSeasonOptions, getModeOptions, getMapOptions } = require('../../options');
 const { clearMsg, getAllSubmits, getMapPoints, getUserReaction } = require('../../Util/misc');
 
 module.exports = run;
@@ -9,10 +7,11 @@ async function run(msg, client, regexGroups) {
     await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Searching personal Best, please hold on.');
     try {
-        const season = getSeasonOptions(regexGroups[2]);
-        const mode = getModeOptions(regexGroups[3]);
-        const opts = getMapOptions(regexGroups[4]);
-        if (!season || !mode || !opts.length) {
+        const guildId = msg.guild.id;
+              season = getSeasonOptions(regexGroups[2], guildId),
+              mode = getModeOptions(regexGroups[3], guildId),
+              opts = getMapOptions(regexGroups[4], guildId);
+        if (!season || !mode.length || !opts.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ Incorrect season, mode or map.');
@@ -26,8 +25,11 @@ async function run(msg, client, regexGroups) {
             return;
         }
         const user = msg.author.tag,
-              runs = (await getAllSubmits(process.env[`gSheetS${season.replace('season', '')}`], 'Record Log!A2:F')).filter(run => run.category === mode && run.stage === map).sort((runA, runB) => runA.time - runB.time),
-              pb = runs.filter(run => run.name === user)[0]
+              pb = runs.filter(run => run.name === user)[0];
+        let runs = (await getAllSubmits(process.env[`gSheetS${season}`], 'Record Log!A2:F')).filter(run => run.category === mode && run.stage === map).sort((runA, runB) => runA.time - runB.time);
+        for (let run of runs) {
+            if (runs.filter(run2 => run2.name === run.name).length > 1) runs.splice(runs.indexOf(run), 1);
+        }
         if (!pb) {
             clearMsg(botMsg, msg);
             msg.react('❌');
