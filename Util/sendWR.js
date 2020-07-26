@@ -1,54 +1,77 @@
 const getUser = require('./getUser');
+const serverCfg = require('../Config/serverCfg.json');
 
 module.exports = sendWr;
 
-async function sendWr(discord, data) {
+async function sendWr(guild, oldWr, newWr) {
     try {
-        const userStr = data.user.split('#')[0];
-        const oldUserStr = data.oldUser.split('#')[0];
-        const guild = await discord.guilds.get(process.env.DiscordGUILD);
-        const user = await getUser(guild, data.user);
-        const oldUser = await getUser(guild, data.oldUser);
-        const channel = await guild.channels.get(process.env.wrCHANNEL);
-        var dateDif;
-        if (data.oldDate !== 'None') {
-            const oldDateArray = data.oldDate.split('/');
-            const oldDate = new Date(oldDateArray[2], oldDateArray[0], oldDateArray[1]);
-            const dateArray = data.date.split('/');
-            const date = new Date(dateArray[2], dateArray[0], dateArray[1]);
-            const msDay = 1000*60*60*24;
-            dateDif = Math.round((date-oldDate)/msDay);
-        } else dateDif = 'None';
-        var timeSave;
-        data.oldTime !== 'None' ? timeSave = (Number(data.oldTime) - Number(data.time)).toFixed(2) : timeSave = 'None';
-        channel.send(`New WORLD RECORD! ${user}`, {
+        if (!serverCfg[guild.id].channels.wr.enabled) return;
+              userStr = newWr.user.split('#')[0],
+              oldUserStr = oldWr.user.split('#')[0],
+              user = await getUser(guild, newWr.user),
+              oldUser = await getUser(guild, oldWr.user),
+              channel = guild.channels.get(serverCfg[guild.id].channels.wr.channel);
+        let dateDif,
+            timeSave;
+        if (!oldWr) {
+            oldWr = {
+                user: 'none',
+                time: 'none',
+                date: 'none',
+            }
+            dateDif = 'undefined',
+            timeSave = 'undefined'
+        } else {
+            const newYear = newWr.date.split('/')[2].split(' ')[0].trim(),
+                  newMonth = Number(newWr.date.split('/')[0])-1,
+                  newDay = newWr.date.split('/')[1],
+                  newHour = newWr.date.split('/')[2].split(' ')[1].split(':')[0].trim(),
+                  newMinute = newWr.date.split('/')[2].split(' ')[1].split(':')[1],
+                  newSecond = newWr.date.split('/')[2].split(' ')[1].split(':')[2],
+                  newDate = new Date(newYear, newMonth, newDay, newHour, newMinute, newSecond),
+                  oldYear = newWr.date.split('/')[2].split(' ')[0].trim(),
+                  oldMonth = Number(newWr.date.split('/')[0])-1,
+                  oldDay = newWr.date.split('/')[1],
+                  oldHour = newWr.date.split('/')[2].split(' ')[1].split(':')[0].trim(),
+                  oldMinute = newWr.date.split('/')[2].split(' ')[1].split(':')[1],
+                  oldSecond = newWr.date.split('/')[2].split(' ')[1].split(':')[2],
+                  oldDate = new Date(oldYear, oldMonth, oldDay, oldHour, oldMinute, oldSecond),
+                  msDif = newDate-oldDate,
+                  yearsDif = msDif/(365*24*60*60*1000),
+                  msDif = msDif - yearsDif*365*24*60*60*1000,
+                  daysDif = msDif/(24*60*60*1000),
+                  msDif = msDif - daysDif*24*60*60*1000,
+                  hoursDif = msDif/(60*60*1000),
+                  msDif = msDif - hoursDif*60*60*1000,
+                  minutesDif = msDif/(60*1000),
+                  msDif = msDif - minutesDif*60*1000,
+                  secondsDif = msDif/(1000),
+                  dateDif = `${yearsDif} years, ${daysDif} days, ${hoursDif} hours, ${minutesDif} mins, ${secondsDif} secs`,
+                  timeSave = Math.round(Number(oldWr.time) - Number(newWr.time))
+        }
+        channel.send(`${user}`, {
             embed: {
-                title: `Record submitted by ${userStr}`,
+                title: `New **World Record** by ${userStr}`,
                 url: `${data.link}`,
                 color: 3010349,
-                author: {
-                    name: 'LSL-discordbot',
-                    icon_url: 'https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/BotIco.jpg',
-                    url: 'https://github.com/TERRORW0LF/LSL-Discordbot',
-                },
                 thumbnail: {
                     url: `https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/${data.map.split(' ').join('%20')}.jpg`,
                 },
-                description: `Season:  ${data.season.replace('season', 'season ')}\nMode:   ${data.mode}\nMap:    ${data.map}`,
+                description: `Season: season ${newWr.season}\nMode: ${newWr.mode}\nMap: ${newWr.map}`,
                 fields: [
                     {
                         name: '__New Record__',
-                        value: `User:\t${userStr}\nTime:\t${data.time}\nDate:\t${data.date}`,
+                        value: `User: ${userStr}\nTime: ${newWr.time}\nDate: ${newWr.date}`,
                         inline: true,
                     },
                     {
                         name: '__Old Record__',
-                        value: `User:\t${oldUserStr}\nTime:\t${data.oldTime}\nDate:\t${data.oldDate}`,
+                        value: `User: ${oldUserStr}\nTime: ${oldWr.time}\nDate: ${oldWr.date}`,
                         inline: true,
                     },
                     {
                         name: '__Comparison__',
-                        value: `Time save:    ${timeSave}s\nRecord held:  ${dateDif} days`,
+                        value: `Time save: ${timeSave}\nRecord held: ${dateDif}`,
                     },
                 ],
                 timestamp: new Date(),
@@ -58,7 +81,7 @@ async function sendWr(discord, data) {
                 },
             },
         });
-        channel.send(`${data.user !== data.oldUser && typeof oldUser !== 'string' ? getBM(oldUser) : ''}\n ${data.link}`);
+        channel.send(`${newWr.user !== oldWr.user && typeof oldUser !== 'string' ? getBM(oldUser) : ''}\n${data.link}`);
     } catch (err) {
         console.log('An error occured in sendWR: '+err.message);
         console.log(err.stack);

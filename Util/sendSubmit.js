@@ -1,29 +1,25 @@
 const getUser = require('./getUser');
+const serverCfg = require('../Config/serverCfg.json');
 
 module.exports = sendSubmit;
 
-async function sendSubmit(discord, data) {
+async function sendSubmit(guild, data) {
     try {
-        const userStr = data.user.split('#')[0];
-        const guild = await discord.guilds.get(process.env.DiscordGUILD);
-        const user = await getUser(guild, data.user);
-        const channel = await guild.channels.get(process.env.submitCHANNEL);
-        channel.send(`new run submitted! ${user}`, {
+        if (!serverCfg[guild.id].channels.submit.enabled) return;
+        const userStr = data.user.split('#')[0],
+              user = await getUser(guild, data.user),
+              channel = await guild.channels.get(serverCfg[guild.id].channels.submit.channel);
+        channel.send(`${user}`, {
             embed: {
                 title: `new run submitted by ${userStr}`,
                 url: `${data.link}`,
                 color: 3010349,
-                author: {
-                    name: 'LSL-discordbot',
-                    icon_url: 'https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/BotIco.jpg',
-                    url: 'https://github.com/TERRORW0LF/LSL-Discordbot',
-                },
                 thumbnail: {
                     url: `https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/${data.map.split(' ').join('%20')}.jpg`,
                 },
                 fields: [{
                     name: 'Season',
-                    value: `${data.season.replace('season', 'season ')}`,
+                    value: `season ${data.season}`,
                     inline: true,
                 },
                 {

@@ -9,11 +9,9 @@ function newDelete(client) {
             return;
         }
         try {
-            res.sendStatus(200);
-            const guild = client.guilds.get(process.env.DiscordGUILD);
-            setWrCache();
-            setPbCache();
+            const guild = client.guilds.get(req.body.id);
             roleUpdate(guild, req.body.season);
+            res.sendStatus(200);
         } catch (err) {
             console.log('An error occured in newDelete: '+err.message);
             console.log(err.stack);
