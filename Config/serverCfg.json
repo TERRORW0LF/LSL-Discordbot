@@ -6,6 +6,11 @@
             "Route 66","Gibraltar","Blizzard World","Eichenwalde","Hollywood","King's Row","Numbani", "Busan Sanctuary","Busan MEKA Base",
             "Busan Downtown","Ilios Well","Ilios Ruins","Ilios Lighthouse","Lijiang Night Market","Lijiang Garden","Lijiang Control Center",
             "Nepal Village","Nepal Sanctum","Nepal Shrine","Oasis City Center","Oasis University","Oasis Gardens"],
+        "roleOptions": {
+            "role": "highestSeasonCategory",
+            "firstPlace": true,
+            "firstPlaceRole": "all"
+        },
         "roles": {
             "1": {
                 "695342905769852929": 5500,
@@ -64,6 +69,116 @@
                 574732901208424449,
                 574523898784251908
             ]
+        },
+        "googleSheets": {
+            "submit": {
+                "1": {
+                    "Gravspeed": {
+                        "id": "1vWtqNrRQsuZFsp8-Y-CGBIppjSzSbR4bkN151lCzaQA",
+                        "range": "Record Log!A2:F",
+                        "gid": "1091303763"
+                    },
+                    "Standard": {
+                        "id": "1vWtqNrRQsuZFsp8-Y-CGBIppjSzSbR4bkN151lCzaQA",
+                        "range": "Record Log!A2:F",
+                        "gid": "1091303763"
+                    }
+                },
+                "2": {
+                    "Gravspeed": {
+                        "id": "1EMNogqAx53IKpyaFh9p136FtMTOuV4bM8cJzi7pcwiM",
+                        "range": "Record Log!A2:F",
+                        "gid": "1091303763"
+                    },
+                    "Standard": {
+                        "id": "1EMNogqAx53IKpyaFh9p136FtMTOuV4bM8cJzi7pcwiM",
+                        "range": "Record Log!A2:F",
+                        "gid": "1091303763"
+                    }
+                },
+                "3": {
+                    "Gravspeed": {
+                        "id": "15aNH2PcnyM_V3g_DsNfRGbHzWLWQgAqNY_xyG0vyqCo",
+                        "range": "Record Log!A2:F",
+                        "gid": "1091303763"
+                    },
+                    "Standard": {
+                        "id": "15aNH2PcnyM_V3g_DsNfRGbHzWLWQgAqNY_xyG0vyqCo",
+                        "range": "Record Log!A2:F",
+                        "gid": "1091303763"
+                    }
+                },
+                "4": {
+                    "Gravspeed": {
+                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
+                        "range": "Record Log!A2:F",
+                        "gid": "1091303763"
+                    },
+                    "Standard": {
+                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
+                        "range": "Record Log!A2:F",
+                        "gid": "1091303763"
+                    }
+                }
+            },
+            "points": {
+                "1": {
+                    "Gravspeed": {
+                        "id": "1vWtqNrRQsuZFsp8-Y-CGBIppjSzSbR4bkN151lCzaQA",
+                        "range": "Points Sheet!D3:E"
+                    },
+                    "Standard": {
+                        "id": "1vWtqNrRQsuZFsp8-Y-CGBIppjSzSbR4bkN151lCzaQA",
+                        "range": "Points Sheet!A3:B"
+                    },
+                    "Total": {
+                        "id": "1vWtqNrRQsuZFsp8-Y-CGBIppjSzSbR4bkN151lCzaQA",
+                        "range": "Points Sheet!G3:H"
+                    }
+                },
+                "2": {
+                    "Gravspeed": {
+                        "id": "1EMNogqAx53IKpyaFh9p136FtMTOuV4bM8cJzi7pcwiM",
+                        "range": "Points Sheet!D3:E"
+                    },
+                    "Standard": {
+                        "id": "1EMNogqAx53IKpyaFh9p136FtMTOuV4bM8cJzi7pcwiM",
+                        "range": "Points Sheet!A3:B"
+                    },
+                    "Total": {
+                        "id": "1EMNogqAx53IKpyaFh9p136FtMTOuV4bM8cJzi7pcwiM",
+                        "range": "Points Sheet!G3:H"
+                    }
+                },
+                "3": {
+                    "Gravspeed": {
+                        "id": "15aNH2PcnyM_V3g_DsNfRGbHzWLWQgAqNY_xyG0vyqCo",
+                        "range": "Points Sheet!D3:E"
+                    },
+                    "Standard": {
+                        "id": "15aNH2PcnyM_V3g_DsNfRGbHzWLWQgAqNY_xyG0vyqCo",
+                        "range": "Points Sheet!A3:B"
+                    },
+                    "Total": {
+                        "id": "15aNH2PcnyM_V3g_DsNfRGbHzWLWQgAqNY_xyG0vyqCo",
+                        "range": "Points Sheet!G3:H"
+                    }
+                },
+                "4": {
+                    "Gravspeed": {
+                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
+                        "range": "Points Sheet!D3:E"
+                    },
+                    "Standard": {
+                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
+                        "range": "Points Sheet!A3:B"
+                    },
+                    "Total": {
+                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
+                        "range": "Points Sheet!G3:H"
+                    }
+                }
+            }
         }
     }
 }
