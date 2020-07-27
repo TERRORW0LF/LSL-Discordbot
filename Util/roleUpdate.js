@@ -8,9 +8,9 @@ module.exports = roleUpdate;
 
 async function roleUpdate(guild, season) {
     try {
-        const guildCfg = serverCgf[guild.id];
+        const guildCfg = serverCfg[guild.id];
         if (guildCfg.roleOptions.role === "none") return;
-        const roles = GuildCfg.roles,
+        const roles = guildCfg.roles,
               allUsers = guild.members.fetch(),
               sheets = google.sheets('v4'),
               token = await getGoogleAuth();
@@ -24,16 +24,34 @@ async function roleUpdate(guild, season) {
             case "highestSeasonCategory": // One role per season --> highest category points of each season.
                 roles = roles[season];
                 let highestPoints = new Map(),
-                    firstPlace;
+                    firstPlace = ['', 0],
+                    newFirstPlaces = new Map();
                 for (let category of guildCfg.categories) {
+                    // Get user/points pairs of current category.
                     const users = (await sheets.spreadsheets.values.get({
                         auth: token,
                         spreadsheetId: guildCfg.googleSheets.points[season][category].id,
                         range: guildCfg.googleSheets[season][category].range,
                         majorDimension: 'ROWS'
                     })).data.values;
+                    // Give out first place roles if needed.
                     if (guildCfg.roleOptions.firstPlace) {
-                        // DO SOMETHING HERE I DON'T WANT TO RN
+                        try {
+                            if (guildCfg.roleOptions.firstPlaceRole === 'all') {
+                                users.sort((a, b) => b[0] - a[0]);
+                                firstPlace = [users[0][1], users[0][0]];
+                                const firstPlaceUser = allUsers.find(member => member.user.tag === users[0][1]);
+                                if (firstPlaceUser && !firstPlaceUser.roles.cache.has(guildCfg.roles.firstPlace[season][category])) {
+                                    firstPlaceUser.roles.add(guildCfg.roles.firstPlace[season][category]);
+                                    newFirstPlaces.set(guildCfg.roles.firstPlace[season][category], firstPlaceUser.user.tag);
+                                }
+                            } else if (guildCfg.roleOptions.firstPlaceRole === 'highest') {
+                                users.sort((a, b) => b[0] - a[0]);
+                                if (firstPlace[1] < users[0][0]) firstPlace = [users[0][1], users[0][0]];
+                            }
+                        } catch {
+                            console.log('Failed to give first place role to user');
+                        }
                     }
                     for (let user in users) {
                         let highestPointsUser = highestPoints.get(user[1]);
@@ -42,16 +60,30 @@ async function roleUpdate(guild, season) {
                         } else highestPoints.set(user[1], user[0]);
                     }
                 }
-                for ([key, value] of highestPoints) {
-                    const guildmem = allUsers.find(member => member.user.tag === key),
-                          role = getRole(roles, value);
-                    if (!role) continue;
+                if (guildCfg.roleOptions.firstPlaceRole === 'highest') {
                     try {
-                        const currUserRoles = roles.keys().filter(key => guildmem.roles.cache.has(key) && key !== role);
-                        for (role of currUserRoles) guildmem.roles.cache.remove(role);
-                        if (!guildmem.roles.has(role)) guildmem.roles.add(role);
+                        const firstPlaceUser = allUsers.find(member => member.user.tag === firstPlace[0]);
+                        if (firstPlaceUser && !firstPlaceUser.roles.cache.has(guildCfg.roles.firstPlace[season])) {
+                            firstPlaceUser.roles.add(guildCfg.roles.firstPlace[season]);
+                            newFirstPlaces.set(guildCfg.roles.firstPlace[season], firstPlaceUser.user.tag);
+                        }
                     } catch {
-                        console.log(`Failed to give role "${role}" to user "${key}"`);
+                        console.log(`Failed to give first place role to user`);
+                    }
+                }
+                for ([key, value] of highestPoints) {
+                    try {
+                        const guildmem = allUsers.find(member => member.user.tag === key),
+                            role = getRole(roles, value);
+                        for ([key, value] of newFirstPlaces) {
+                            if (guildmem.roles.cache.has(key) && guildmem.user.tag !== value) guildmem.roles.remove(key);
+                        }
+                        if (!role) continue;
+                        const currUserRoles = roles.keys().filter(key => guildmem.roles.cache.has(key) && key !== role);
+                        for (role of currUserRoles) guildmem.roles.remove(role);
+                        if (!guildmem.roles.cache.has(role)) guildmem.roles.add(role);
+                    } catch {
+                        console.log(`Failed to give or remove role from user "${key}"`);
                     }
                 }
                 break;
