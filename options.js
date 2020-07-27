@@ -13,7 +13,7 @@ function getModeOptions(mode, id) {
           categoriesLow = categories.map(category => category.toLowerCase());
     let opts = [];
     for (i = 0; i < 5; i++) {
-        const d = strcomp.findBestMatch(map.toLowerCase(), categoriesLow);
+        const d = strcomp.findBestMatch(mode.toLowerCase(), categoriesLow);
         if (d.bestMatch.rating < 0.35) return opts;
         opts.push(categories[d.bestMatchIndex]);
         if (d.bestMatch.rating > 0.7) return opts;
