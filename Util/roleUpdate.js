@@ -53,6 +53,7 @@ async function roleUpdate(guild, season) {
                             console.log('Failed to give first place role to user');
                         }
                     }
+                    // Set Map of users to their corresponding role.
                     for (let user in users) {
                         let highestPointsUser = highestPoints.get(user[1]);
                         if (highestPointsUser) {
@@ -60,6 +61,7 @@ async function roleUpdate(guild, season) {
                         } else highestPoints.set(user[1], user[0]);
                     }
                 }
+                // Give out first place role if needed.
                 if (guildCfg.roleOptions.firstPlaceRole === 'highest') {
                     try {
                         const firstPlaceUser = allUsers.find(member => member.user.tag === firstPlace[0]);
@@ -71,6 +73,7 @@ async function roleUpdate(guild, season) {
                         console.log(`Failed to give first place role to user`);
                     }
                 }
+                // loop over users and give corresponding role.
                 for ([key, value] of highestPoints) {
                     try {
                         const guildmem = allUsers.find(member => member.user.tag === key),
