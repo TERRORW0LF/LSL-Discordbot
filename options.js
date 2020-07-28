@@ -13,7 +13,7 @@ function getModeOptions(mode, id) {
           categoriesLow = categories.map(category => category.toLowerCase());
     let opts = [];
     console.log(mode, categories, categoriesLow);
-    for (i = 0; i < 5 || i < categories.length; i++) {
+    for (i = 0; i < 5 && i < categories.length; i++) {
         const d = strcomp.findBestMatch(mode.toLowerCase(), categoriesLow);
         console.log(d);
         if (d.bestMatch.rating < 0.35) return opts;
@@ -30,7 +30,7 @@ function getMapOptions(stage, id) {
     const maps = serverCfg[id].stages,
           mapsLow = maps.map(str => str.toLowerCase());
     let opts = [];
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < 5 && i < maps.length; i++) {
         const d = strcomp.findBestMatch(stage.toLowerCase(), mapsLow);
         if (d.bestMatch.rating < 0.35) return opts;
         opts.push(maps[d.bestMatchIndex]);
