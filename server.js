@@ -33,9 +33,9 @@ client.on('ready', () => {
 
     // Discord events
     client.on('message', msg => {
+        const prefix = serverCfg[msg.guild.id].prefix;
         if (msg.content.startsWith(prefix) && !msg.author.bot) {
             let answered = false;
-            const prefix = serverCfg[msg.guild.id].prefix;
             for (let command of commands.commandList) {
                 let pattern = new RegExp(command.regex, "i");
                 if (pattern.test(msg.content.replace(prefix, '').trim())) {
