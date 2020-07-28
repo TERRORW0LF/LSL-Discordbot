@@ -28,45 +28,45 @@ process.on('uncaughtException', err => {
 // Start Discord bot
 const client = new Discord.Client();
 client.login(process.env.discordTOKEN);
-client.on('ready', () => {
-    console.log('Discord bot up and running!');
-
-    // Discord events
-    client.on('message', msg => {
-        const prefix = serverCfg[msg.guild.id].prefix;
-        if (msg.content.startsWith(prefix) && !msg.author.bot) {
-            let answered = false;
-            for (let command of commands.commandList) {
-                let pattern = new RegExp(command.regex, "i");
-                if (pattern.test(msg.content.replace(prefix, '').trim())) {
-                    const permission = serverCfg[msg.guild.id].permissions[command.group];
-                    if (permission) {
-                        let hasPermission = false;
-                        for (role of permission) {
-                            if (msg.member.roles.cache.has(role)) hasPermission = true;
-                        }
-                        if (!hasPermission) break;
-                    }
-                    const run = require(`./${command.path}`);
-                    run(msg, client, pattern.exec(msg.content.replace(prefix, '').trim()));
-                    answered = true;
-                }
-            }
-            if (!answered) msg.channel.send("❌ No matching command found.")
-        }
-    });
-
-    // Initialize webhooks handling submits and deletes to google sheets.
-    app.post('/submit', newSubmit(client));
-    app.post('/delete', newDelete(client));
-});
-
 
 // Process app / Webhook listener
 const P = process.env.PORT ||  3000;
 
 (async function init () {
     try {
+        client.on('ready', () => {
+            console.log('Discord bot up and running!');
+        
+            // Discord events
+            client.on('message', msg => {
+                const prefix = serverCfg[msg.guild.id].prefix;
+                if (msg.content.startsWith(prefix) && !msg.author.bot) {
+                    let answered = false;
+                    for (let command of commands.commandList) {
+                        let pattern = new RegExp(command.regex, "i");
+                        if (pattern.test(msg.content.replace(prefix, '').trim())) {
+                            const permission = serverCfg[msg.guild.id].permissions[command.group];
+                            if (permission) {
+                                let hasPermission = false;
+                                for (role of permission) {
+                                    if (msg.member.roles.cache.has(role)) hasPermission = true;
+                                }
+                                if (!hasPermission) break;
+                            }
+                            const run = require(`./${command.path}`);
+                            run(msg, client, pattern.exec(msg.content.replace(prefix, '').trim()));
+                            answered = true;
+                        }
+                    }
+                    if (!answered) msg.channel.send("❌ No matching command found.")
+                }
+            });
+        
+            // Initialize webhooks handling submits and deletes to google sheets.
+            app.post('/submit', newSubmit(client));
+            app.post('/delete', newDelete(client));
+        });
+
         // Start Webhooks listener.
         app.use(express.json());
         await setGoogleAuth();
