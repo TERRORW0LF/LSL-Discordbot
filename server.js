@@ -13,7 +13,6 @@ const newSubmit = require('./Util/newSubmit');
 const newDelete = require('./Util/newDelete');
 
 if (!process.env.PORT) require('dotenv').config();
-const prefix = '!';
 
 // Process unhandled errors
 process.on('unhandledRejection', err => {
@@ -34,8 +33,9 @@ client.on('ready', () => {
 
     // Discord events
     client.on('message', msg => {
-        if (msg.content.startsWith(prefix) && !msg.author.bot && msg.guild.id === '678275066064142347') {
+        if (msg.content.startsWith(prefix) && !msg.author.bot) {
             let answered = false;
+            const prefix = serverCfg[msg.guild.id].prefix;
             for (let command of commands.commandList) {
                 let pattern = new RegExp(command.regex, "i");
                 if (pattern.test(msg.content.replace(prefix, '').trim())) {
