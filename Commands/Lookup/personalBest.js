@@ -12,6 +12,7 @@ async function run(msg, client, regexGroups) {
               season = getSeasonOptions(regexGroups[2], guildId),
               categoryOpts = getModeOptions(regexGroups[3], guildId),
               stageOpts = getMapOptions(regexGroups[4], guildId);
+        console.log(season, categoryOpts, stageOpts);
         if (!season || !categoryOpts.length || !stageOpts.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
