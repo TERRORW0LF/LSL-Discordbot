@@ -1,5 +1,5 @@
 const strcomp = require('string-similarity');
-const serverCfg = require('../Config/serverCfg.json');
+const serverCfg = require('./Config/serverCfg.json');
 
 module.exports = {getSeasonOptions, getModeOptions, getMapOptions};
 
