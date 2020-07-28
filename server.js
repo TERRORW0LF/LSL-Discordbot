@@ -12,8 +12,6 @@ const { setGoogleAuth } = require('./google-auth');
 const newSubmit = require('./Util/newSubmit');
 const newDelete = require('./Util/newDelete');
 
-if (!process.env.PORT) require('dotenv').config();
-
 // Process unhandled errors
 process.on('unhandledRejection', err => {
 	console.error('Unhandled promise rejection:', err);
