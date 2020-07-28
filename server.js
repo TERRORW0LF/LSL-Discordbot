@@ -39,12 +39,12 @@ const P = process.env.PORT ||  3000;
         
             // Discord events
             client.on('message', msg => {
+                const prefix = serverCfg[msg.guild.id].prefix;
+                if (!msg.content.startsWith(prefix) || msg.author.bot) return;
                 if (!serverCfg[msg.guild.id].channels.commands.length || !serverCfg[msg.guild.id].channels.commands.some(value => value === msg.channel.id)) {
                     msg.channel.send('please post commands in the designated channels.');
                     return;
                 }
-                const prefix = serverCfg[msg.guild.id].prefix;
-                if (!msg.content.startsWith(prefix) || msg.author.bot) return;
                 let answered = false;
                 for (let command of commands.commandList) {
                     let pattern = new RegExp(command.regex, "i");
