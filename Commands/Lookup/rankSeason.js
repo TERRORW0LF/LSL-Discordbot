@@ -8,7 +8,7 @@ async function run(msg, client, regexGroups) {
     await msg.react('💬');
     botMsg = await msg.channel.send('💬 Collecting data, please hold on.');
     try {
-        const guildId = msg.guild.id;
+        const guildId = msg.guild.id,
               season = getSeasonOptions(regexGroups[2], guildId);
         if (!season) {
             clearMsg(botMsg, msg);

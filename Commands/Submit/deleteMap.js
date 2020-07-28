@@ -12,7 +12,7 @@ async function run(msg, client, regexGroups) {
     await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Processing deletion. Please hold on.');
     try {
-        const guildId = msg.guild.id;
+        const guildId = msg.guild.id,
               season = getSeasonOptions(regexGroups[2], guildId),
               category = getModeOptions(regexGroups[3], guildId),
               opts = getMapOptions(regexGroups[4], guildId);
