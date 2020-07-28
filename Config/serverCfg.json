@@ -2,7 +2,7 @@
     "574522788967088128": {
         "seasons": ["1","2","3","4"],
         "categories": ["Standard", "Gravspeed"],
-        "maps": ["Hanamura","Horizon Lunar Colony","Paris","Temple of Anubis","Volskaya Industries","Dorado","Havana","Junkertown","Rialto",
+        "stages": ["Hanamura","Horizon Lunar Colony","Paris","Temple of Anubis","Volskaya Industries","Dorado","Havana","Junkertown","Rialto",
             "Route 66","Gibraltar","Blizzard World","Eichenwalde","Hollywood","King's Row","Numbani", "Busan Sanctuary","Busan MEKA Base",
             "Busan Downtown","Ilios Well","Ilios Ruins","Ilios Lighthouse","Lijiang Night Market","Lijiang Garden","Lijiang Control Center",
             "Nepal Village","Nepal Sanctum","Nepal Shrine","Oasis City Center","Oasis University","Oasis Gardens"],
@@ -87,6 +87,18 @@
                 574732901208424449,
                 574523898784251908
             ]
+        },
+        "googleForms": {
+            "1": {
+                "Gravspeed": {
+                    "url": "",
+                    "values": ["","","","",""]
+                },
+                "Standard": {
+                    "url": "",
+                    "values": ["","","","",""]
+                }
+            }
         },
         "googleSheets": {
             "submit": {

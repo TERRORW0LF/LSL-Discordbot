@@ -11,18 +11,18 @@ async function run(msg, client, regexGroups) {
     try {
         const guildId = msg.guild.id,
               season = getSeasonOptions(regexGroups[2], guildId),
-              mode = getModeOptions(regexGroups[3], guildId);
-        if (!season || !mode.length) {
+              category = getModeOptions(regexGroups[3], guildId);
+        if (!season || !category.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ Incorrect season or mode.');
             return;
         }
-        let mapOptions = serverCfg[guildId].maps;
-        const sheet = process.env[`gSheetS${season}`],
-              submits = (await getAllSubmits(sheet, 'Record Log!A2:F')).filter(submit => submit.name === msg.author.tag),
-              complete = mapOptions.filter(map => submits.some(submit => submit.stage === map)),
-              incomplete = mapOptions.filter(map => !complete.some(map2 => map === map2));
+        let stageOptions = serverCfg[guildId].stages;
+        const sheet = serverCfg[guildId].googleSheets.submit[season][category].id,
+              submits = (await getAllSubmits(sheet, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(submit => submit.name === msg.author.tag),
+              complete = stageOptions.filter(stage => submits.some(submit => submit.stage === stage)),
+              incomplete = stageOptions.filter(stage => !complete.some(stage2 => stage === stage2));
         clearMsg(botMsg, msg);
         msg.react('✅');
         if (!complete) botMsg.edit('You have not completed any maps.');

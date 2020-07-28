@@ -4,6 +4,7 @@ const assert = require('assert').strict;
 const { getGoogleAuth } = require('../../google-auth');
 const { getSeasonOptions } = require('../../options');
 const { clearMsg, getAllSubmits, getUserReaction } = require('../../Util/misc');
+const serverCfg = require('../../Config/serverCfg.json');
 
 module.exports = run;
 
@@ -21,9 +22,11 @@ async function run(msg, client, regexGroups) {
             return;
         }
         let runs;
-        const sheet = process.env[`gSheetS${season}`],
-              submits = await getAllSubmits(sheet, 'Record Log!A2:F');
-        if (msg.member.roles.cache.has('574732901208424449') || msg.member.roles.cache.has('574523898784251908')) {
+        let submits = [];
+        for (let category of serverCfg[guildId].categories) {
+            submits.push((await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(submit => submit.category === category));
+        }
+        if (serverCfg[guildId].permissions.moderation.some(value => msg.author.roles.cache.has(value))) {
             runs = submits.filter(run => run.proof === link);
         } else {
             runs = submits.filter(run => run.proof === link && run.name === msg.author.tag);
@@ -38,7 +41,7 @@ async function run(msg, client, regexGroups) {
               row = submits.findIndex(value => { try {return !assert.deepStrictEqual(run, value);} catch(err) {return false}}),
               client = google.sheets('v4'),
               token = await getGoogleAuth(),
-              sid = process.env.gSheetLOGID;
+              gid = serverCfg[guildId].googleSheets.submit[season][run.category].gid;
         if (row === -1) {
             clearMsg(botMsg, msg);
             msg.react('❌');
@@ -49,7 +52,7 @@ async function run(msg, client, regexGroups) {
         requests.push({
             deleteDimension: {
                 range: {
-                    sheetId: parseInt(sid),
+                    sheetId: parseInt(gid),
                     dimension: 'ROWS',
                     startIndex: row + 1,
                     endIndex: row + 2,
@@ -58,7 +61,7 @@ async function run(msg, client, regexGroups) {
         });
         requests.push({
             appendDimension: {
-                sheetId: parseInt(sid),
+                sheetId: parseInt(gid),
                 dimension: 'ROWS',
                 length: 1,
             },
@@ -66,7 +69,7 @@ async function run(msg, client, regexGroups) {
         const resourceVals = {requests};
         await client.spreadsheets.batchUpdate({
             auth: token,
-            spreadsheetId: sheet,
+            spreadsheetId: serverCfg[guildId].googleSheets.submit[season][run.category].id,
             resource: resourceVals,
         }, async (err, res) => {
             if (err) {

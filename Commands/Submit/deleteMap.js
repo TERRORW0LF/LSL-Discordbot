@@ -4,6 +4,7 @@ const assert = require('assert').strict;
 const { clearMsg, getUserReaction, getAllSubmits } = require("../../Util/misc");
 const { getSeasonOptions, getModeOptions, getMapOptions } = require("../../options");
 const { getGoogleAuth } = require("../../google-auth");
+const serverCfg = require('../../Config/serverCfg.json');
 
 module.exports = run;
 
@@ -13,28 +14,28 @@ async function run(msg, client, regexGroups) {
     try {
         const guildId = msg.guild.id;
               season = getSeasonOptions(regexGroups[2], guildId),
-              mode = getModeOptions(regexGroups[3], guildId),
+              category = getModeOptions(regexGroups[3], guildId),
               opts = getMapOptions(regexGroups[4], guildId);
-        if (!season || !mode.length || !opts.length) {
+        if (!season || !category.length || !opts.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ Incorrect season, mode or map.');
             return;
         }
-        const map = opts.length === 1 ? opts[0] : await getUserReaction(msg, botMsg, opts);
-        if (!map) {
+        const stage = opts.length === 1 ? opts[0] : await getUserReaction(msg, botMsg, opts);
+        if (!stage) {
             clearMsg(botMsg, msg);
             msg.react('⌛');
             botMsg.edit('⌛ No map selected.');
             return;
         }
         let runs;
-        const sheet = process.env[`gSheetS${season}`],
-              submits = await getAllSubmits(sheet, 'Record Log!A2:F');
-        if (msg.member.roles.cache.has('574732901208424449') || msg.member.roles.cache.has('574523898784251908')) {
-            runs = submits.filter(run => run.category === mode && run.stage === map);
+        const sheet = serverCfg[guildId].googleSheets.submit[season][category].id,
+              submits = await getAllSubmits(sheet, serverCfg[guildId].googleSheets.submit[season][category].range);
+        if (serverCfg[guildId].permissions.moderation.some(value => msg.member.roles.cache.has(value))) {
+            runs = submits.filter(run => run.category === category && run.stage === stage);
         } else {
-            runs = submits.filter(run => run.category === mode && run.stage === map && run.name === msg.author.tag);
+            runs = submits.filter(run => run.category === category && run.stage === stage && run.name === msg.author.tag);
         }
         if (!runs.length) {
             clearMsg(botMsg, msg);
@@ -46,7 +47,7 @@ async function run(msg, client, regexGroups) {
               row = submits.findIndex(value => { try {return !assert.deepStrictEqual(value, run);} catch(err) {return false}}),
               client = google.sheets('v4'),
               token = await getGoogleAuth(),
-              sid = process.env.gSheetLOGID;
+              gid = serverCfg[guildId].googleSheets.submit[season][category].gid;
         if (row === -1) {
             clearMsg(botMsg, msg);
             msg.react('❌');
@@ -57,7 +58,7 @@ async function run(msg, client, regexGroups) {
         requests.push({
             deleteDimension: {
                 range: {
-                    sheetId: parseInt(sid),
+                    sheetId: parseInt(gid),
                     dimension: 'ROWS',
                     startIndex: row + 1,
                     endIndex: row + 2,
@@ -66,7 +67,7 @@ async function run(msg, client, regexGroups) {
         });
         requests.push({
             appendDimension: {
-                sheetId: parseInt(sid),
+                sheetId: parseInt(gid),
                 dimension: 'ROWS',
                 length: 1,
             },

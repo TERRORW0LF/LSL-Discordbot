@@ -1,5 +1,6 @@
 const { getSeasonOptions, getModeOptions, getMapOptions } = require('../../options');
 const { getAllSubmits, getUserReaction, clearMsg } = require('../../Util/misc');
+const serverCfg = require('../../Config/serverCfg.json');
 
 module.exports = run;
 
@@ -9,22 +10,22 @@ async function run(msg, client, regexGroups) {
     try {
         const guildId = msg.guild.id;
               season = getSeasonOptions(regexGroups[2], guildId),
-              mode = getModeOptions(regexGroups[3], guildId),
+              category = getModeOptions(regexGroups[3], guildId),
               opts = getMapOptions(regexGroups[4], guildId);
-        if (!season || !mode.length || !opts.length) {
+        if (!season || !category.length || !opts.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ Incorrect season, mode or map.');
             return;
         }
-        const map = opts.length === 1 ? opts[0] : await getUserReaction(msg, botMsg, opts);
-        if (!map) {
+        const stage = opts.length === 1 ? opts[0] : await getUserReaction(msg, botMsg, opts);
+        if (!stage) {
             clearMsg(botMsg, msg);
             msg.react('⌛');
             botMsg.edit('⌛ No map selected.');
             return;
         }
-        const wr = (await getAllSubmits(process.env[`gSheetS${season}`], 'Record Log!A2:F')).filter(run => run.category === mode && run.stage === map).sort((a, b) => a -b)[0];
+        const wr = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((a, b) => a.time - b.time)[0];
         if (!wr) {
             clearMsg(botMsg, msg);
             msg.react('❌');
