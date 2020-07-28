@@ -24,12 +24,12 @@ function getModeOptions(mode, id) {
 }
 
 
-function getMapOptions(map, id) {
-    const maps = serverCfg[id].maps,
+function getMapOptions(stage, id) {
+    const maps = serverCfg[id].stages,
           mapsLow = maps.map(str => str.toLowerCase());
     let opts = [];
     for (i = 0; i < 5; i++) {
-        const d = strcomp.findBestMatch(map.toLowerCase(), mapsLow);
+        const d = strcomp.findBestMatch(stage.toLowerCase(), mapsLow);
         if (d.bestMatch.rating < 0.35) return opts;
         opts.push(maps[d.bestMatchIndex]);
         if (d.bestMatch.rating > 0.7) return opts;
