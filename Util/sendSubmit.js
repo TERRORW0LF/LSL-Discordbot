@@ -6,16 +6,16 @@ module.exports = sendSubmit;
 async function sendSubmit(guild, data) {
     try {
         if (!serverCfg[guild.id].channels.submit.enabled) return;
-        const userStr = data.user.split('#')[0],
-              user = await getUser(guild, data.user),
+        const userStr = data.name.split('#')[0],
+              user = await getUser(guild, data.name),
               channel = await guild.channels.get(serverCfg[guild.id].channels.submit.channel);
         channel.send(`${user}`, {
             embed: {
                 title: `new run submitted by ${userStr}`,
-                url: `${data.link}`,
+                url: `${data.proof}`,
                 color: 3010349,
                 thumbnail: {
-                    url: `https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/${data.map.split(' ').join('%20')}.jpg`,
+                    url: `https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/${data.stage.split(' ').join('%20')}.jpg`,
                 },
                 fields: [{
                     name: 'Season',
@@ -23,13 +23,13 @@ async function sendSubmit(guild, data) {
                     inline: true,
                 },
                 {
-                    name: 'Mode',
-                    value: `${data.mode}`,
+                    name: 'Category',
+                    value: `${data.category}`,
                     inline: true,
                 },
                 {
-                    name: 'Map',
-                    value: `${data.map}`,
+                    name: 'Stage',
+                    value: `${data.stage}`,
                     inline: true,
                 },
                 {
@@ -54,7 +54,7 @@ async function sendSubmit(guild, data) {
                 },
             },
         });
-        channel.send(`${data.link}`);
+        channel.send(`${data.proof}`);
     } catch (err) {
         console.log('An error occured in sendSubmit: ' + err.message);
         console.log(err.stack);

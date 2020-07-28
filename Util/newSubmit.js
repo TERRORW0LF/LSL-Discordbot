@@ -2,6 +2,7 @@ const sendSubmit = require('./sendSubmit');
 const sendWr = require('./sendWR');
 const roleUpdate = require('./roleUpdate');
 const { getAllSubmits } = require('./misc');
+const serverCfg = require('../Config/serverCfg.json');
 
 module.exports = newSubmit;
 
@@ -14,10 +15,10 @@ function newSubmit(client) {
         try {
             const guild = discord.guilds.get(req.body.id);
             sendSubmit(guild, req.body);
-            const wr = (await getAllSubmits(process.env[`gSheetS${req.body.season}`], 'Record Log!A2:F')).filter(submit => submit.category === req.body.mode && submit.stage === req.body.map).sort((a, b) => a.time - b.time)[0];
+            const wr = (await getAllSubmits(serverCfg[guild.id].googleSheets.submit[req.body.season][req.body.category].id, serverCfg[guild.id].googleSheets.submit[req.body.season][req.body.category])).filter(submit => submit.category === req.body.category && submit.stage === req.body.stage).sort((a, b) => a.time - b.time)[0];
             if (!wr || wr.time > req.body.time) {
-                console.log(`New Record: ${req.body.season}, ${req.body.mode}, ${req.body.map}, ${req.body.user}, ${req.body.time}, ${req.body.link}`);
-                sendWr(client, req.body, wr);
+                console.log(`New Record: ${req.body.season}, ${req.body.mode}, ${req.body.map}, ${req.body.name}, ${req.body.time}, ${req.body.link}`);
+                sendWr(client, wr, req.body);
             }
             roleUpdate(guild, req.body.season);
             res.sendStatus(200);

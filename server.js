@@ -98,6 +98,6 @@ const P = process.env.PORT ||  3000;
 function pingSelf () {
     if (!process.env.PORT) return;
     setInterval(async () => {
-        axios.get(`https://discord-lsl.herokuapp.com/ping?auth=${process.env.herokuAUTH}`);
+        axios.get(`https://lsl-discordbot-v12.herokuapp.com/ping?auth=${process.env.herokuAUTH}`);
     }, 1700000);
 }

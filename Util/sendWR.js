@@ -6,22 +6,26 @@ module.exports = sendWr;
 async function sendWr(guild, oldWr, newWr) {
     try {
         if (!serverCfg[guild.id].channels.wr.enabled) return;
-              userStr = newWr.user.split('#')[0],
-              oldUserStr = oldWr.user.split('#')[0],
-              user = await getUser(guild, newWr.user),
-              oldUser = await getUser(guild, oldWr.user),
+        const userStr = newWr.name.split('#')[0],
+              user = await getUser(guild, newWr.name),
               channel = guild.channels.get(serverCfg[guild.id].channels.wr.channel);
-        let dateDif,
+        let oldUserStr,
+            oldUser,
+            dateDif,
             timeSave;
         if (!oldWr) {
             oldWr = {
-                user: 'none',
+                name: 'none',
                 time: 'none',
                 date: 'none',
             }
+            oldUserStr = 'none',
+            oldUser = 'none',
             dateDif = 'undefined',
             timeSave = 'undefined'
         } else {
+            oldUserStr = oldWr.name.split('#')[0];
+            oldUser = await getUser(guild, oldWr.name);
             const newYear = newWr.date.split('/')[2].split(' ')[0].trim(),
                   newMonth = Number(newWr.date.split('/')[0])-1,
                   newDay = newWr.date.split('/')[1],
@@ -52,12 +56,12 @@ async function sendWr(guild, oldWr, newWr) {
         channel.send(`${user}`, {
             embed: {
                 title: `New **World Record** by ${userStr}`,
-                url: `${data.link}`,
+                url: `${newWr.proof}`,
                 color: 3010349,
                 thumbnail: {
-                    url: `https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/${data.map.split(' ').join('%20')}.jpg`,
+                    url: `https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/master/Pictures/${newWr.stage.split(' ').join('%20')}.jpg`,
                 },
-                description: `Season: season ${newWr.season}\nMode: ${newWr.mode}\nMap: ${newWr.map}`,
+                description: `Season: season ${newWr.season}\nMode: ${newWr.category}\nMap: ${newWr.stage}`,
                 fields: [
                     {
                         name: '__New Record__',
@@ -81,7 +85,7 @@ async function sendWr(guild, oldWr, newWr) {
                 },
             },
         });
-        channel.send(`${newWr.user !== oldWr.user && typeof oldUser !== 'string' ? getBM(oldUser) : ''}\n${data.link}`);
+        channel.send(`${newWr.name !== oldWr.name && typeof oldUser !== 'string' ? getBM(oldUser) : ''}\n${newWr.proof}`);
     } catch (err) {
         console.log('An error occured in sendWR: '+err.message);
         console.log(err.stack);
