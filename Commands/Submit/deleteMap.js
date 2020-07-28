@@ -14,15 +14,22 @@ async function run(msg, client, regexGroups) {
     try {
         const guildId = msg.guild.id,
               season = getSeasonOptions(regexGroups[2], guildId),
-              category = getModeOptions(regexGroups[3], guildId),
-              opts = getMapOptions(regexGroups[4], guildId);
-        if (!season || !category.length || !opts.length) {
+              categoryOpts = getModeOptions(regexGroups[3], guildId),
+              stageOpts = getMapOptions(regexGroups[4], guildId);
+        if (!season || !categoryOpts.length || !stageOpts.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ Incorrect season, mode or map.');
             return;
         }
-        const stage = opts.length === 1 ? opts[0] : await getUserReaction(msg, botMsg, opts);
+        const category = categoryOpts.length === 1 ? categoryOpts[0] : await getUserReaction(msg, botMsg, categoryOpts);
+        if (!category) {
+            clearMsg(botMsg, msg);
+            msg.react('⌛');
+            botMsg.edit('⌛ No category selected.');
+            return;
+        }
+        const stage = stageOpts.length === 1 ? stageOpts[0] : await getUserReaction(msg, botMsg, stageOpts);
         if (!stage) {
             clearMsg(botMsg, msg);
             msg.react('⌛');
