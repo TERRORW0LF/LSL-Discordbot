@@ -4,7 +4,7 @@ const serverCfg = require('./Config/serverCfg.json');
 module.exports = {getSeasonOptions, getModeOptions, getMapOptions};
 
 function getSeasonOptions(season, id) {
-    return serverCfg[id].seasons.find(value => value = season) ? season : undefined;
+    return serverCfg[id].seasons.find(value => value === season) ? season : undefined;
 }
 
 
