@@ -39,7 +39,7 @@ const P = process.env.PORT ||  3000;
         
             // Discord events
             client.on('message', msg => {
-                if (!serverCfg[msg.guild.id].channels.commands.length || serverCfg[msg.guild.id].channels.commands.some(value => value === msg.channel.id)) {
+                if (!serverCfg[msg.guild.id].channels.commands.length || !serverCfg[msg.guild.id].channels.commands.some(value => value === msg.channel.id)) {
                     msg.channel.send('please post commands in the designated channels.');
                     return;
                 }
