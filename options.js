@@ -12,10 +12,8 @@ function getModeOptions(mode, id) {
     const categories = serverCfg[id].categories,
           categoriesLow = categories.map(category => category.toLowerCase());
     let opts = [];
-    console.log(mode, categories, categoriesLow);
     for (i = 0; i < 5 && i < categories.length; i++) {
         const d = strcomp.findBestMatch(mode.toLowerCase(), categoriesLow);
-        console.log(d);
         if (d.bestMatch.rating < 0.35) return opts;
         opts.push(categories[d.bestMatchIndex]);
         if (d.bestMatch.rating > 0.7) return opts;
