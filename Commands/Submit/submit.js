@@ -50,15 +50,16 @@ async function run(msg, client, regexGroups) {
     }
 }
 
-function getSubmitUrl(msg, season, mode, map, time, link) {
-    var submiturl = '';
-    var user = encodeURIComponent(msg.author.tag);
-    submiturl+= process.env[`gFormS${season.replace('season', '')}`];
-    submiturl+=`&entry.${process.env.gFormMODE}=${mode}`;
-    submiturl+=`&entry.${process.env.gFormMAP}=${map}`;
-    submiturl+=`&entry.${process.env.gFormTIME}=${time}`;
-    submiturl+=`&entry.${process.env.gFormLINK}=${link}`;
-    submiturl+=`&entry.${process.env.gFormUSER}=${user}`;
+function getSubmitUrl(msg, season, category, stage, time, proof) {
+    let submiturl = '';
+    const user = encodeURIComponent(msg.author.tag),
+          submitCfg = serverCfg[msg.guild.id].googleForms[season][category];
+    submiturl+= submitCfg.url;
+    submiturl+=`&entry.${submitCfg.category}=${category}`;
+    submiturl+=`&entry.${submitCfg.stage}=${stage}`;
+    submiturl+=`&entry.${submitCfg.time}=${time}`;
+    submiturl+=`&entry.${submitCfg.proof}=${proof}`;
+    submiturl+=`&entry.${submitCfg.user}=${user}`;
     encodeURI(submiturl);
     return submiturl;
 }
