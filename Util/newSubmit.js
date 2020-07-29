@@ -15,9 +15,9 @@ function newSubmit(client) {
         try {
             const guild = client.guilds.cache.get(req.body.id);
             sendSubmit(guild, req.body);
-            const wr = (await getAllSubmits(serverCfg[guild.id].googleSheets.submit[req.body.season][req.body.category].id, serverCfg[guild.id].googleSheets.submit[req.body.season][req.body.category])).filter(submit => submit.category === req.body.category && submit.stage === req.body.stage).sort((a, b) => a.time - b.time)[0];
+            const wr = (await getAllSubmits(serverCfg[guild.id].googleSheets.submit[req.body.season][req.body.category].id, serverCfg[guild.id].googleSheets.submit[req.body.season][req.body.category].range)).filter(submit => submit.category === req.body.category && submit.stage === req.body.stage).sort((a, b) => a.time - b.time)[0];
             if (!wr || wr.time > req.body.time) {
-                console.log(`New Record: ${req.body.season}, ${req.body.mode}, ${req.body.map}, ${req.body.name}, ${req.body.time}, ${req.body.link}`);
+                console.log(`New Record: ${req.body.season}, ${req.body.category}, ${req.body.stage}, ${req.body.name}, ${req.body.time}, ${req.body.proof}`);
                 sendWr(client, wr, req.body);
             }
             roleUpdate(guild, req.body.season);
