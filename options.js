@@ -9,10 +9,8 @@ function getSeasonOptions(season, id) {
 
 
 function getModeOptions(mode, id) {
-    console.log(serverCfg[id].categories);
     const modes = serverCfg[id].categories,
           modesLow = modes.map(category => category.toLowerCase());
-    console.log(modes);
     let opts = [];
     for (i = 0; i < 5 && modes.length; i++) {
         const d = strcomp.findBestMatch(mode.toLowerCase(), modesLow);
@@ -23,7 +21,6 @@ function getModeOptions(mode, id) {
         modesLow.splice(d.bestMatchIndex, 1);
         console.log(serverCfg[id].categories);
     }
-    console.log(serverCfg[id].categories);
     return opts;
 }
 
@@ -39,6 +36,7 @@ function getMapOptions(stage, id) {
         if (d.bestMatch.rating > 0.7) return opts;
         maps.splice(d.bestMatchIndex, 1);
         mapsLow.splice(d.bestMatchIndex, 1);
+        console.log(serverCfg[id].stages);
     }
     return opts;
 }
