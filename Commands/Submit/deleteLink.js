@@ -30,6 +30,7 @@ async function run(msg, client, regexGroups) {
                 runs.push(submits.filter(run => run.proof === link && run.category === category && run.name === msg.author.tag));
             }
         }
+        console.log(runs);
         if (!runs.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
