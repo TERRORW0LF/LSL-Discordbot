@@ -21,16 +21,16 @@ function getModeOptions(mode, id) {
         if (d.bestMatch.rating > 0.7) return opts;
         modes.splice(d.bestMatchIndex, 1);
         modesLow.splice(d.bestMatchIndex, 1);
+        console.log(serverCfg[id].categories);
     }
+    console.log(serverCfg[id].categories);
     return opts;
 }
 
 
 function getMapOptions(stage, id) {
-    console.log(serverCfg[id].stages);
     const maps = serverCfg[id].stages,
           mapsLow = maps.map(str => str.toLowerCase());
-    console.log(maps);
     let opts = [];
     for (i = 0; i < 5 && maps.length; i++) {
         const d = strcomp.findBestMatch(stage.toLowerCase(), mapsLow);
