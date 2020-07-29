@@ -56,7 +56,7 @@ async function roleUpdate(guild, season) {
                         }
                     }
                     // Set Map of users to their corresponding role.
-                    for (let user in users) {
+                    for (let user of users) {
                         let highestPointsUser = highestPoints.get(user[1]);
                         if (highestPointsUser) {
                             if (highestPointsUser < Number(user[0])) highestPoints.set(user[1], Number(user[0]));
