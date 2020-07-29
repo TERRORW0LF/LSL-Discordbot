@@ -16,7 +16,7 @@ function newSubmit(client) {
             const guild = client.guilds.cache.get(req.body.id);
             sendSubmit(guild, req.body);
             const wr = (await getAllSubmits(serverCfg[guild.id].googleSheets.submit[req.body.season][req.body.category].id, serverCfg[guild.id].googleSheets.submit[req.body.season][req.body.category].range)).filter(submit => submit.category === req.body.category && submit.stage === req.body.stage).sort((a, b) => a.time - b.time)[0];
-            if (!wr || wr.time > req.body.time) {
+            if (!wr || Number(wr.time) > Number(req.body.time)) {
                 console.log(`New Record: ${req.body.season}, ${req.body.category}, ${req.body.stage}, ${req.body.name}, ${req.body.time}, ${req.body.proof}`);
                 sendWr(client, wr, req.body);
             }

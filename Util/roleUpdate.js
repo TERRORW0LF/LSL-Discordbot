@@ -34,6 +34,7 @@ async function roleUpdate(guild, season) {
                         range: guildCfg.googleSheets.points[season][category].range,
                         majorDimension: 'ROWS'
                     })).data.values;
+                    console.log(users);
                     // Give out first place roles if needed.
                     if (guildCfg.roleOptions.firstPlace) {
                         try {
