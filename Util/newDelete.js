@@ -9,7 +9,7 @@ function newDelete(client) {
             return;
         }
         try {
-            const guild = client.guilds.get(req.body.id);
+            const guild = client.guilds.cache.get(req.body.id);
             roleUpdate(guild, req.body.season);
             res.sendStatus(200);
         } catch (err) {

@@ -13,7 +13,7 @@ function newSubmit(client) {
             return;
         }
         try {
-            const guild = client.guilds.get(req.body.id);
+            const guild = client.guilds.cache.get(req.body.id);
             sendSubmit(guild, req.body);
             const wr = (await getAllSubmits(serverCfg[guild.id].googleSheets.submit[req.body.season][req.body.category].id, serverCfg[guild.id].googleSheets.submit[req.body.season][req.body.category])).filter(submit => submit.category === req.body.category && submit.stage === req.body.stage).sort((a, b) => a.time - b.time)[0];
             if (!wr || wr.time > req.body.time) {
