@@ -31,7 +31,7 @@ async function roleUpdate(guild, season) {
                     const users = (await sheets.spreadsheets.values.get({
                         auth: token,
                         spreadsheetId: guildCfg.googleSheets.points[season][category].id,
-                        range: guildCfg.googleSheets[season][category].range,
+                        range: guildCfg.googleSheets.points[season][category].range,
                         majorDimension: 'ROWS'
                     })).data.values;
                     // Give out first place roles if needed.
