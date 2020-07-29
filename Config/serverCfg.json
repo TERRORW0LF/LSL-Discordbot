@@ -259,15 +259,15 @@
                 },
                 "4": {
                     "Gravspeed": {
-                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
+                        "id": "1FVWxhVCEFe1MXuclEwQe-fBxdxeqB3ZQtUmfJ8aPxWg",
                         "range": "Points Sheet!D3:E"
                     },
                     "Standard": {
-                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
+                        "id": "1FVWxhVCEFe1MXuclEwQe-fBxdxeqB3ZQtUmfJ8aPxWg",
                         "range": "Points Sheet!A3:B"
                     },
                     "Total": {
-                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
+                        "id": "1FVWxhVCEFe1MXuclEwQe-fBxdxeqB3ZQtUmfJ8aPxWg",
                         "range": "Points Sheet!G3:H"
                     }
                 }
