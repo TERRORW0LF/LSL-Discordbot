@@ -51,7 +51,7 @@ async function sendWr(guild, oldWr, newWr) {
             msDif -= minutesDif*60*1000;
             const secondsDif = Math.floor(msDif/(1000));
             dateDif = `${yearsDif} years, ${daysDif} days, ${hoursDif} hours, ${minutesDif} mins, ${secondsDif} secs`,
-            timeSave = Math.round(Number(oldWr.time) - Number(newWr.time))
+            timeSave = (Number(oldWr.time) - Number(newWr.time)).toFixed(2);
         }
         channel.send(`${user}`, {
             embed: {
