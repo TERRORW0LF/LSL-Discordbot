@@ -46,7 +46,7 @@ client.on('message', msg => {
             const permission = serverCfg[msg.guild.id].permissions[command.group];
             if (permission) {
                 let hasPermission = false;
-                for (role of permission) {
+                for (let role of permission) {
                     if (msg.member.roles.cache.has(role)) hasPermission = true;
                 }
                 if (!hasPermission) break;
