@@ -10,17 +10,17 @@ function getSeasonOptions(season, id) {
 
 function getModeOptions(mode, id) {
     console.log(serverCfg[id].categories);
-    const categories = serverCfg[id].categories,
-          categoriesLow = categories.map(category => category.toLowerCase());
+    const modes = serverCfg[id].categories,
+          modesLow = categories.map(category => category.toLowerCase());
     console.log(categories);
     let opts = [];
-    for (i = 0; i < 5 && categories.length; i++) {
-        const d = strcomp.findBestMatch(mode.toLowerCase(), categoriesLow);
+    for (i = 0; i < 5 && modes.length; i++) {
+        const d = strcomp.findBestMatch(mode.toLowerCase(), modesLow);
         if (d.bestMatch.rating < 0.35) return opts;
-        opts.push(categories[d.bestMatchIndex]);
+        opts.push(modes[d.bestMatchIndex]);
         if (d.bestMatch.rating > 0.7) return opts;
-        categories.splice(d.bestMatchIndex, 1);
-        categoriesLow.splice(d.bestMatchIndex, 1);
+        modes.splice(d.bestMatchIndex, 1);
+        modesLow.splice(d.bestMatchIndex, 1);
     }
     return opts;
 }
