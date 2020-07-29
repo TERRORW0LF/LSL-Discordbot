@@ -39,7 +39,7 @@ async function run(msg, client, regexGroups) {
         let runs;
         const sheet = serverCfg[guildId].googleSheets.submit[season][category].id,
               submits = await getAllSubmits(sheet, serverCfg[guildId].googleSheets.submit[season][category].range);
-        if (serverCfg[guildId].permissions.moderation.some(value => msg.member.roles.cache.has(value))) {
+        if (!serverCfg[guildId].permissions.moderation || serverCfg[guildId].permissions.moderation.some(value => msg.member.roles.cache.has(value))) {
             runs = submits.filter(run => run.category === category && run.stage === stage);
         } else {
             runs = submits.filter(run => run.category === category && run.stage === stage && run.name === msg.author.tag);
