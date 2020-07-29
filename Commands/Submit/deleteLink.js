@@ -21,15 +21,14 @@ async function run(msg, client, regexGroups) {
             botMsg.edit('❌ Incorrect season.');
             return;
         }
-        let runs;
-        let submits = [];
+        let runs = [];
         for (let category of serverCfg[guildId].categories) {
-            submits.push((await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(submit => submit.category === category));
-        }
-        if (serverCfg[guildId].permissions.moderation.some(value => msg.author.roles.cache.has(value))) {
-            runs = submits.filter(run => run.proof === link);
-        } else {
-            runs = submits.filter(run => run.proof === link && run.name === msg.author.tag);
+            const submits = await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range);
+            if (serverCfg[guildId].permissions.moderation.some(value => msg.author.roles.cache.has(value))) {
+                runs.push(submits.filter(run => run.proof === link && run.category === category));
+            } else {
+                runs.push(submits.filter(run => run.proof === link && run.category === category && run.name === msg.author.tag));
+            }
         }
         if (!runs.length) {
             clearMsg(botMsg, msg);
@@ -38,7 +37,7 @@ async function run(msg, client, regexGroups) {
             return;
         }
         const run = runs.length === 1 ? runs[0] : await getUserReaction(msg, botMsg, runs.slice(-5).reverse()),
-              row = submits.findIndex(value => { try {return !assert.deepStrictEqual(run, value);} catch(err) {return false}}),
+              row = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][run.category].id, serverCfg[guildId].googleSheets.submit[season][run.category].range)).findIndex(value => { try {return !assert.deepStrictEqual(run, value);} catch(err) {return false}}),
               client = google.sheets('v4'),
               token = await getGoogleAuth(),
               gid = serverCfg[guildId].googleSheets.submit[season][run.category].gid;
