@@ -47,7 +47,7 @@ async function run(msg, client, regexGroups) {
             return;
         }
         const rank = runs.indexOf(pb)+1,
-              points = Math.round((runs.length/rank - 1)^2*getMapPoints(map, mode));
+              points = Math.round((runs.length/rank - 1)^2*getMapPoints(stage, category));
         msg.react('✅');
         botMsg.edit(`✅ **Personal Best found!**\n**Time:** ${pb.time}\n**Rank:** ${rank}\n**Points:** ${points}\n**Submitted:** ${pb.date}\n${pb.proof}`);
     } catch (err) {

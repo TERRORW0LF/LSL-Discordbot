@@ -42,7 +42,7 @@ async function run(msg, client, regexGroups) {
         if (resp.status === 200) {
             clearMsg(botMsg, msg);
             msg.react('✅');
-            botMsg.edit(`✅ New run submitted by ${message.author}`);
+            botMsg.edit(`✅ New run submitted by ${msg.author}`);
         } else {
             clearMsg(botMsg, msg);
             msg.react('❌');
