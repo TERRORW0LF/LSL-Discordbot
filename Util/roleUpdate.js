@@ -49,7 +49,7 @@ async function roleUpdate(guild, season) {
                                 users.sort((a, b) => b[0] - a[0]);
                                 if (firstPlace[1] < Number(users[0][0])) firstPlace = [users[0][1], Number(users[0][0])];
                             }
-                        } catch {
+                        } catch (err) {
                             console.log('Failed to give first place role to user\n'+err);
                         }
                     }
@@ -69,8 +69,8 @@ async function roleUpdate(guild, season) {
                             firstPlaceUser.roles.add(guildCfg.roles.firstPlace[season]);
                             newFirstPlaces.set(guildCfg.roles.firstPlace[season], firstPlaceUser.user.tag);
                         }
-                    } catch {
-                        console.log(`Failed to give first place role to user`);
+                    } catch (err) {
+                        console.log(`Failed to give first place role to user\n`+err);
                     }
                 }
                 // loop over users and give corresponding role.
@@ -85,8 +85,8 @@ async function roleUpdate(guild, season) {
                         const currUserRoles = roles.keys().filter(key => guildmem.roles.cache.has(key) && key !== role);
                         for (role of currUserRoles) guildmem.roles.remove(role);
                         if (!guildmem.roles.cache.has(role)) guildmem.roles.add(role);
-                    } catch {
-                        console.log(`Failed to give or remove role from user "${key}"`);
+                    } catch (err) {
+                        console.log(`Failed to give or remove role from user "${key}"\n`+err);
                     }
                 }
                 break;
