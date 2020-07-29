@@ -39,26 +39,26 @@ async function roleUpdate(guild, season) {
                         try {
                             if (guildCfg.roleOptions.firstPlaceRole === 'all') {
                                 users.sort((a, b) => b[0] - a[0]);
-                                firstPlace = [users[0][1], users[0][0]];
-                                const firstPlaceUser = allUsers.find(member => member.user.tag === users[0][1]);
+                                firstPlace = [users[0][1], Number(users[0][0])];
+                                const firstPlaceUser = allUsers.find(member => member.user.tag === firstPlace[0]);
                                 if (firstPlaceUser && !firstPlaceUser.roles.cache.has(guildCfg.roles.firstPlace[season][category])) {
                                     firstPlaceUser.roles.add(guildCfg.roles.firstPlace[season][category]);
                                     newFirstPlaces.set(guildCfg.roles.firstPlace[season][category], firstPlaceUser.user.tag);
                                 }
                             } else if (guildCfg.roleOptions.firstPlaceRole === 'highest') {
                                 users.sort((a, b) => b[0] - a[0]);
-                                if (firstPlace[1] < users[0][0]) firstPlace = [users[0][1], users[0][0]];
+                                if (firstPlace[1] < Number(users[0][0])) firstPlace = [users[0][1], Number(users[0][0])];
                             }
                         } catch {
-                            console.log('Failed to give first place role to user');
+                            console.log('Failed to give first place role to user\n'+err);
                         }
                     }
                     // Set Map of users to their corresponding role.
                     for (let user in users) {
                         let highestPointsUser = highestPoints.get(user[1]);
                         if (highestPointsUser) {
-                            if (highestPointsUser < user[0]) highestPoints.set(user[1], user[0]);
-                        } else highestPoints.set(user[1], user[0]);
+                            if (highestPointsUser < Number(user[0])) highestPoints.set(user[1], Number(user[0]));
+                        } else highestPoints.set(user[1], Number(user[0]));
                     }
                 }
                 // Give out first place role if needed.
