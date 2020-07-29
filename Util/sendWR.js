@@ -8,7 +8,7 @@ async function sendWr(guild, oldWr, newWr) {
         if (!serverCfg[guild.id].channels.wr.enabled) return;
         const userStr = newWr.name.split('#')[0],
               user = await getUser(guild, newWr.name),
-              channel = guild.channels.get(serverCfg[guild.id].channels.wr.channel);
+              channel = guild.channels.cache.get(serverCfg[guild.id].channels.wr.channel);
         let oldUserStr,
             oldUser,
             dateDif,

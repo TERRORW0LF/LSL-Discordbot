@@ -8,7 +8,7 @@ async function sendSubmit(guild, data) {
         if (!serverCfg[guild.id].channels.submit.enabled) return;
         const userStr = data.name.split('#')[0],
               user = await getUser(guild, data.name),
-              channel = await guild.channels.get(serverCfg[guild.id].channels.submit.channel);
+              channel = await guild.channels.cache.get(serverCfg[guild.id].channels.submit.channel);
         channel.send(`${user}`, {
             embed: {
                 title: `new run submitted by ${userStr}`,
