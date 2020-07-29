@@ -47,7 +47,7 @@
             "name": "submit",
             "regex": "(submit|sub) (\\d+) (\\S+) (.+) (\\d+\\.\\d{2}) (https://\\S+)$",
             "help": "submit <season> <mode> <map> <time> <proof>",
-            "path": "Comamnds/Submit/submit.js"
+            "path": "Commands/Submit/submit.js"
         },
         {
             "group": "submit",
