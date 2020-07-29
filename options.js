@@ -11,7 +11,7 @@ function getSeasonOptions(season, id) {
 function getModeOptions(mode, id) {
     console.log(serverCfg[id].categories);
     const modes = serverCfg[id].categories,
-          modesLow = categories.map(category => category.toLowerCase());
+          modesLow = modes.map(category => category.toLowerCase());
     console.log(categories);
     let opts = [];
     for (i = 0; i < 5 && modes.length; i++) {
