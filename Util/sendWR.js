@@ -41,15 +41,15 @@ async function sendWr(guild, oldWr, newWr) {
                   oldSecond = oldWr.date.split('/')[2].split(' ')[1].split(':')[2],
                   oldDate = new Date(oldYear, oldMonth, oldDay, oldHour, oldMinute, oldSecond);
             let msDif = newDate-oldDate,
-                yearsDif = msDif/(365*24*60*60*1000);
+                yearsDif = Math.floor(msDif/(365*24*60*60*1000));
             msDif -= yearsDif*365*24*60*60*1000;
-            const daysDif = msDif/(24*60*60*1000);
+            const daysDif = Math.floor(msDif/(24*60*60*1000));
             msDif -= daysDif*24*60*60*1000;
-            const hoursDif = msDif/(60*60*1000);
+            const hoursDif = Math.floor(msDif/(60*60*1000));
             msDif -= hoursDif*60*60*1000;
-            const minutesDif = msDif/(60*1000);
+            const minutesDif = Math.floor(msDif/(60*1000));
             msDif -= minutesDif*60*1000;
-            const secondsDif = msDif/(1000);
+            const secondsDif = Math.floor(msDif/(1000));
             dateDif = `${yearsDif} years, ${daysDif} days, ${hoursDif} hours, ${minutesDif} mins, ${secondsDif} secs`,
             timeSave = Math.round(Number(oldWr.time) - Number(newWr.time))
         }
