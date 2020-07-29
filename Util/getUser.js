@@ -1,7 +1,9 @@
 module.exports = getUser;
 
 async function getUser(guild, user) {
-    const mention = await guild.members.fetch({query: user, limit: 1});
-    console.log(mention);
-    return mention ? mention[0] : user.split('#')[0];
+    const similarUsers = await guild.members.fetch({query: user.split('#')[0]});
+    console.log(similarUsers);
+    if (!similarUsers) return user.split('#')[0];
+    const mention = similarUsers.find(member => member.user.tag === user);
+    return mention ? mention : user.split('#')[0];
 }
