@@ -81,14 +81,13 @@ async function roleUpdate(guild, season) {
                     try {
                         const guildmem = allUsers.find(member => member.user.tag === key),
                               role = getRole(roles, value);
-                        console.log(guildmem);
                         for ([key, value] of newFirstPlaces) {
                             if (guildmem.roles.cache.has(key) && guildmem.user.tag !== value) guildmem.roles.remove(key);
                         }
                         if (!role) continue;
                         const currUserRoles = Object.keys(roles).filter(key => guildmem.roles.cache.has(key) && key !== role);
                         for (currRole of currUserRoles) guildmem.roles.remove(currRole);
-                        if (!guildmem.roles.cache.has(currRole)) guildmem.roles.add(currRole);
+                        if (!guildmem.roles.cache.has(role)) guildmem.roles.add(currRole);
                     } catch (err) {
                         console.log(`Failed to give or remove role from user "${key}"\n`+err);
                     }
