@@ -146,7 +146,7 @@
             },
             "4": {
                 "Gravspeed": {
-                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSdnC0z2SxbYgIXlAShRQnPJdFYnJ9st8YM6yTEZe_QoNgAofg/formResponse?&submit=SUBMIT",
+                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSel0AEPuyDDOa9uCyf5iBts7DGHQew2c8SK9ERoMWgTbAqIpQ/formResponse?&submit=SUBMIT",
                     "time": "927634646",
                     "user": "58689989",
                     "proof": "774918022",
@@ -203,12 +203,12 @@
                 },
                 "4": {
                     "Gravspeed": {
-                        "id": "1FVWxhVCEFe1MXuclEwQe-fBxdxeqB3ZQtUmfJ8aPxWg",
+                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
                         "range": "Record Log!A2:F",
                         "gid": "1091303763"
                     },
                     "Standard": {
-                        "id": "1FVWxhVCEFe1MXuclEwQe-fBxdxeqB3ZQtUmfJ8aPxWg",
+                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
                         "range": "Record Log!A2:F",
                         "gid": "1091303763"
                     }
@@ -259,15 +259,15 @@
                 },
                 "4": {
                     "Gravspeed": {
-                        "id": "1FVWxhVCEFe1MXuclEwQe-fBxdxeqB3ZQtUmfJ8aPxWg",
+                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
                         "range": "Points Sheet!D3:E"
                     },
                     "Standard": {
-                        "id": "1FVWxhVCEFe1MXuclEwQe-fBxdxeqB3ZQtUmfJ8aPxWg",
+                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
                         "range": "Points Sheet!A3:B"
                     },
                     "Total": {
-                        "id": "1FVWxhVCEFe1MXuclEwQe-fBxdxeqB3ZQtUmfJ8aPxWg",
+                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
                         "range": "Points Sheet!G3:H"
                     }
                 }
