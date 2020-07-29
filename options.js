@@ -9,8 +9,10 @@ function getSeasonOptions(season, id) {
 
 
 function getModeOptions(mode, id) {
+    console.log(serverCfg[id].categories);
     const categories = serverCfg[id].categories,
           categoriesLow = categories.map(category => category.toLowerCase());
+    console.log(categories);
     let opts = [];
     for (i = 0; i < 5 && categories.length; i++) {
         const d = strcomp.findBestMatch(mode.toLowerCase(), categoriesLow);
@@ -25,8 +27,10 @@ function getModeOptions(mode, id) {
 
 
 function getMapOptions(stage, id) {
+    console.log(serverCfg[id].stages);
     const maps = serverCfg[id].stages,
           mapsLow = maps.map(str => str.toLowerCase());
+    console.log(maps);
     let opts = [];
     for (i = 0; i < 5 && maps.length; i++) {
         const d = strcomp.findBestMatch(stage.toLowerCase(), mapsLow);
