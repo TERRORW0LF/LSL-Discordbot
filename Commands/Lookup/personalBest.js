@@ -37,6 +37,7 @@ async function run(msg, client, regexGroups) {
         const user = msg.author.tag,
               pb = runs.filter(run => run.name === user)[0];
         for (let run of runs) {
+            if (pb === run) continue;
             if (runs.filter(run2 => run2.name === run.name).length > 1) runs.splice(runs.indexOf(run), 1);
         }
         if (!pb) {
