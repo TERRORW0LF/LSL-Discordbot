@@ -50,8 +50,14 @@ async function run(msg, client, regexGroups) {
             botMsg.edit('❌ No run found.');
             return;
         }
-        const run = runs.length === 1 ? runs[0] : await getUserReaction(msg, botMsg, runs.slice(-5).reverse()),
-              row = submits.findIndex(value => { try {return !assert.deepStrictEqual(value, run);} catch(err) {return false}}),
+        const run = runs.length === 1 ? runs[0] : await getUserReaction(msg, botMsg, runs.slice(-5).reverse());
+        if (!run) {
+            clearMsg(botMsg, msg);
+            msg.react('⌛');
+            botMsg.edit('⌛ No run selected.');
+            return;
+        }
+        const row = submits.findIndex(value => { try {return !assert.deepStrictEqual(value, run);} catch(err) {return false}}),
               client = google.sheets('v4'),
               token = await getGoogleAuth(),
               gid = serverCfg[guildId].googleSheets.submit[season][category].gid;
