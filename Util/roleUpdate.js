@@ -35,6 +35,7 @@ async function roleUpdate(guild, season) {
                         majorDimension: 'ROWS'
                     })).data.values;
                     console.log(users);
+                    if (!users) continue;
                     // Give out first place roles if needed.
                     if (guildCfg.roleOptions.firstPlace) {
                         try {
@@ -75,10 +76,12 @@ async function roleUpdate(guild, season) {
                     }
                 }
                 // loop over users and give corresponding role.
+                console.log(highestPoints);
                 for ([key, value] of highestPoints) {
                     try {
                         const guildmem = allUsers.find(member => member.user.tag === key),
                             role = getRole(roles, value);
+                        console.log(guildmem);
                         for ([key, value] of newFirstPlaces) {
                             if (guildmem.roles.cache.has(key) && guildmem.user.tag !== value) guildmem.roles.remove(key);
                         }
