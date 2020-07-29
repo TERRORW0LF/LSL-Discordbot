@@ -86,7 +86,7 @@ async function roleUpdate(guild, season) {
                             if (guildmem.roles.cache.has(key) && guildmem.user.tag !== value) guildmem.roles.remove(key);
                         }
                         if (!role) continue;
-                        const currUserRoles = roles.keys().filter(key => guildmem.roles.cache.has(key) && key !== role);
+                        const currUserRoles = Object.keys(roles).filter(key => guildmem.roles.cache.has(key) && key !== role);
                         for (role of currUserRoles) guildmem.roles.remove(role);
                         if (!guildmem.roles.cache.has(role)) guildmem.roles.add(role);
                     } catch (err) {
