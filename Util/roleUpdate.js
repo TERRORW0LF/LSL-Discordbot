@@ -10,7 +10,7 @@ async function roleUpdate(guild, season) {
     try {
         const guildCfg = serverCfg[guild.id];
         if (guildCfg.roleOptions.role === "none") return;
-        const allUsers = guild.members.fetch(),
+        const allUsers = await guild.members.fetch(),
               sheets = google.sheets('v4'),
               token = await getGoogleAuth();
         let roles = guildCfg.roles;
