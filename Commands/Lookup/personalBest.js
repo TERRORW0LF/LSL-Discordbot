@@ -8,7 +8,6 @@ async function run(msg, client, regexGroups) {
     await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Searching personal Best, please hold on.');
     try {
-        console.log(regexGroups);
         const guildId = msg.guild.id,
               season = getSeasonOptions(regexGroups[2], guildId),
               categoryOpts = getModeOptions(regexGroups[3], guildId),
