@@ -34,7 +34,6 @@ async function roleUpdate(guild, season) {
                         range: guildCfg.googleSheets.points[season][category].range,
                         majorDimension: 'ROWS'
                     })).data.values;
-                    console.log(users);
                     if (!users) continue;
                     // Give out first place roles if needed.
                     if (guildCfg.roleOptions.firstPlace) {
@@ -76,7 +75,6 @@ async function roleUpdate(guild, season) {
                     }
                 }
                 // loop over users and give corresponding role.
-                console.log(highestPoints);
                 for ([key, value] of highestPoints) {
                     try {
                         const guildmem = allUsers.find(member => member.user.tag === key),
@@ -87,7 +85,7 @@ async function roleUpdate(guild, season) {
                         if (!role) continue;
                         const currUserRoles = Object.keys(roles).filter(key => guildmem.roles.cache.has(key) && key !== role);
                         for (currRole of currUserRoles) guildmem.roles.remove(currRole);
-                        if (!guildmem.roles.cache.has(role)) guildmem.roles.add(currRole);
+                        if (!guildmem.roles.cache.has(role)) guildmem.roles.add(role);
                     } catch (err) {
                         console.log(`Failed to give or remove role from user "${key}"\n`+err);
                     }
