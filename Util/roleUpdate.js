@@ -79,6 +79,7 @@ async function roleUpdate(guild, season) {
                     try {
                         const guildmem = allUsers.find(member => member.user.tag === key),
                               role = getRole(roles, value);
+                        if (!guildmem) continue;
                         for ([key, value] of newFirstPlaces) {
                             if (guildmem.roles.cache.has(key) && guildmem.user.tag !== value) guildmem.roles.remove(key);
                         }
