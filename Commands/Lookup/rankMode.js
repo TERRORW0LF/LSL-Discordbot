@@ -29,7 +29,6 @@ async function run(msg, client, regexGroups) {
               pair = (await getPoints(serverCfg[guildId].googleSheets.points[season][category].id, serverCfg[guildId].googleSheets.points[season][category].range)).find(pair => pair.name === user),
               submits = await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range),
               runs = submits.filter(submit => submit.name === user && submit.category === category);
-        let length;
         for (let run of runs) {
             if (runs.filter(value => value.stage === run.stage).length > 1) runs.splice(runs.indexOf(run), 1);
         }
