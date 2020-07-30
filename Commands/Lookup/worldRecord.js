@@ -32,7 +32,7 @@ async function run(msg, client, regexGroups) {
             botMsg.edit('⌛ No map selected.');
             return;
         }
-        const wr = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((a, b) => a.time - b.time)[0];
+        const wr = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((a, b) => Number(a.time) - Number(b.time))[0];
         if (!wr) {
             clearMsg(botMsg, msg);
             msg.react('❌');
