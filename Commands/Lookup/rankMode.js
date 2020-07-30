@@ -34,7 +34,7 @@ async function run(msg, client, regexGroups) {
             if (runs.filter(value => value.stage === run.stage).length > 1) runs.splice(runs.indexOf(run), 1);
         }
         pairs.sort((a, b) => Number(b.points) - Number(a.points));
-        const rank = pairs.indexOf(pair) !== -1 ? pairs.indexOf(pair) : 'undefined';
+        const rank = pairs.indexOf(pair) !== -1 ? pairs.indexOf(pair)+1 : 'undefined';
               length = runs.length,
               points = pair ? pair.points : 0;
         clearMsg(botMsg, msg);
