@@ -1,5 +1,5 @@
 const { getSeasonOptions, getModeOptions, getMapOptions } = require('../../options');
-const { clearMsg, getAllSubmits, getMapPoints, getUserReaction } = require('../../Util/misc');
+const { clearMsg, getAllSubmits, getMapPoints, getPlacePoints, getUserReaction } = require('../../Util/misc');
 const serverCfg = require('../../Config/serverCfg.json');
 
 module.exports = run;
@@ -49,7 +49,7 @@ async function run(msg, client, regexGroups) {
             return;
         }
         const rank = runs.indexOf(pb)+1,
-              points = Math.round((runs.length/rank - 1)^2*getMapPoints(stage, category));
+              points = Math.round(((runs.length+1-rank)/runs.length)^2*100 + getMapPoints(stage, category) + getPlacePoints(rank));
         clearMsg(botMsg, msg);
         msg.react('✅');
         botMsg.edit(`✅ **Personal Best found!**\n**Time:** ${pb.time}\n**Rank:** ${rank}\n**Points:** ${points}\n**Submitted:** ${pb.date}\n${pb.proof}`);

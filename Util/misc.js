@@ -3,7 +3,7 @@ const { google } = require('googleapis');
 
 const { getEmojiFromNum, getNumFromEmoji,  reactionFilter } = require('./reactionEmj');
 
-module.exports = { clearMsg, getAllSubmits, getPoints, getMapPoints, getUserReaction };
+module.exports = { clearMsg, getAllSubmits, getPoints, getMapPoints, getPlacePoints, getUserReaction };
 
 async function clearMsg(botMsg, msg) {
     if (msg) msg.reactions.removeAll();
@@ -59,6 +59,20 @@ function getMapPoints(map, mode) {
     else if (['Temple of Anubis', 'Oasis University', 'Oasis City Center', 'Nepal Village', 'Lijiang Garden', 'Ilios Well', 'Illios Ruins', 'Illios Lighthouse', 'Busan Sanctuary', 'Busan Downtown', 'Blizzard World'].includes(map)) points = 50;
     else points = 40;
     return mode === 'Standard' ? points : points/2;
+}
+
+function getPlacePoints(place) {
+    switch(place) {
+        case "1": return 200;
+        case "2": return 180;
+        case "3": return 140;
+        case "4": return 120;
+        case "5": return 100;
+        case "6": return 60;
+        case "7": return 40;
+        case "8": return 20;
+        default: return 0;
+    }
 }
 
 async function getPoints(sheet, sheetRange) {
