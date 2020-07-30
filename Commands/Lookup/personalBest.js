@@ -36,7 +36,11 @@ async function run(msg, client, regexGroups) {
         const user = msg.author.tag,
               pb = runs.filter(run => run.name === user)[0];
         for (let run of runs) {
-            if (runs.filter(run2 => run2.name === run.name).length > 1) runs.splice(runs.indexOf(Number(run.time) > Number(run2.time) ? run : run2), 1);
+            const runs2 = runs.filter(run2 => run2.name === run.name);
+            for (let run2 of runs2) {
+                if (run === run2) continue;
+                runs.splice(runs.indexOf(Number(run.time) > Number(run2.time) ? run : run2), 1);
+            }
         }
         if (!pb) {
             clearMsg(botMsg, msg);
