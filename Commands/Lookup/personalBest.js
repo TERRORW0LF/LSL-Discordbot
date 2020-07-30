@@ -48,9 +48,8 @@ async function run(msg, client, regexGroups) {
             botMsg.edit('❌ No personal best found.');
             return;
         }
-        console.log(runs.length);
         const rank = runs.indexOf(pb)+1,
-              points = Math.round(((runs.length+1-rank)/runs.length)^2*100 + getMapPoints(stage, category) + getPlacePoints(rank));
+              points = Math.round(Math.pow((runs.length+1-rank)/runs.length, 2)*100 + getMapPoints(stage, category) + getPlacePoints(rank));
         clearMsg(botMsg, msg);
         msg.react('✅');
         botMsg.edit(`✅ **Personal Best found!**\n**Time:** ${pb.time}\n**Rank:** ${rank}\n**Points:** ${points}\n**Submitted:** ${pb.date}\n${pb.proof}`);
