@@ -27,7 +27,7 @@ async function run(msg, client, regexGroups) {
         const user = msg.author.tag,
               username = msg.author.username,
               pairs = await getPoints(serverCfg[guildId].googleSheets.points[season][category].id, serverCfg[guildId].googleSheets.points[season][category].range),
-              pair = pairs.find(pair.name === user),
+              pair = pairs.find(value => value.name === user),
               submits = await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range),
               runs = submits.filter(submit => submit.name === user && submit.category === category);
         for (let run of runs) {
