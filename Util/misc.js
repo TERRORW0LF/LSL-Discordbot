@@ -63,14 +63,14 @@ function getMapPoints(map, mode) {
 
 function getPlacePoints(place) {
     switch(place) {
-        case "1": return 200;
-        case "2": return 180;
-        case "3": return 140;
-        case "4": return 120;
-        case "5": return 100;
-        case "6": return 60;
-        case "7": return 40;
-        case "8": return 20;
+        case 1: return 200;
+        case 2: return 180;
+        case 3: return 140;
+        case 4: return 120;
+        case 5: return 100;
+        case 6: return 60;
+        case 7: return 40;
+        case 8: return 20;
         default: return 0;
     }
 }
