@@ -28,12 +28,12 @@ async function run(msg, client, regexGroups) {
         let stageOptions = serverCfg[guildId].stages;
         const sheet = serverCfg[guildId].googleSheets.submit[season][category].id,
               submits = (await getAllSubmits(sheet, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(submit => submit.name === msg.author.tag),
-              complete = stageOptions.filter(stage => submits.some(submit => submit.stage === stage)),
+              complete = stageOptions.filter(stage => submits.some(submit => submit.category === category && submit.stage === stage)),
               incomplete = stageOptions.filter(stage => !complete.some(stage2 => stage === stage2));
         clearMsg(botMsg, msg);
         msg.react('✅');
-        if (!complete) botMsg.edit('You have not completed any maps.');
-        else if (!incomplete) botMsg.edit('You have completed every map.');
+        if (!complete.length) botMsg.edit('You have not completed any maps.');
+        else if (!incomplete.length) botMsg.edit('You have completed every map.');
         else botMsg.edit(`**Completed:**\n${complete.join(', ')}\n\n**Pending:**\n${incomplete.join(', ')}`);
     } catch (err) {
         clearMsg(botMsg, msg);

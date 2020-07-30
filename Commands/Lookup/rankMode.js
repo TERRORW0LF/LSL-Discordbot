@@ -26,17 +26,20 @@ async function run(msg, client, regexGroups) {
         }
         const user = msg.author.tag,
               username = msg.author.username,
-              pair = (await getPoints(serverCfg[guildId].googleSheets.points[season][category].id, serverCfg[guildId].googleSheets.points[season][category].range)).find(pair => pair.name === user),
+              pairs = await getPoints(serverCfg[guildId].googleSheets.points[season][category].id, serverCfg[guildId].googleSheets.points[season][category].range),
+              pair = pairs.find(pair.name === user),
               submits = await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range),
               runs = submits.filter(submit => submit.name === user && submit.category === category);
         for (let run of runs) {
             if (runs.filter(value => value.stage === run.stage).length > 1) runs.splice(runs.indexOf(run), 1);
         }
-        const length = runs.length,
+        pairs.sort((a, b) => Number(b.points) - Number(a.points));
+        const rank = pairs.indexOf(pair) !== -1 ? pairs.indexOf(pair) : 'undefined';
+              length = runs.length,
               points = pair ? pair.points : 0;
         clearMsg(botMsg, msg);
         msg.react('✅');
-        botMsg.edit(`✅ Mode rank found!\n**User:** ${username}\n**Points:** ${points}\n**Maps:** ${length}`);
+        botMsg.edit(`✅ Mode rank found!\n**Rank:** ${rank}\n**Points:** ${points}\n**Maps:** ${length}`);
     } catch(err) {
         clearMsg(botMsg, msg);
         msg.react('❌');

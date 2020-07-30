@@ -17,21 +17,24 @@ async function run(msg, client, regexGroups) {
             return;
         }
         const user = msg.author.tag,
-              username = msg.author.username,
-              pair = (await getPoints(serverCfg[guildId].googleSheets.points[season].Total.id, serverCfg[guildId].googleSheets.points[season].Total.range)).find(pair => pair.name === user);
-        let runs = [];
+              pairs = await getPoints(serverCfg[guildId].googleSheets.points[season].Total.id, serverCfg[guildId].googleSheets.points[season].Total.range),
+              pair = pairs.find(value => value.name === user);
+        let runs = [],
+            allSubmits = []
         for (let category of serverCfg[guildId].categories) {
             const submits = await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range);
-            runs.push(submits.filter(submit => submit.name === user && submit.category === category));
+            submits.filter(submit => submit.name === user && submit.category === category).forEach(value => runs.push(value));
         }
         for (let run of runs) {
             if (runs.filter(value => value.stage === run.stage && value.category === run.category).length > 1) runs.splice(runs.indexOf(run), 1);
         }
-        const length = runs.length,
+        pairs.sort((a, b) => Number(b.points) - Number(a.points));
+        const rank = pairs.indexOf(pair) !== -1 ? pairs.indexOf(pair) : 'undefined';
+              length = runs.length,
               points = pair ? pair.points : 0;
         clearMsg(botMsg, msg);
         msg.react('✅');
-        botMsg.edit(`✅ Season rank found!\n**User:** ${username}\n**Points:** ${points}\n**Maps:** ${length}`);
+        botMsg.edit(`✅ Season rank found!\n**Rank:** ${rank}\n**Points:** ${points}\n**Maps:** ${length}`);
     } catch(err) {
         clearMsg(botMsg, msg);
         msg.react('❌');
