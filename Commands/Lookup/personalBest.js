@@ -42,7 +42,7 @@ async function run(msg, client, regexGroups) {
             return;
         }
         runs = new Map([...runs.reverse().map(run => [run.name, run.time])]);
-        runs = [...runs.entries()].reverse;
+        runs = [...runs.entries()].reverse();
         const rank = runs.filter(run => Number(run[1]) < Number(pb.time)).length+1,
               points = Math.round(Math.pow((runs.length+1-rank)/runs.length, 2)*100 + getMapPoints(stage, category) + getPlacePoints(rank));
         clearMsg(botMsg, msg);
