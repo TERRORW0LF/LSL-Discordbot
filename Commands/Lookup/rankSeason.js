@@ -19,18 +19,15 @@ async function run(msg, client, regexGroups) {
         const user = msg.author.tag,
               pairs = await getPoints(serverCfg[guildId].googleSheets.points[season].Total.id, serverCfg[guildId].googleSheets.points[season].Total.range),
               pair = pairs.find(value => value.name === user);
-        let runs = [],
-            allSubmits = []
+        let runs = [];
         for (let category of serverCfg[guildId].categories) {
             const submits = await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range);
-            submits.filter(submit => submit.name === user && submit.category === category).forEach(value => runs.push(value));
+            runs.push(...submits.filter(submit => submit.name === user && submit.category === category));
         }
-        for (let run of runs) {
-            if (runs.filter(value => value.stage === run.stage && value.category === run.category).length > 1) runs.splice(runs.indexOf(run), 1);
-        }
+        runs = new Set([...runs.map(run => run.stage)]);
         pairs.sort((a, b) => Number(b.points) - Number(a.points));
         const rank = pairs.indexOf(pair) !== -1 ? pairs.indexOf(pair)+1 : 'undefined';
-              length = runs.length,
+              length = runs.size,
               points = pair ? pair.points : 0;
         clearMsg(botMsg, msg);
         msg.react('✅');

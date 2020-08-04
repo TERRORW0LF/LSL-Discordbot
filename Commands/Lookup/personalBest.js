@@ -34,21 +34,16 @@ async function run(msg, client, regexGroups) {
         }
         let runs = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((runA, runB) => Number(runA.time) - Number(runB.time));
         const user = msg.author.tag,
-              pb = runs.filter(run => run.name === user)[0];
-        for (let run of runs) {
-            const runs2 = runs.filter(run2 => run2.name === run.name);
-            for (let run2 of runs2) {
-                if (run === run2) continue;
-                runs.splice(runs.indexOf(Number(run.time) > Number(run2.time) ? run : run2), 1);
-            }
-        }
+              pb = runs.find(run => run.name === user);
         if (!pb) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ No personal best found.');
             return;
         }
-        const rank = runs.indexOf(pb)+1,
+        runs = new Map([...runs.reverse().map(run => [run.name, run.time])]);
+        runs = [...runs].reverse;
+        const rank = runs.filter(run => Number(run[1]) < Number(pb.time)).length+1,
               points = Math.round(Math.pow((runs.length+1-rank)/runs.length, 2)*100 + getMapPoints(stage, category) + getPlacePoints(rank));
         clearMsg(botMsg, msg);
         msg.react('✅');
