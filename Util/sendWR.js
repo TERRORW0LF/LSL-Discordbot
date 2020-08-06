@@ -43,6 +43,8 @@ async function sendWr(guild, oldWr, newWr) {
             let msDif = newDate-oldDate,
                 yearsDif = Math.floor(msDif/(365*24*60*60*1000));
             msDif -= yearsDif*365*24*60*60*1000;
+            const weeksDif = Math.floor(msDif/(7*24*60*60*1000));
+            msDif -= weeksDif*7*24*60*60*1000;
             const daysDif = Math.floor(msDif/(24*60*60*1000));
             msDif -= daysDif*24*60*60*1000;
             const hoursDif = Math.floor(msDif/(60*60*1000));
@@ -50,7 +52,7 @@ async function sendWr(guild, oldWr, newWr) {
             const minutesDif = Math.floor(msDif/(60*1000));
             msDif -= minutesDif*60*1000;
             const secondsDif = Math.floor(msDif/(1000));
-            dateDif = `${yearsDif} years, ${daysDif} days, ${hoursDif} hours, ${minutesDif} mins, ${secondsDif} secs`,
+            dateDif = `${yearsDif} years, ${weeksDif} weeks, ${daysDif} days, ${hoursDif} hours, ${minutesDif} mins, ${secondsDif} secs`,
             timeSave = (Number(oldWr.time) - Number(newWr.time)).toFixed(2);
         }
         channel.send(`${user}`, {
