@@ -43,7 +43,19 @@ async function run(msg, client, regexGroups) {
         }
         runs = new Map([...runs.reverse().map(run => [run.name, run.time])]);
         runs = [...runs.entries()].reverse();
-        const rank = runs.filter(run => Number(run[1]) < Number(pb.time)).length+1,
+        let index;
+        if (serverCfg[guildId].tieOptions.stageTie) {
+            index = runs.filter(run => Number(run[1]) < Number(pb.time)).length;
+            if (!serverCfg[guildId].tieOptions.stageFirstPlaceTie) {
+                if (runs[0][1] === pb.time) index = runs[0][0] === pb.name ? 0 : 1;
+            }
+        } else {
+            index = runs.indexOf([pb.name, pb.time]);
+            if (serverCfg[guildId].tieOptions.stageFirstPlaceTie) {
+                if (runs[0][1] === pb.time) index = 0;
+            }
+        }
+        const rank = index+1,
               points = Math.round(Math.pow((runs.length+1-rank)/runs.length, 2)*100 + getMapPoints(stage, category) + getPlacePoints(rank));
         clearMsg(botMsg, msg);
         msg.react('✅');

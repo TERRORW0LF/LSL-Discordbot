@@ -26,8 +26,13 @@ async function run(msg, client, regexGroups) {
         }
         runs = new Set([...runs.map(run => run.stage)]);
         pairs.sort((a, b) => Number(b.points) - Number(a.points));
-        const rank = pairs.indexOf(pair) !== -1 ? pairs.indexOf(pair)+1 : 'undefined';
-              length = runs.size,
+        let rank;
+        if (pair) {
+            if (serverCfg[guildId].tieOptions.seasonTie) {
+                rank = pairs.filter(currPair => Number(currPair.points) < Number(pair.points)).length + 1;
+            } else rank = pairs.indexOf(pair) + 1;
+        } else rank = 'undefined';
+        const length = runs.size,
               points = pair ? pair.points : 0;
         clearMsg(botMsg, msg);
         msg.react('✅');

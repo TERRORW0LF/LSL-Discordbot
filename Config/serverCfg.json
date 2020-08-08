@@ -12,6 +12,12 @@
             "firstPlace": true,
             "firstPlaceRole": "all"
         },
+        "tieOptions": {
+            "stageTie": true,
+            "stageFirstPlaceTie": false,
+            "modeTie": true,
+            "seasonTie": true
+        },
         "roles": {
             "firstPlace": {
                 "1": {

@@ -25,14 +25,18 @@ async function run(msg, client, regexGroups) {
             return;
         }
         const user = msg.author.tag,
-              username = msg.author.username,
               pairs = await getPoints(serverCfg[guildId].googleSheets.points[season][category].id, serverCfg[guildId].googleSheets.points[season][category].range),
               pair = pairs.find(value => value.name === user),
               submits = await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range),
               runs = new Set([...submits.filter(submit => submit.name === user && submit.category === category).map(run => run.stage)]);
         pairs.sort((a, b) => Number(b.points) - Number(a.points));
-        const rank = pairs.indexOf(pair) !== -1 ? pairs.indexOf(pair)+1 : 'undefined';
-              length = runs.size,
+        let rank;
+        if (pair) {
+            if (serverCfg[guildId].tieOptions.modeTie) {
+                rank = pairs.filter(currPair => Number(currPair.points) < Number(pair.points)).length + 1;
+            } else rank = pairs.indexOf(pair) + 1;
+        } else rank = 'undefined';
+        const length = runs.size,
               points = pair ? pair.points : 0;
         clearMsg(botMsg, msg);
         msg.react('✅');
