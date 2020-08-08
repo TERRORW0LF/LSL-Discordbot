@@ -33,7 +33,7 @@ async function run(msg, client, regexGroups) {
         let rank;
         if (pair) {
             if (serverCfg[guildId].tieOptions.modeTie) {
-                rank = pairs.filter(currPair => Number(currPair.points) < Number(pair.points)).length + 1;
+                rank = pairs.filter(currPair => Number(currPair.points) > Number(pair.points)).length + 1;
             } else rank = pairs.indexOf(pair) + 1;
         } else rank = 'undefined';
         const length = runs.size,
