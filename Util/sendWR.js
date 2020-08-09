@@ -103,7 +103,14 @@ function getBM(user) {
         'it\'s time for a comeback!',
         'get it back, if you can.',
         'had a good run.',
-        'stop sandbagging!'
+        'stop sandbagging!',
+        'got flexed on!',
+        'lost good gamer privileges.',
+        'they\'re making fun about you!',
+        'get good, kid.',
+        'just isn\'t good enough.',
+        'take back your pride!',
+        'my grandma is faster than you!'
     ];
     const msg = Math.round(Math.random()*(bm.length-1));
     return `${user} ${bm[msg]}`
