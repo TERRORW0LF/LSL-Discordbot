@@ -110,7 +110,11 @@ function getBM(user) {
         'get good, kid.',
         'just isn\'t good enough.',
         'take back your pride!',
-        'my grandma is faster than you!'
+        'my grandma is faster than you!',
+        'go back to playing mercy.',
+        'even moira is too hard for you.',
+        'was stuck in brig jail.',
+        'are you a brig main?'
     ];
     const msg = Math.round(Math.random()*(bm.length-1));
     return `${user} ${bm[msg]}`
