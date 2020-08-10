@@ -32,18 +32,21 @@ async function run(msg, client, regexGroups) {
             botMsg.edit('⌛ No map selected.');
             return;
         }
-        let runs = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((runA, runB) => Number(runA.time) - Number(runB.time));
-        const user = msg.author.tag,
-              pb = runs.find(run => run.name === user);
+        const runsPreProc = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((runA, runB) => Number(runA.time) - Number(runB.time)),
+              user = msg.author.tag,
+              pb = runsPreProc.find(run => run.name === user);
         if (!pb) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ No personal best found.');
             return;
         }
-        runs = new Map([...runs.reverse().map(run => [run.name, run.time])]);
-        runs = [...runs.entries()].reverse();
-        let index;
+        let runs = [],
+            index;
+        for (let run of runsPreProc) {
+            if (runs.some(value => value[0] === run.name)) continue;
+            else runs.push([run.name, run.time]);
+        }
         if (serverCfg[guildId].tieOptions.stageTie) {
             index = runs.filter(run => Number(run[1]) < Number(pb.time)).length;
             if (!serverCfg[guildId].tieOptions.stageFirstPlaceTie) {
