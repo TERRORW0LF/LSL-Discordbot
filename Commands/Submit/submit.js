@@ -52,7 +52,7 @@ async function run(msg, client, regexGroups) {
         clearMsg(botMsg, msg);
         msg.react('❌');
         botMsg.edit('❌ An error occurred while handling your command.');
-        console.log('Error in handleSubmission: ' + err.message);
+        console.log('Error in submit: ' + err.message);
         console.log(err.stack);
     }
 }
