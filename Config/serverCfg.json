@@ -96,6 +96,14 @@
             ]
         },
         "googleForms": {
+            "tournament": {
+                "url": "https://docs.google.com/forms/d/e/1FAIpQLSeeQPnSdg9WYILN0LIc8QucpKkVzSpOUHZtl-rNZ_osvi2IDQ/formResponse?&submit=SUBMIT",
+                "discordtag": "1876541319",
+                "battletag": "305490003",
+                "region": "1250086957",
+                "role": "1094513847",
+                "hours": "1330136788"
+            },
             "1": {
                 "Gravspeed": {
                     "url": "https://docs.google.com/forms/d/e/1FAIpQLSfRydSJyHkMp8jUbS0MoESL09co5TKCTHhwxs-waVVA3hPqEQ/formResponse?&submit=SUBMIT",

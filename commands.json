@@ -62,6 +62,13 @@
             "regex": "(delete|del) (\\d+) (\\S+) (.+)",
             "help": "delete <season> <mode> <map>",
             "path": "Commands/Submit/deleteMap.js"
+        },
+        {
+            "group": "tournament",
+            "name": "sign-in",
+            "regex": "(tournament|tourney) (sign-in|sign in| signin) (^[^0-9][^#\\s]{2,11}#[0-9]{4,6}) (na\\s*east|na\\s*e|na\\s*west|na\\s*w|eu|sa|asia|oce) (@.+) (\\d+)$",
+            "help": "tournament sign-in <Blizzard battle-tag> <region> <highest role> <hours played>",
+            "path": "Commands/Tournament/sign-in.js"
         }
     ]
 }
