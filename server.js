@@ -29,6 +29,7 @@ client.login(process.env.discordTOKEN);
 
 // Discord events
 client.on('ready', () => {
+    client.user.setActivity('failing', { type: 'PLAYING' });
     console.log('Discord bot up and running!');
 });
 
@@ -99,5 +100,6 @@ function pingSelf () {
     if (!process.env.PORT) return;
     setInterval(async () => {
         axios.get(`https://lsl-discordbot-v12.herokuapp.com/ping?auth=${process.env.herokuAUTH}`);
+        axios.get(`https://discord-lsl.herokuapp.com/ping?auth=${process.env.herokuAUTH}`);
     }, 1700000);
 }
