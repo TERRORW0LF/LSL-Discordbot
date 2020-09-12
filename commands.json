@@ -69,6 +69,13 @@
             "regex": "(tournament|tourney) (sign-in|sign in| signin) (^[^0-9][^#\\s]{2,11}#[0-9]{4,6}) (na\\s*east|na\\s*e|na\\s*west|na\\s*w|eu|sa|asia|oce) (@.+) (\\d+)$",
             "help": "tournament sign-in <Blizzard battle-tag> <region> <highest role> <hours played>",
             "path": "Commands/Tournament/sign-in.js"
+        },
+        {
+            "group": "tournament",
+            "name": "create",
+            "regex": "(tournament|tourney) (create) ('.+') ((0[1-9]|1[012])/(0[1-9]|[12]\\d|3[01])/\\d{4} ([01]\\d|2[0123]):[0-5]\\d:[0-5]\\d) (min: (\\d+)){0,1} (max: (\\d+)){0,1}$",
+            "help": "tournament create <name> <date (mm/dd/yyyy hh:mm:ss)> (<min: d>) (<max: d>)",
+            "path": "Commands/Tournament/create.js"
         }
     ]
 }
