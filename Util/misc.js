@@ -42,7 +42,7 @@ async function getUserReaction(msg, botMsg, opts) {
     }
     clearMsg(undefined, msg);
     msg.react('❔');
-    botMsg.edit('❔ React to select the corresponding map!' + opts.map((o, i) => '```'+reactOpts[i]+' '+(typeof o !== 'string' ? [...Object.values(o)].join(' ') : o)+'```').join(''));
+    botMsg.edit('❔ React to select the corresponding map!' + opts.map((o, i) => '```'+reactOpts[i]+' '+(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)+'```').join(''));
     const userChoice = await botMsg.awaitReactions(reactionFilter(reactOpts, msg.author.id), {max: 1, time: 15000});
     if (!userChoice || !userChoice.first()) return;
     const opt = getNumFromEmoji(userChoice.first().emoji.name);
