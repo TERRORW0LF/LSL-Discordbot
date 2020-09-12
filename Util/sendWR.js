@@ -26,7 +26,7 @@ async function sendWr(guild, oldWr, newWr) {
         } else {
             oldUserStr = oldWr.name.split('#')[0];
             oldUser = await getUser(guild, oldWr.name);
-            const newYear = newWr.date.split('/')[2].split(' ')[0].trim(),
+            /*const newYear = newWr.date.split('/')[2].split(' ')[0].trim(),
                   newMonth = Number(newWr.date.split('/')[0])-1,
                   newDay = newWr.date.split('/')[1],
                   newHour = newWr.date.split('/')[2].split(' ')[1].split(':')[0].trim(),
@@ -39,7 +39,9 @@ async function sendWr(guild, oldWr, newWr) {
                   oldHour = oldWr.date.split('/')[2].split(' ')[1].split(':')[0].trim(),
                   oldMinute = oldWr.date.split('/')[2].split(' ')[1].split(':')[1],
                   oldSecond = oldWr.date.split('/')[2].split(' ')[1].split(':')[2],
-                  oldDate = new Date(oldYear, oldMonth, oldDay, oldHour, oldMinute, oldSecond);
+                  oldDate = new Date(oldYear, oldMonth, oldDay, oldHour, oldMinute, oldSecond);*/
+            const newDate = new Date(newWr.date),
+                  oldDate = new Date(oldWr.date);
             let msDif = newDate-oldDate,
                 yearsDif = Math.floor(msDif/(365*24*60*60*1000));
             msDif -= yearsDif*365*24*60*60*1000;

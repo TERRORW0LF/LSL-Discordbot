@@ -102,7 +102,7 @@ async function run(msg, client, regexGroups) {
             botMsg.edit('✅ Sucessfully deleted run!');
         });
     } catch (err) {
-        clearMsg(botMsg, msg)
+        clearMsg(botMsg, msg);
         msg.react('❌');
         botMsg.edit('❌ An error occurred while handling your command.');
         console.log('Error in deleteMap: ' + err.message);
