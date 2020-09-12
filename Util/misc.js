@@ -24,10 +24,10 @@ async function getAllSubmits(sheet, sheetrange) {
         output.push({
             date: row[0],
             name: row[1],
-            time: row[2],
-            proof: row[3],
+            category: row[5],
             stage: row[4],
-            category: row[5]
+            time: row[2],
+            proof: row[3]
         });
     }
     return output;
