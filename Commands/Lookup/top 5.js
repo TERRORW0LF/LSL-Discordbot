@@ -8,7 +8,7 @@ async function run(msg, client, regexGroups) {
     const botMsg = await msg.channel.send('💬 Searching top 5 runs, please hold on.');
     try {
         const guildId = msg.guild.id,
-              season = getSeasonOptions(regexGroups[2]),
+              season = getSeasonOptions(regexGroups[2], guildId),
               categoryOpts = getModeOptions(regexGroups[3], guildId),
               stageOpts = getMapOptions(regexGroups[4], guildId);
         if (!season || !categoryOpts.length || !stageOpts.length) {
