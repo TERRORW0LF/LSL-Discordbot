@@ -32,12 +32,17 @@ async function run(msg, client, regexGroups) {
             botMsg.edit('⌛ No map selected.');
             return;
         }
-        const runs = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((a, b) => Number(a.time) - Number(b.time));
+        const runsPreProc = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((a, b) => Number(a.time) - Number(b.time));
         if (!runs.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ No submits found.');
             return;
+        }
+        let runs = [];
+        for (let run of runsPreProc) {
+            if (runs.some(value => value.name === run.name)) continue;
+            else runs.push(run);
         }
         const top5 = runs.filter(run => Number(run.time) <= Number(runs[4].time));
         let outputStr = '```';
