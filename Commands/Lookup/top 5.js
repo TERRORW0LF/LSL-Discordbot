@@ -33,7 +33,7 @@ async function run(msg, client, regexGroups) {
             return;
         }
         const runsPreProc = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((a, b) => Number(a.time) - Number(b.time));
-        if (!runs.length) {
+        if (!runsPreProc.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ No submits found.');
