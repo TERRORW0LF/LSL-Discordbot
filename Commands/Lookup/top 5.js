@@ -1,4 +1,4 @@
-const { getSeasonOptions, getCategoryOptions, getMapOptions } = require("../../options");
+const { getSeasonOptions, getModeOptions, getMapOptions } = require("../../options");
 const { clearMsg } = require("../../Util/misc");
 
 module.exports = run;
