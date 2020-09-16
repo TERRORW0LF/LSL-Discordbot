@@ -1,7 +1,7 @@
-import { getSeasonOptions, getCategoryOptions, getMapOptions } from "../../options";
-import { clearMsg } from "../../Util/misc";
+const { getSeasonOptions, getCategoryOptions, getMapOptions } = require("../../options");
+const { clearMsg } = require("../../Util/misc");
 
-export default run;
+module.exports = run;
 
 async function run(msg, client, regexGroups) {
     await msg.react('💬');
