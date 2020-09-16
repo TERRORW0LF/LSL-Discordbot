@@ -1,5 +1,5 @@
 const { getSeasonOptions, getModeOptions, getMapOptions } = require("../../options");
-const { clearMsg } = require("../../Util/misc");
+const { clearMsg, getAllSubmits } = require("../../Util/misc");
 
 module.exports = run;
 
