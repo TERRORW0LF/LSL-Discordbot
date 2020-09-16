@@ -1,6 +1,6 @@
 const { getSeasonOptions, getModeOptions, getMapOptions } = require("../../options");
 const { clearMsg, getAllSubmits } = require("../../Util/misc");
-const ServerCfg = require("../../Config/serverCfg.json");
+const serverCfg = require("../../Config/serverCfg.json");
 
 module.exports = run;
 
