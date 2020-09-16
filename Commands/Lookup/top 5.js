@@ -40,11 +40,12 @@ async function run(msg, client, regexGroups) {
             return;
         }
         const top5 = runs.filter(run => Number(run.time) <= Number(runs[4].time));
-        let outputStr = '';
-        for (let run of runs) {
+        let outputStr = '```';
+        for (let run of top5) {
             outputStr += `\n${runs.filter(run2 => Number(run2.time) < Number(run.time)).length + 1}`;
             outputStr += ` ${run.name} - ${run.time} - ${run.proof}`;
         }
+        outputStr += '```';
         clearMsg(botMsg, msg);
         msg.react('✅');
         botMsg.edit(`✅ Top 5 runs:${outputStr}`);
