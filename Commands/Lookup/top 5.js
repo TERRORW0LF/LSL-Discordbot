@@ -44,7 +44,7 @@ async function run(msg, client, regexGroups) {
             if (runs.some(value => value.name === run.name)) continue;
             else runs.push(run);
         }
-        const top5 = runs.filter(run => Number(run.time) <= Number(runs[4].time) || Number(runs[runs.length - 1].time));
+        const top5 = runs.filter(run => Number(run.time) <= runs[4] ? Number(runs[4].time) : Number(runs[runs.length - 1].time));
         let outputStr = '```';
         for (let run of top5) {
             outputStr += `\n${runs.filter(run2 => Number(run2.time) < Number(run.time)).length + 1}`;
