@@ -8,6 +8,27 @@
             "path": "Commands/Basic/help.js"
         },
         {
+            "group": "moderation",
+            "name": "mute",
+            "regex": "(mute) <@!?(\\d+)>\\S*((\\d+)(mos?|months?))((\\d+)(ds?|days?))((\\d+)(hs?|hours?))((\\d+)(ms?|mins?))((\\d+)(ss?|secs?)) (.*)",
+            "help": "mute <mention> <duration> <reason>",
+            "path": "Commands/Moderation/mute.js"
+        },
+        {
+            "group": "moderation",
+            "name": "kick",
+            "regex": "(kick) <@!?(\\d+)>\\S*(.*)",
+            "help": "kick <mention> <reason>",
+            "path": "Commands/Moderation/kick.js"
+        },
+        {
+            "group": "moderation",
+            "name": "ban",
+            "regex": "(ban) <@!?(\\d+)>\\S*(.*)",
+            "help": "ban <mention> <reason>",
+            "path": "Commands/Moderation/ban.js"
+        },
+        {
             "group": "lookup",
             "name": "world record",
             "regex": "(wr|world-record|world record) (\\d+) (\\S+) (.+)",
