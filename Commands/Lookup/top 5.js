@@ -44,13 +44,16 @@ async function run(msg, client, regexGroups) {
             if (runs.some(value => value.name === run.name)) continue;
             else runs.push(run);
         }
-        const top5 = runs.filter(run => Number(run.time) <= (runs[4] ? Number(runs[4].time) : Number(runs[runs.length - 1].time)));
         let outputStr = '```';
-        for (let run of top5) {
-            outputStr += `\n${runs.filter(run2 => Number(run2.time) < Number(run.time)).length + 1}`;
-            outputStr += ` ${run.name} - ${run.time} - ${run.proof}`;
+        if (!runs.length) outputStr = '\nNo runs found.';
+        else {
+            const top5 = runs.filter(run => Number(run.time) <= (runs[4] ? Number(runs[4].time) : Number(runs[runs.length - 1].time)));
+            for (let run of top5) {
+                outputStr += `\n${runs.filter(run2 => Number(run2.time) < Number(run.time)).length + 1}`;
+                outputStr += ` ${run.name} - ${run.time} - ${run.proof}`;
+            }
         }
-        outputStr += '```';
+        outputStr += '\n```';
         clearMsg(botMsg, msg);
         msg.react('✅');
         botMsg.edit(`✅ Top 5 runs:${outputStr}`);
