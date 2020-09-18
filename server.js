@@ -57,7 +57,7 @@ client.on('message', msg => {
             answered = true;
         }
     }
-    if (!answered) msg.channel.send("❌ No matching command found.")
+    if (!answered) msg.channel.send("❌ No matching command found / missing permission.")
 });
 
 // Process app / Webhook listener
