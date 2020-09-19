@@ -29,6 +29,13 @@
             "path": "Commands/Moderation/ban.js"
         },
         {
+            "group": "moderation",
+            "name": "unban",
+            "regex": "(unban) (.+#?\\d*) (reason (.+))?",
+            "help": "unban <username> <reason>",
+            "path": "Commands/Moderation/unban.js"
+        },
+        {
             "group": "lookup",
             "name": "world record",
             "regex": "(wr|world-record|world record) (\\d+) (\\S+) (.+)",
