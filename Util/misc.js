@@ -11,6 +11,7 @@ async function clearMsg(botMsg, msg) {
 }
 
 async function getAllSubmits(sheet, sheetrange) {
+    if (!sheet || !sheetrange) return [];
     const token = await getGoogleAuth();
     const client = google.sheets('v4');
     const response = (await client.spreadsheets.values.get({

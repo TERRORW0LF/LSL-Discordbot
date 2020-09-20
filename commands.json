@@ -10,7 +10,7 @@
         {
             "group": "moderation",
             "name": "mute",
-            "regex": "(mute) <@!?(\\d+)>\\S*((\\d+)(mos?|months?))((\\d+)(ds?|days?))((\\d+)(hs?|hours?))((\\d+)(ms?|mins?))((\\d+)(ss?|secs?)) (.*)",
+            "regex": "(mute) <@!?(\\d+)>\\s*((\\d+)(weeks?|ws?))?((\\d+)(days?|ds?))?((\\d+)(hours?|hs?))?((\\d+)(mins?|ms?))?((\\d+)(secs?|ss?))?(.*)?",
             "help": "mute <mention> <duration> <reason>",
             "path": "Commands/Moderation/mute.js"
         },
