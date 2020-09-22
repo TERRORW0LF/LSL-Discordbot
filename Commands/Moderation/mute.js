@@ -34,7 +34,7 @@ async function run(msg, clinet, regexGroups) {
         msg.react('✅');
         botMsg.edit(`✅ Muted ${msg.mentions.members.first()} for ${timeout}ms${regexGroups[19] ? `\nreason: ${regexGroups[19]}` : ''}`);
         setTimeout(() => {
-            msg.member.roles.remove(mutedRole);
+            msg.mentions.members.first().roles.remove(mutedRole);
             msg.channel.send(`✅ ${msg.mentions.members.first()} can now talk again.`);
         }, timeout);
     } catch (err) {
