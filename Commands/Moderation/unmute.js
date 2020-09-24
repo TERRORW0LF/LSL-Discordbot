@@ -1,5 +1,5 @@
 const { clearMsg } = require('../../Util/misc');
-const { deleteTimeout } = require('../../Util/Timeouts');
+const { deleteTimeout } = require('../../Util/timeouts');
 
 module.exports = run;
 

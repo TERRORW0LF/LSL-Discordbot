@@ -1,5 +1,5 @@
 const { clearMsg } = require('../../Util/misc');
-const { addTimeout, deleteTimeout } = require('../../Util/Timeouts');
+const { addTimeout, deleteTimeout } = require('../../Util/timeouts');
 const serverCfg = require('../../Config/serverCfg.json');
 
 module.exports = run;

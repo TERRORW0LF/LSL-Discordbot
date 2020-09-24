@@ -8,7 +8,9 @@ async function addTimeout(id, timeout) {
 }
 
 async function deleteTimeout(id) {
-    const timeout = timeouts.get(id);
-    clearTimeout(timeout);
-    return timeouts.delete(id);
+    try {
+        const timeout = timeouts.get(id);
+        clearTimeout(timeout);
+        return timeouts.delete(id);
+    } catch(err) { console.log(err); }
 }
