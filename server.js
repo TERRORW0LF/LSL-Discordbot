@@ -9,6 +9,7 @@ const Discord = require('discord.js');
 const commands = require('./commands.json');
 const serverCfg = require('./Config/serverCfg.json');
 const { setGoogleAuth } = require('./google-auth');
+const { deleteTimeout } = require('./Util/Timeouts');
 const newSubmit = require('./Util/newSubmit');
 const newDelete = require('./Util/newDelete');
 
@@ -58,6 +59,10 @@ client.on('message', msg => {
         }
     }
     if (!answered) msg.channel.send("❌ No matching command found / missing permission.")
+});
+
+client.on('guildMemberRemove', member => {
+    deleteTimeout(member.guild.id+member.id);
 });
 
 // Process app / Webhook listener
