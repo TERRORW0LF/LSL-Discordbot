@@ -31,7 +31,7 @@ async function run(msg, client, regexGroups) {
             botMsg.edit('❌ Please mention only one member in your message.');
         }
         const timeout = 7*24*60*60*1000*Number(regexGroups[4] | 0)+24*60*60*1000*Number(regexGroups[7] | 0)+60*60*1000*Number(regexGroups[10] | 0)+60*1000*Number(regexGroups[13] | 0)+1000*Number(regexGroups[16] | 0);
-        if (!muteUser.roles.caches.has(muteRole)) muteUser.roles.add(muteRole);
+        if (!muteUser.roles.cache.has(muteRole)) muteUser.roles.add(muteRole);
         clearMsg(botMsg, msg);
         msg.react('✅');
         botMsg.edit(`✅ Muted ${muteUser} for ${timeout}ms${regexGroups[18] ? `\nreason: ${regexGroups[18]}` : ''}`);
