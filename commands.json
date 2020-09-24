@@ -11,33 +11,35 @@
             "group": "moderation",
             "name": "mute",
             "regex": "(mute) <@!?(\\d+)>\\s*((\\d+)(weeks?|ws?))?((\\d+)(days?|ds?))?((\\d+)(hours?|hs?))?((\\d+)(mins?|ms?))?((\\d+)(secs?|ss?))?(.*)?",
-            "help": "mute <mention> <duration> <reason>",
+            "help": "mute <mention> <duration> [<reason>]",
             "path": "Commands/Moderation/mute.js"
         },
         {
             "group": "moderation",
             "name": "unmute",
-            "regex": "(unmute) <@!?(\\d+)>\\s*(.*)?"
+            "regex": "(unmute) <@!?(\\d+)>\\s*(.*)?",
+            "help": "unmute <mention> [<reason>]",
+            "path": "Commands/Moderation/unmute.js"
         },
         {
             "group": "moderation",
             "name": "kick",
             "regex": "(kick) <@!?(\\d+)>\\S*(.*)?",
-            "help": "kick <mention> <reason>",
+            "help": "kick <mention> [<reason>]",
             "path": "Commands/Moderation/kick.js"
         },
         {
             "group": "moderation",
             "name": "ban",
             "regex": "(ban) <@!?(\\d+)>\\s*(.*)?",
-            "help": "ban <mention> <reason>",
+            "help": "ban <mention> [<reason>]",
             "path": "Commands/Moderation/ban.js"
         },
         {
             "group": "moderation",
             "name": "unban",
             "regex": "(unban) (.+#?\\d*) (reason (.+))?",
-            "help": "unban <username> <reason>",
+            "help": "unban <username> [<reason>]",
             "path": "Commands/Moderation/unban.js"
         },
         {
