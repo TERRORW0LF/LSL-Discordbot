@@ -1,5 +1,6 @@
 const { clearMsg } = require('../../Util/misc');
 const { deleteTimeout } = require('../../Util/timeouts');
+const serverCfg = require('../../Config/serverCfg.json');
 
 module.exports = run;
 
@@ -9,6 +10,7 @@ async function run(msg, client, regexGroups) {
     try {
         const answer = await deleteTimeout(msg.guild.id+regexGroups[2]);
         if (answer) {
+            msg.mentions.members.get(regexGroups[2]).roles.remove(serverCfg[msg.guild.id].roles.moderation.mute);
             clearMsg(botMsg, msg);
             msg.react('✅');
             botMsg.edit(`✅ Successfully unmuted <@${regexGroups[2]}>.`);
