@@ -3,112 +3,112 @@
         {
             "group": "basic",
             "name": "help",
-            "regex": "(.*)\\s?(help|commands)$",
+            "regex": "^(.*)\\s?(help|commands)$",
             "help": "help / <command-group> help",
             "path": "Commands/Basic/help.js"
         },
         {
             "group": "moderation",
             "name": "mute",
-            "regex": "(mute) <@!?(\\d+)>\\s*((\\d+)(weeks?|ws?))?((\\d+)(days?|ds?))?((\\d+)(hours?|hs?))?((\\d+)(mins?|ms?))?((\\d+)(secs?|ss?))?(.*)?",
+            "regex": "^(mute) <@!?(\\d+)>\\s*((\\d+)(weeks?|ws?))?((\\d+)(days?|ds?))?((\\d+)(hours?|hs?))?((\\d+)(mins?|ms?))?((\\d+)(secs?|ss?))?(.*)?",
             "help": "mute <mention> <duration> [<reason>]",
             "path": "Commands/Moderation/mute.js"
         },
         {
             "group": "moderation",
             "name": "unmute",
-            "regex": "(unmute) <@!?(\\d+)>\\s*(.*)?",
+            "regex": "^(unmute) <@!?(\\d+)>\\s*(.*)?",
             "help": "unmute <mention> [<reason>]",
             "path": "Commands/Moderation/unmute.js"
         },
         {
             "group": "moderation",
             "name": "kick",
-            "regex": "(kick) <@!?(\\d+)>\\S*(.*)?",
+            "regex": "^(kick) <@!?(\\d+)>\\S*(.*)?",
             "help": "kick <mention> [<reason>]",
             "path": "Commands/Moderation/kick.js"
         },
         {
             "group": "moderation",
             "name": "ban",
-            "regex": "(ban) <@!?(\\d+)>\\s*(.*)?",
+            "regex": "^(ban) <@!?(\\d+)>\\s*(.*)?",
             "help": "ban <mention> [<reason>]",
             "path": "Commands/Moderation/ban.js"
         },
         {
             "group": "moderation",
             "name": "unban",
-            "regex": "(unban) (.+#?\\d*) (reason (.+))?",
+            "regex": "^(unban) (.+#?\\d*) (reason (.+))?",
             "help": "unban <username> [<reason>]",
             "path": "Commands/Moderation/unban.js"
         },
         {
             "group": "lookup",
             "name": "world record",
-            "regex": "(wr|world-record|world record) (\\d+) (\\S+) (.+)",
+            "regex": "^(wr|world-record|world record) (\\d+) (\\S+) (.+)",
             "help": "wr <season> <mode> <map>",
             "path": "Commands/Lookup/worldRecord.js"
         },
         {
             "group": "lookup",
             "name": "personal best",
-            "regex": "(pb|personal-best|personal best|rank|standing|position) (\\d+) (\\S+) (.+)",
+            "regex": "^(pb|personal-best|personal best|rank|standing|position) (\\d+) (\\S+) (.+)",
             "help": "pb|rank <season> <mode> <map>",
             "path": "Commands/Lookup/personalBest.js"
         },
         {
             "group": "lookup",
             "name": "top 5",
-            "regex": "(top 5|top5|t5) (\\d+) (\\S+) (.+)",
+            "regex": "^(top 5|top5|t5) (\\d+) (\\S+) (.+)",
             "help": "top 5 <season> <mode> <map>",
             "path": "Commands/Lookup/top 5.js"
         },
         {
             "group": "lookup",
             "name": "rank season",
-            "regex": "(rank|standing|position) (\\d+)$",
+            "regex": "^(rank|standing|position) (\\d+)$",
             "help": "rank <season>",
             "path": "Commands/Lookup/rankSeason.js"
         },
         {
             "group": "lookup",
             "name": "rank mode",
-            "regex": "(rank|standing|position) (\\d+) (\\S+)$",
+            "regex": "^(rank|standing|position) (\\d+) (\\S+)$",
             "help": "rank <season> <mode>",
             "path": "Commands/Lookup/rankMode.js"
         },
         {
             "group": "lookup",
             "name": "incomplete",
-            "regex": "(incomplete|complete) (\\d+) (\\S+)$",
+            "regex": "^(incomplete|complete) (\\d+) (\\S+)$",
             "help": "incomplete <season> <mode>",
             "path": "Commands/Lookup/incomplete.js"
         },
         {
             "group": "submit",
             "name": "delete link",
-            "regex": "(delete|del) (\\d+) (https://\\S+)$",
+            "regex": "^(delete|del) (\\d+) (https://\\S+)$",
             "help": "delete <season> <link>",
             "path": "Commands/Submit/deleteLink.js"
         },
         {
             "group": "submit",
             "name": "delete map",
-            "regex": "(delete|del) (\\d+) (\\S+) (.+)",
+            "regex": "^(delete|del) (\\d+) (\\S+) (.+)",
             "help": "delete <season> <mode> <map>",
             "path": "Commands/Submit/deleteMap.js"
         },
         {
             "group": "tournament",
             "name": "sign-in",
-            "regex": "(tournament|tourney) (sign-in|sign in| signin) (^[^0-9][^#\\s]{2,11}#[0-9]{4,6}) (na\\s*east|na\\s*e|na\\s*west|na\\s*w|eu|sa|asia|oce) (@.+) (\\d+)$",
+            "regex": "^(tournament|tourney) (sign-in|sign in| signin) (^[^0-9][^#\\s]{2,11}#[0-9]{4,6}) (na\\s*east|na\\s*e|na\\s*west|na\\s*w|eu|sa|asia|oce) (@.+) (\\d+)$",
             "help": "tournament sign-in <Blizzard battle-tag> <region> <highest role> <hours played>",
             "path": "Commands/Tournament/sign-in.js"
         },
         {
             "group": "tournament",
             "name": "create",
-            "regex": "(tournament|tourney) (create) ('.+') ((0[1-9]|1[012])/(0[1-9]|[12]\\d|3[01])/\\d{4} ([01]\\d|2[0123]):[0-5]\\d:[0-5]\\d) (min: (\\d+)){0,1} (max: (\\d+)){0,1}$",
+            "regex": "^(tournament|tourney) (create) ('.+') ((0[1-9]|1[012])/(0[1-9]|[12]\\d|3[01])/\\d{4} ([01]\\d|2[0123]):[0-5]\\d:[0-5]\\d) (min: (\\d+)){0,1} (max: (\\d+)){0,1}$",
             "help": "tournament create <name> <date (mm/dd/yyyy hh:mm:ss)> (<min: d>) (<max: d>)",
             "path": "Commands/Tournament/create.js"
         }
