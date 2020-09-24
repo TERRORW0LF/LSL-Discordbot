@@ -6,16 +6,23 @@ async function run(msg, clinet, regexGroups) {
     await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Searching user data, please hold on.');
     try {
+        const kickUser = msg.mentions.members.first();
+        if (!kickUser) {
+            clearMsg(botMsg, msg);
+            msg.react('❌');
+            botMsg.edit('❌ Please mention a user to kick.');
+            return;
+        }
         if (msg.mentions.members.length > 1) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ Please only mention one user.');
             return;
         }
-        msg.mentions.members.first().kick(regexGroups[3]);
+        kickUser.kick(regexGroups[3]);
         clearMsg(botMsg, msg);
         msg.react('✅');
-        botMsg.edit(`✅ Successfully kicked ${msg.mentions.members.first().tag}.`);
+        botMsg.edit(`✅ Successfully kicked ${kickUser.tag}.`);
     } catch (err) {
         clearMsg(botMsg, msg);
         msg.react('❌');

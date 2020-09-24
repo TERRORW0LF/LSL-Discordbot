@@ -6,16 +6,23 @@ async function run(msg, clinet, regexGroups) {
     await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Searching user data, please hold on.');
     try {
+        const banUser = msg.mentions.members.first();
+        if (!banUser) {
+            clearMsg(botMsg, msg);
+            msg.react('❌');
+            botMsg.edit('❌ Please mention a user to ban.');
+            return;
+        }
         if (msg.mentions.members.length > 1) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ Please only mention one user.');
             return;
         }
-        msg.mentions.members.first().ban({reason: regexGroups[3]});
+        banUser.ban({reason: regexGroups[3]});
         clearMsg(botMsg, msg);
         msg.react('✅');
-        botMsg.edit(`✅ Successfully banned ${msg.mentions.members.first().tag}.`);
+        botMsg.edit(`✅ Successfully banned ${banUser.tag}.`);
     } catch (err) {
         clearMsg(botMsg, msg);
         msg.react('❌');

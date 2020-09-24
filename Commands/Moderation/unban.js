@@ -2,7 +2,7 @@ const { clearMsg } = require("../../Util/misc");
 
 module.exports = run;
 
-async function run(msg, clinet, regexGroups) {
+async function run(msg, client, regexGroups) {
     await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Searching user data, please hold on.');
     try {
@@ -21,7 +21,7 @@ async function run(msg, clinet, regexGroups) {
         clearMsg(botMsg, msg);
         msg.react('❌');
         botMsg.edit('❌ An error occurred while handling your command.');
-        console.log('Error in ban: ' + err.message);
+        console.log('Error in unban: ' + err.message);
         console.log(err.stack);
     }
 }
