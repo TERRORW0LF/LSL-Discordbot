@@ -16,15 +16,20 @@
         },
         {
             "group": "moderation",
+            "name": "unmute",
+            "regex": "(unmute) <@!?(\\d+)>\\s*(.*)?"
+        },
+        {
+            "group": "moderation",
             "name": "kick",
-            "regex": "(kick) <@!?(\\d+)>\\S*(.*)",
+            "regex": "(kick) <@!?(\\d+)>\\S*(.*)?",
             "help": "kick <mention> <reason>",
             "path": "Commands/Moderation/kick.js"
         },
         {
             "group": "moderation",
             "name": "ban",
-            "regex": "(ban) <@!?(\\d+)>\\S*(.*)",
+            "regex": "(ban) <@!?(\\d+)>\\s*(.*)?",
             "help": "ban <mention> <reason>",
             "path": "Commands/Moderation/ban.js"
         },
