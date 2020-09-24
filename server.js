@@ -9,7 +9,7 @@ const Discord = require('discord.js');
 const commands = require('./commands.json');
 const serverCfg = require('./Config/serverCfg.json');
 const { setGoogleAuth } = require('./google-auth');
-const { deleteTimeout } = require('./Util/Timeouts');
+const { deleteTimeout } = require('./Util/timeouts');
 const newSubmit = require('./Util/newSubmit');
 const newDelete = require('./Util/newDelete');
 
