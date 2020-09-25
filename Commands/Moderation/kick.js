@@ -19,9 +19,9 @@ async function run(msg, clinet, regexGroups) {
             botMsg.edit('❌ Please only mention one user.');
             return;
         }
-        if (kickUser.roles.highest.comparePositionTo(msg.member.roles.highest) > 0) {
+        if (kickUser.roles.highest.comparePositionTo(msg.member.roles.highest) >= 0) {
             clearMsg(botMsg, msg);
-            msg.reat('❌');
+            msg.react('❌');
             botMsg.edit('❌ You can only kick members with a lower highest role than yours.');
             return;
         }

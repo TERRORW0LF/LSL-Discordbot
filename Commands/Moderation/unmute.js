@@ -14,12 +14,11 @@ async function run(msg, client, regexGroups) {
             clearMsg(botMsg, msg);
             msg.react('✅');
             botMsg.edit(`✅ Successfully unmuted <@${regexGroups[2]}>.`);
-        } 
-        else {
-            clearMsg(botMsg, msg);
-            msg.react('❌');
-            botMsg.edit(`❌ <@${regexGroups[2]}> is either not muted or not in the guild anymore.`);
+            return;
         }
+        clearMsg(botMsg, msg);
+        msg.react('❌');
+        botMsg.edit(`❌ <@${regexGroups[2]}> is either not muted or not in the guild anymore.`);
     } catch(err) {
         clearMsg(botMsg, msg);
         msg.react('❌');

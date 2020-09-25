@@ -24,15 +24,17 @@ async function run(msg, client, regexGroups) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ No member mentioned.');
+            return;
         }
         if (msg.mentions.members.size > 1) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ Please mention only one member in your message.');
+            return;
         }
-        if (muteUser.roles.highest.comparePositionTo(msg.member.roles.highest) > 0) {
+        if (muteUser.roles.highest.comparePositionTo(msg.member.roles.highest) >= 0) {
             clearMsg(botMsg, msg);
-            msg.reat('❌');
+            msg.react('❌');
             botMsg.edit('❌ You can only mute members with a lower highest role than yours.');
             return;
         }
