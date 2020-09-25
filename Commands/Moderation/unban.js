@@ -6,7 +6,7 @@ async function run(msg, client, regexGroups) {
     await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Searching user data, please hold on.');
     try {
-        const bannedPlayer = msg.guild.fetchBans().find(user => regexGroups[2].split('#')[1] ? user.tag === regexGroups[2] : user.username === regexGroups[2]);
+        const bannedPlayer = msg.guild.fetchBans().find(user => regexGroups[2].split('#')[1] ? user.user.tag === regexGroups[2] : user.user.username === regexGroups[2]);
         if (!bannedPlayer) {
             clearMsg(botMsg, msg);
             msg.react('❌');

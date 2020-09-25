@@ -30,6 +30,12 @@ async function run(msg, client, regexGroups) {
             msg.react('❌');
             botMsg.edit('❌ Please mention only one member in your message.');
         }
+        if (muteUser.roles.highest.comparePositionTo(msg.member.roles.highest) > 0) {
+            clearMsg(botMsg, msg);
+            msg.reat('❌');
+            botMsg.edit('❌ You can only mute members with a lower highest role than yours.');
+            return;
+        }
         const timeout = 7*24*60*60*1000*Number(regexGroups[4] | 0)+24*60*60*1000*Number(regexGroups[7] | 0)+60*60*1000*Number(regexGroups[10] | 0)+60*1000*Number(regexGroups[13] | 0)+1000*Number(regexGroups[16] | 0);
         if (!muteUser.roles.cache.has(muteRole)) muteUser.roles.add(muteRole);
         clearMsg(botMsg, msg);
