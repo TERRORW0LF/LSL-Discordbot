@@ -1,7 +1,9 @@
 {
-  "name": "testing-js-discord-bot",
-  "version": "0.0.0",
-  "description": "Just for Testing purpose",
+  "name": "Speedominator",
+  "version": "2.0.0",
+  "description": "version 2 of the bot. Now with modular package adding and discord.js v12.",
+  "repository": "https://github.com/TERRORW0LF/LSL-Discordbot",
+  "readme": "https://github.com/TERRORW0LF/LSL-Discordbot/blob/master/README.md",
   "main": "server.js",
   "author": {
     "name": "TERRORWOLF"
@@ -9,12 +11,13 @@
   "keywords": [],
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.2",
-    "discord.js": "^12.2.0",
+    "axios": "^0.20.0",
+    "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "google-auth-library": "^6.0.3",
-    "googleapis": "^52.1.0",
-    "string-similarity": "^4.0.1"
+    "google-auth-library": "^6.1.0",
+    "googleapis": "^60.0.1",
+    "package.json": "^2.0.1",
+    "string-similarity": "^4.0.2"
   }
 }
