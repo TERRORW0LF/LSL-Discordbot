@@ -1,9 +1,10 @@
 const { getGoogleAuth } = require('../google-auth');
 const { google } = require('googleapis');
+const strComp = require('string-similarity');
 
 const { getEmojiFromNum, getNumFromEmoji,  reactionFilter } = require('./reactionEmj');
 
-module.exports = { clearMsg, getAllSubmits, getPoints, getMapPoints, getPlacePoints, getUserReaction };
+module.exports = { clearMsg, getAllSubmits, getPoints, getMapPoints, getPlacePoints, getUserReaction, getOptions };
 
 async function clearMsg(botMsg, msg) {
     if (msg) msg.reactions.removeAll();
@@ -34,17 +35,37 @@ async function getAllSubmits(sheet, sheetrange) {
     return output;
 }
 
-async function getUserReaction(msg, botMsg, opts) {
-    const reactOpts = [];
-    for (i = 1; i <= opts.length; i++) {
-        const emoji = getEmojiFromNum(i);
-        reactOpts.push(emoji);
-        botMsg.react(emoji);
+function getOptions(input, opts, min = 0.35, max = 0.7) {
+    const options = Array.from(opts),
+          optionsLow = options.map(option => option.toLowerCase());
+    let similars = [];
+    const d = strComp.findBestMatch(input.toLowerCase(), optionsLow);
+    for ([index, rating] of d.ratings.entries()) {
+        if (rating.rating < min) continue;
+        else if (rating.rating > max) return options[index];
+        else similars.push(options[index]);
     }
-    clearMsg(undefined, msg);
+    return similars;
+}
+
+async function getUserReaction(msg, botMsg, opts) {
+    clearMsg(botMsg, msg);
     msg.react('❔');
-    botMsg.edit('❔ React to select the corresponding map!' + opts.map((o, i) => '```'+reactOpts[i]+' '+(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)+'```').join(''));
-    const userChoice = await botMsg.awaitReactions(reactionFilter(reactOpts, msg.author.id), {max: 1, time: 15000});
+    let userChoice,
+        page = 0;
+    const reactOpts = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','▶'];
+    do {
+        if (opts.slice((page-1)*5, page*5).length < 5) page = 0;
+        page++;
+        for (i = 0; i <= 4; i++) {
+            if (i < opts.slice((page-1)*5, page*5).length && !msg.reactions.cache.find(reaction => reaction.emoji.name === reactOpts[i])) botMsg.react(reactOpts[i]);
+            else if (msg.reactions.cache.find(reaction => reaction.emoji.name === reactOpts[i])) msg.reactions.find(reaction => reaction.emoji.name === reactOpts[i]).remove();
+        }
+        botMsg.react('▶');
+        if (botMsg.reactions.cache.find(reaction => reaction.emoji.name === '▶') && botMsg.reactions.cache.find(reaction => reaction.emoji.name === '▶').users.cache.has(msg.author.id)) botMsg.reactions.cache.find(reaction => reaction.emoji.name === '▶').users.remove(msg.author.id);
+        botMsg.edit('❔ React to select the desired Option!' + opts.slice((page-1)*5, page*5).map((o, i) => '```'+reactOpts[i]+' '+(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)+'```').join(''));
+        userChoice = await botMsg.awaitReactions(reactionFilter(reactOpts, msg.author.id), {max: 1, time: 15000});
+    } while (userChoice.first() && userChoice.first().emoji.name === '▶');
     if (!userChoice || !userChoice.first()) return;
     const opt = getNumFromEmoji(userChoice.first().emoji.name);
     const map = opts[opt - 1];

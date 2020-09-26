@@ -1,5 +1,4 @@
-const { getSeasonOptions } = require('../../options');
-const { getPoints, clearMsg, getAllSubmits } = require("../../Util/misc");
+const { getPoints, clearMsg, getAllSubmits, getOptions } = require("../../Util/misc");
 const serverCfg = require('../../Config/serverCfg.json');
 
 module.exports = run;
@@ -9,11 +8,18 @@ async function run(msg, client, regexGroups) {
     const botMsg = await msg.channel.send('💬 Collecting data, please hold on.');
     try {
         const guildId = msg.guild.id,
-              season = getSeasonOptions(regexGroups[2], guildId);
-        if (!season) {
+              seasonOpts = getOptions(regexGroups[2], serverCfg[guildId].seasons);
+        if (!seasonOpts.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ Incorrect season.');
+            return;
+        }
+        const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg, botMsg, seasonOpts);
+        if (!season) {
+            clearMsg(botMsg, msg);
+            msg.react('⌛');
+            botMsg.edit('⌛ No season selected.');
             return;
         }
         const user = msg.author.tag,

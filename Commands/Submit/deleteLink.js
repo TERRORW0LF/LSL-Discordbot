@@ -2,8 +2,7 @@ const { google } = require('googleapis');
 const assert = require('assert').strict;
 
 const { getGoogleAuth } = require('../../google-auth');
-const { getSeasonOptions } = require('../../options');
-const { clearMsg, getAllSubmits, getUserReaction } = require('../../Util/misc');
+const { clearMsg, getAllSubmits, getUserReaction, getOptions } = require('../../Util/misc');
 const serverCfg = require('../../Config/serverCfg.json');
 
 module.exports = run;
@@ -13,12 +12,19 @@ async function run(msg, client, regexGroups) {
     const botMsg = await msg.channel.send('💬 Processing deletion. Please hold on.');
     try {
         const guildId = msg.guild.id,
-              season = getSeasonOptions(regexGroups[2], guildId),
+              seasonOpts = getOptions(regexGroups[2], serverCfg[guildId].seasons),
               link = regexGroups[3];
-        if (!season) {
+        if (!seasonOpts.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ Incorrect season.');
+            return;
+        }
+        const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg, botMsg, seasonOpts);
+        if (!season) {
+            clearMsg(botMsg, msg);
+            msg.react('⌛');
+            botMsg.edit('⌛ No season selected.');
             return;
         }
         let runs = [];

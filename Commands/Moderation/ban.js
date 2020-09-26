@@ -19,16 +19,23 @@ async function run(msg, clinet, regexGroups) {
             botMsg.edit('❌ Please only mention one user.');
             return;
         }
+        if (!banUser.bannable) {
+            clearMsg(botMsg, msg);
+            msg.react('❌');
+            botMsg.edit('❌ Unable to ban this user.');
+            return;
+        }
         if (banUser.roles.highest.comparePositionTo(msg.member.roles.highest) >= 0) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ You can only ban members with a lower highest role than yours.');
             return;
         }
-        banUser.ban({reason: regexGroups[3]});
+        if (regexGroups[3]) banUser.ban({reason: regexGroups[3]});
+        else banUser.ban();
         clearMsg(botMsg, msg);
         msg.react('✅');
-        botMsg.edit(`✅ Successfully banned ${banUser.tag}.`);
+        botMsg.edit(`✅ Successfully banned ${banUser}.`);
     } catch (err) {
         clearMsg(botMsg, msg);
         msg.react('❌');

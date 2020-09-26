@@ -38,7 +38,7 @@
         {
             "group": "moderation",
             "name": "unban",
-            "regex": "^(unban) (.+#?\\d*) (reason (.+))?",
+            "regex": "^(unban) (.+#?\\d*)(\\s*reason (.+))?",
             "help": "unban <username> [<reason>]",
             "path": "Commands/Moderation/unban.js"
         },

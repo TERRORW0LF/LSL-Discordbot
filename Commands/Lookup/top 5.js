@@ -1,5 +1,4 @@
-const { getSeasonOptions, getModeOptions, getMapOptions } = require("../../options");
-const { clearMsg, getAllSubmits, getUserReaction } = require("../../Util/misc");
+const { clearMsg, getAllSubmits, getUserReaction, getOptions } = require("../../Util/misc");
 const serverCfg = require("../../Config/serverCfg.json");
 
 module.exports = run;
@@ -9,13 +8,20 @@ async function run(msg, client, regexGroups) {
     const botMsg = await msg.channel.send('💬 Searching top 5 runs, please hold on.');
     try {
         const guildId = msg.guild.id,
-              season = getSeasonOptions(regexGroups[2], guildId),
-              categoryOpts = getModeOptions(regexGroups[3], guildId),
-              stageOpts = getMapOptions(regexGroups[4], guildId);
-        if (!season || !categoryOpts.length || !stageOpts.length) {
+              seasonOpts = getOptions(regexGroups[2], serverCfg[guildId].seasons),
+              categoryOpts = getOptions(regexGroups[3], serverCfg[guildId].categories),
+              stageOpts = getOptions(regexGroups[4], serverCfg[guildId].stages);
+        if (!seasonOpts.length || !categoryOpts.length || !stageOpts.length) {
             clearMsg(botMsg, msg);
             msg.react('❌');
             botMsg.edit('❌ Incorrect season, mode or map.');
+            return;
+        }
+        const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg, botMsg, seasonOpts);
+        if (!season) {
+            clearMsg(botMsg, msg);
+            msg.react('⌛');
+            botMsg.edit('⌛ No season selected.');
             return;
         }
         const category = categoryOpts.length === 1 ? categoryOpts[0] : await getUserReaction(msg, botMsg, categoryOpts);

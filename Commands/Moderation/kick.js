@@ -2,7 +2,7 @@ const { clearMsg } = require("../../Util/misc");
 
 module.exports = run;
 
-async function run(msg, clinet, regexGroups) {
+async function run(msg, client, regexGroups) {
     await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Searching user data, please hold on.');
     try {
@@ -19,6 +19,12 @@ async function run(msg, clinet, regexGroups) {
             botMsg.edit('❌ Please only mention one user.');
             return;
         }
+        if (!kickUser.kickable) {
+            clearMsg(botMsg, msg);
+            msg.react('❌');
+            botMsg.edit('❌ Unable to kick this user.');
+            return;
+        }
         if (kickUser.roles.highest.comparePositionTo(msg.member.roles.highest) >= 0) {
             clearMsg(botMsg, msg);
             msg.react('❌');
@@ -28,7 +34,7 @@ async function run(msg, clinet, regexGroups) {
         kickUser.kick(regexGroups[3]);
         clearMsg(botMsg, msg);
         msg.react('✅');
-        botMsg.edit(`✅ Successfully kicked ${kickUser.tag}.`);
+        botMsg.edit(`✅ Successfully kicked ${kickUser}.`);
     } catch (err) {
         clearMsg(botMsg, msg);
         msg.react('❌');
