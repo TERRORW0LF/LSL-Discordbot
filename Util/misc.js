@@ -42,7 +42,7 @@ function getOptions(input, opts, min = 0.35, max = 0.7) {
     const d = strComp.findBestMatch(input.toLowerCase(), optionsLow);
     for ([index, rating] of d.ratings.entries()) {
         if (rating.rating < min) continue;
-        else if (rating.rating > max) return options[index];
+        else if (rating.rating > max) return [options[index]];
         else similars.push(options[index]);
     }
     return similars;
