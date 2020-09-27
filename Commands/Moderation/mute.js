@@ -38,11 +38,15 @@ async function run(msg, client, regexGroups) {
             botMsg.edit('❌ You can only mute members with a lower highest role than yours.');
             return;
         }
-        const timeout = 7*24*60*60*1000*Number(regexGroups[4] | 0)+24*60*60*1000*Number(regexGroups[7] | 0)+60*60*1000*Number(regexGroups[10] | 0)+60*1000*Number(regexGroups[13] | 0)+1000*Number(regexGroups[16] | 0);
+        const timeout = 604800000*Number(regexGroups[4] | 0)+86400000*Number(regexGroups[7] | 0)+3600000*Number(regexGroups[10] | 0)+60000*Number(regexGroups[13] | 0)+1000*Number(regexGroups[16] | 0);
         if (!muteUser.roles.cache.has(muteRole)) muteUser.roles.add(muteRole);
+        let muteEnd,
+            x;
+        if (timeout >= 604800000) muteEnd = 'until '+new Date(new Date().valueOf() + timeout).toUTCString();
+        else muteEnd = `for ${(x = Math.floor(timeout/604800000)) ? x+'w' : ''}${(x = Math.floor(timeout%604800000/86400000)) ? x+'d' : ''}${(x = Math.floor(timeout%86400000/3600000)) ? x+'h' : ''}${(x = Math.floor(timeout%3600000/60000)) ? x+'m' : ''}${(x = Math.floor(timeout%60000/1000)) ? x+'s' : ''}`;
         clearMsg(botMsg, msg);
         msg.react('✅');
-        botMsg.edit(`✅ Muted ${muteUser} for ${timeout}ms${regexGroups[18] ? `\nreason: ${regexGroups[18]}` : ''}`);
+        botMsg.edit(`✅ Muted ${muteUser} ${muteEnd}${regexGroups[18] ? `\nreason: ${regexGroups[18]}` : ''}`);
         var timeoutFunc = setTimeout(() => {
             muteUser.roles.remove(muteRole);
             msg.channel.send(`✅ ${muteUser} can now talk again.`);
