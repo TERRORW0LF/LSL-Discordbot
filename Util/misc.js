@@ -40,10 +40,10 @@ function getOptions(input, opts, min = 0.35, max = 0.7) {
           optionsLow = options.map(option => option.toLowerCase());
     let similars = [];
     const d = strComp.findBestMatch(input.toLowerCase(), optionsLow);
+    if (d.bestMatch.rating >= max) return [options[d.bestMatchIndex]];
     for ([index, rating] of d.ratings.entries()) {
-        if (rating.rating < min) continue;
-        else if (rating.rating > max) return [options[index]];
-        else similars.push(options[index]);
+        if (rating.rating <= min) continue;
+        similars.push(options[index]);
     }
     return similars;
 }
