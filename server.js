@@ -29,7 +29,7 @@ const client = new Discord.Client();
 client.login(process.env.discordTOKEN);
 
 // Discord events
-client.on('ready', () => {
+client.once('ready', () => {
     client.user.setActivity('failing', { type: 'PLAYING' });
     console.log('Discord bot up and running!');
 });
