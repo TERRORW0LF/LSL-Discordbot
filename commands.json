@@ -86,6 +86,13 @@
         },
         {
             "group": "submit",
+            "name": "submit",
+            "regex": "(submit|sub) (\\d+) (\\S+) (.+) (\\d+\\.\\d{2}) (https://\\S+)$",
+            "help": "submit <season> <mode> <map> <time> <proof>",
+            "path": "Commands/Submit/submit.js"
+        },
+        {
+            "group": "submit",
             "name": "delete link",
             "regex": "^(delete|del) (\\d+) (https://\\S+)$",
             "help": "delete <season> <link>",

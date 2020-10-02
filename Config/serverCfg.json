@@ -41,32 +41,32 @@
                 }
             },
             "1": {
-                "695342905769852929": 5500,
-                "695343498630791178": 4000,
-                "695343697545396265": 2000,
-                "695344203458281482": 1000,
-                "695344329404973106": 300
+                "761716204809093128": 5500,
+                "761716104317501450": 4000,
+                "761716004367368262": 2000,
+                "761715886599438337": 1000,
+                "761715771511668788": 300
             },
             "2": {
-                "695342736735338516": 5500,
-                "695343210993680507": 4000,
-                "695343791892070472": 2000,
-                "695344029793124383": 1000,
-                "695344377312313419": 300
+                "761721961529212949": 5500,
+                "761721846559014926": 4000,
+                "761721730091450378": 2000,
+                "761721615682895912": 1000,
+                "761721496409341963": 300
             },
             "3": {
-                "637248384633143297": 5500,
-                "637248388802543617": 4000,
-                "637248393885777948": 2000,
-                "637248396419137556": 1000,
-                "637248665559236608": 300
+                "761722007271505950": 5500,
+                "761721883577810984": 4000,
+                "761721777423908875": 2000,
+                "761721653293875251": 1000,
+                "761721548947456020": 300
             },
             "4": {
-                "718519535090663527": 5500,
-                "718519736299683951": 4000,
-                "718519896870223943": 2000,
-                "718520058980204684": 1000,
-                "718520220817424396": 300
+                "761722048346587206": 5500,
+                "761721936606003211": 4000,
+                "761721814711271466": 2000,
+                "761721687632642118": 1000,
+                "761721582774910996": 300
             }
         },
         "channels": {
@@ -120,7 +120,7 @@
             },
             "1": {
                 "Gravspeed": {
-                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSfRydSJyHkMp8jUbS0MoESL09co5TKCTHhwxs-waVVA3hPqEQ/formResponse?&submit=SUBMIT",
+                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSflZqu62M6iRfGMnb82KFeJG4qAQsIjhestw3GDQ5047GaQSQ/formResponse?&submit=SUBMIT",
                     "time": "927634646",
                     "user": "58689989",
                     "proof": "774918022",
@@ -128,7 +128,7 @@
                     "stage": "428387040"
                 },
                 "Standard": {
-                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSfRydSJyHkMp8jUbS0MoESL09co5TKCTHhwxs-waVVA3hPqEQ/formResponse?&submit=SUBMIT",
+                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSflZqu62M6iRfGMnb82KFeJG4qAQsIjhestw3GDQ5047GaQSQ/formResponse?&submit=SUBMIT",
                     "time": "927634646",
                     "user": "58689989",
                     "proof": "774918022",
@@ -138,7 +138,7 @@
             },
             "2": {
                 "Gravspeed": {
-                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSeopLQbZOZcDMm7TV_QWtOPxnk6FmAXxl7YqidP_SSIm27-sw/formResponse?&submit=SUBMIT",
+                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSdU79OL_S_CUfyUGlXoMTl3HO-eD0y3xD0O0UIt-PGmNWGDhA/formResponse?&submit=SUBMIT",
                     "time": "927634646",
                     "user": "58689989",
                     "proof": "774918022",
@@ -146,7 +146,7 @@
                     "stage": "428387040"
                 },
                 "Standard": {
-                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSeopLQbZOZcDMm7TV_QWtOPxnk6FmAXxl7YqidP_SSIm27-sw/formResponse?&submit=SUBMIT",
+                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSdU79OL_S_CUfyUGlXoMTl3HO-eD0y3xD0O0UIt-PGmNWGDhA/formResponse?&submit=SUBMIT",
                     "time": "927634646",
                     "user": "58689989",
                     "proof": "774918022",
@@ -156,7 +156,7 @@
             },
             "3": {
                 "Gravspeed": {
-                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSdr9zaU5_P3oYSQDVFxqr7l9nuXYV0SjwyXYCIpkd4KDyPyeA/formResponse?&submit=SUBMIT",
+                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSdcrdArKObFu0YMJ7QdhXwEfMqQ8ffn-HdA19RMcOdDZyb7LQ/formResponse?&submit=SUBMIT",
                     "time": "927634646",
                     "user": "58689989",
                     "proof": "774918022",
@@ -164,7 +164,7 @@
                     "stage": "428387040"
                 },
                 "Standard": {
-                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSdr9zaU5_P3oYSQDVFxqr7l9nuXYV0SjwyXYCIpkd4KDyPyeA/formResponse?&submit=SUBMIT",
+                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSdcrdArKObFu0YMJ7QdhXwEfMqQ8ffn-HdA19RMcOdDZyb7LQ/formResponse?&submit=SUBMIT",
                     "time": "927634646",
                     "user": "58689989",
                     "proof": "774918022",
@@ -174,7 +174,7 @@
             },
             "4": {
                 "Gravspeed": {
-                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSel0AEPuyDDOa9uCyf5iBts7DGHQew2c8SK9ERoMWgTbAqIpQ/formResponse?&submit=SUBMIT",
+                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSdBGvUIhCwd_WjyPrfqy3csl8_ZW--jDGZdmBFisU2xlYevkg/formResponse?&submit=SUBMIT",
                     "time": "927634646",
                     "user": "58689989",
                     "proof": "774918022",
@@ -182,7 +182,7 @@
                     "stage": "428387040"
                 },
                 "Standard": {
-                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSel0AEPuyDDOa9uCyf5iBts7DGHQew2c8SK9ERoMWgTbAqIpQ/formResponse?&submit=SUBMIT",
+                    "url": "https://docs.google.com/forms/d/e/1FAIpQLSdBGvUIhCwd_WjyPrfqy3csl8_ZW--jDGZdmBFisU2xlYevkg/formResponse?&submit=SUBMIT",
                     "time": "927634646",
                     "user": "58689989",
                     "proof": "774918022",
@@ -195,48 +195,48 @@
             "submit": {
                 "1": {
                     "Gravspeed": {
-                        "id": "1vWtqNrRQsuZFsp8-Y-CGBIppjSzSbR4bkN151lCzaQA",
+                        "id": "1cFZbWBmA95nOs9JEtFMrUtK73sGdnAndzuzDi2NorPs",
                         "range": "Record Log!A2:F",
                         "gid": "1091303763"
                     },
                     "Standard": {
-                        "id": "1vWtqNrRQsuZFsp8-Y-CGBIppjSzSbR4bkN151lCzaQA",
+                        "id": "1cFZbWBmA95nOs9JEtFMrUtK73sGdnAndzuzDi2NorPs",
                         "range": "Record Log!A2:F",
                         "gid": "1091303763"
                     }
                 },
                 "2": {
                     "Gravspeed": {
-                        "id": "1EMNogqAx53IKpyaFh9p136FtMTOuV4bM8cJzi7pcwiM",
+                        "id": "1E5z9PjnUgtJwgSvtHAuaPKNVEtfpUsqAPAa9mbAoAKE",
                         "range": "Record Log!A2:F",
                         "gid": "1091303763"
                     },
                     "Standard": {
-                        "id": "1EMNogqAx53IKpyaFh9p136FtMTOuV4bM8cJzi7pcwiM",
+                        "id": "1E5z9PjnUgtJwgSvtHAuaPKNVEtfpUsqAPAa9mbAoAKE",
                         "range": "Record Log!A2:F",
                         "gid": "1091303763"
                     }
                 },
                 "3": {
                     "Gravspeed": {
-                        "id": "15aNH2PcnyM_V3g_DsNfRGbHzWLWQgAqNY_xyG0vyqCo",
+                        "id": "11jcNfRsduClM_-xz9IYMkA8_2UpcwGFnZroisKFs4Nk",
                         "range": "Record Log!A2:F",
                         "gid": "1091303763"
                     },
                     "Standard": {
-                        "id": "15aNH2PcnyM_V3g_DsNfRGbHzWLWQgAqNY_xyG0vyqCo",
+                        "id": "11jcNfRsduClM_-xz9IYMkA8_2UpcwGFnZroisKFs4Nk",
                         "range": "Record Log!A2:F",
                         "gid": "1091303763"
                     }
                 },
                 "4": {
                     "Gravspeed": {
-                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
+                        "id": "13FOXjlSfdeQiz0TqO7thu_tDJj6vTZisPRzWbgO_tMw",
                         "range": "Record Log!A2:F",
                         "gid": "1091303763"
                     },
                     "Standard": {
-                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
+                        "id": "13FOXjlSfdeQiz0TqO7thu_tDJj6vTZisPRzWbgO_tMw",
                         "range": "Record Log!A2:F",
                         "gid": "1091303763"
                     }
@@ -245,57 +245,57 @@
             "points": {
                 "1": {
                     "Gravspeed": {
-                        "id": "1vWtqNrRQsuZFsp8-Y-CGBIppjSzSbR4bkN151lCzaQA",
+                        "id": "1cFZbWBmA95nOs9JEtFMrUtK73sGdnAndzuzDi2NorPs",
                         "range": "Points Sheet!D3:E"
                     },
                     "Standard": {
-                        "id": "1vWtqNrRQsuZFsp8-Y-CGBIppjSzSbR4bkN151lCzaQA",
+                        "id": "1cFZbWBmA95nOs9JEtFMrUtK73sGdnAndzuzDi2NorPs",
                         "range": "Points Sheet!A3:B"
                     },
                     "Total": {
-                        "id": "1vWtqNrRQsuZFsp8-Y-CGBIppjSzSbR4bkN151lCzaQA",
+                        "id": "1cFZbWBmA95nOs9JEtFMrUtK73sGdnAndzuzDi2NorPs",
                         "range": "Points Sheet!G3:H"
                     }
                 },
                 "2": {
                     "Gravspeed": {
-                        "id": "1EMNogqAx53IKpyaFh9p136FtMTOuV4bM8cJzi7pcwiM",
+                        "id": "1E5z9PjnUgtJwgSvtHAuaPKNVEtfpUsqAPAa9mbAoAKE",
                         "range": "Points Sheet!D3:E"
                     },
                     "Standard": {
-                        "id": "1EMNogqAx53IKpyaFh9p136FtMTOuV4bM8cJzi7pcwiM",
+                        "id": "1E5z9PjnUgtJwgSvtHAuaPKNVEtfpUsqAPAa9mbAoAKE",
                         "range": "Points Sheet!A3:B"
                     },
                     "Total": {
-                        "id": "1EMNogqAx53IKpyaFh9p136FtMTOuV4bM8cJzi7pcwiM",
+                        "id": "1E5z9PjnUgtJwgSvtHAuaPKNVEtfpUsqAPAa9mbAoAKE",
                         "range": "Points Sheet!G3:H"
                     }
                 },
                 "3": {
                     "Gravspeed": {
-                        "id": "15aNH2PcnyM_V3g_DsNfRGbHzWLWQgAqNY_xyG0vyqCo",
+                        "id": "11jcNfRsduClM_-xz9IYMkA8_2UpcwGFnZroisKFs4Nk",
                         "range": "Points Sheet!D3:E"
                     },
                     "Standard": {
-                        "id": "15aNH2PcnyM_V3g_DsNfRGbHzWLWQgAqNY_xyG0vyqCo",
+                        "id": "11jcNfRsduClM_-xz9IYMkA8_2UpcwGFnZroisKFs4Nk",
                         "range": "Points Sheet!A3:B"
                     },
                     "Total": {
-                        "id": "15aNH2PcnyM_V3g_DsNfRGbHzWLWQgAqNY_xyG0vyqCo",
+                        "id": "11jcNfRsduClM_-xz9IYMkA8_2UpcwGFnZroisKFs4Nk",
                         "range": "Points Sheet!G3:H"
                     }
                 },
                 "4": {
                     "Gravspeed": {
-                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
+                        "id": "13FOXjlSfdeQiz0TqO7thu_tDJj6vTZisPRzWbgO_tMw",
                         "range": "Points Sheet!D3:E"
                     },
                     "Standard": {
-                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
+                        "id": "13FOXjlSfdeQiz0TqO7thu_tDJj6vTZisPRzWbgO_tMw",
                         "range": "Points Sheet!A3:B"
                     },
                     "Total": {
-                        "id": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc",
+                        "id": "13FOXjlSfdeQiz0TqO7thu_tDJj6vTZisPRzWbgO_tMw",
                         "range": "Points Sheet!G3:H"
                     }
                 }
