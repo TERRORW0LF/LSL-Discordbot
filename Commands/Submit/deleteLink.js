@@ -44,7 +44,7 @@ async function run(msg, client, regexGroups) {
             botMsg.edit('❌ No run found.');
             return;
         }
-        const run = runs.length === 1 ? runs[0] : await getUserReaction(msg, botMsg, runs.slice(-5).reverse());
+        const run = runs.length === 1 ? runs[0] : await getUserReaction(msg, botMsg, runs.reverse());
         if (!run) {
             clearMsg(botMsg, msg);
             msg.react('⌛');
