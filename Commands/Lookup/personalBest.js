@@ -41,7 +41,7 @@ async function run(msg, client, regexGroups) {
         const runsPreProc = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((runA, runB) => Number(runA.time) - Number(runB.time)),
               user = msg.author.tag,
               wrTime = Number(runsPreProc[0].time),
-              pb = runsPreProc.find(run => run.name === user),
+              pb = runsPreProc.find(run => run.name === user);
         if (!pb) {
             clearMsg(botMsg, msg);
             msg.react('❌');
