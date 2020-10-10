@@ -6,6 +6,8 @@ const express = require('express');
 const app = express();
 const Discord = require('discord.js');
 
+require('dotenv').config();
+
 const commands = require('./commands.json');
 const serverCfg = require('./Config/serverCfg.json');
 const { setGoogleAuth } = require('./google-auth');
@@ -25,7 +27,7 @@ process.on('uncaughtException', err => {
 
 
 // Start Discord bot
-const client = new Discord.Client();
+const client = new Discord.Client({partials: ['GUILD_MEMBER', 'USER', 'MESSAGE', 'REACTION']});
 client.login(process.env.discordTOKEN);
 
 // Discord events
@@ -34,9 +36,10 @@ client.once('ready', () => {
     console.log('Discord bot up and running!');
 });
 
-client.on('message', msg => {
+client.on('message', async msg => {
     const prefix = serverCfg[msg.guild.id].prefix;
-    if (!msg.content.startsWith(prefix) || msg.author.bot) return;
+    if (!msg.content.startsWith(prefix) || msg.author.bot) 
+        return;
     if (!serverCfg[msg.guild.id].channels.commands.length || !serverCfg[msg.guild.id].channels.commands.some(value => value === msg.channel.id)) {
         msg.channel.send('please post commands in the designated channels.');
         return;
@@ -49,16 +52,43 @@ client.on('message', msg => {
             if (permission) {
                 let hasPermission = false;
                 for (let role of permission) {
-                    if (msg.member.roles.cache.has(role)) hasPermission = true;
+                    if (msg.member.roles.cache.has(role)) 
+                        hasPermission = true;
                 }
-                if (!hasPermission) break;
+                if (!hasPermission) 
+                    break;
             }
             const run = require(`./${command.path}`);
             run(msg, client, pattern.exec(msg.content.replace(prefix, '').trim()));
             answered = true;
         }
     }
-    if (!answered) msg.channel.send("❌ No matching command found / missing permission.")
+    if (!answered) 
+        msg.channel.send("❌ No matching command found / missing permission.")
+});
+
+client.on('messageReactionAdd', async (reaction, user) => {
+    await Promise.all([
+        reaction.fetch(),
+        reaction.message.fetch(),
+        user.fetch()
+    ]);
+    if (reaction.message.channel.type === 'text' && serverCfg[reaction.message.guild.id].starboard.enabled) {
+        const run = require('./Starboard/addedStar');
+        run(reaction, user);
+    }
+});
+
+client.on('messageReactionRemove', async (reaction, user) => {
+    await Promise.all([
+        reaction.fetch(),
+        reaction.message.fetch(),
+        user.fetch()
+    ]);
+    if (reaction.message.channel.type === 'text' && serverCfg[reaction.message.guild.id].starboard.enabled) {
+        const run = require('./Starboard/removedStar');
+        run(reaction, user);
+    }
 });
 
 client.on('guildMemberRemove', member => {
@@ -102,7 +132,8 @@ const P = process.env.PORT ||  3000;
 
 
 function pingSelf () {
-    if (!process.env.PORT) return;
+    if (!process.env.PORT) 
+        return;
     setInterval(async () => {
         axios.get(`https://lsl-discordbot-v12.herokuapp.com/ping?auth=${process.env.herokuAUTH}`).catch(err => { return; });
         axios.get(`https://discord-lsl.herokuapp.com/ping?auth=${process.env.herokuAUTH}`).catch(err => { return; });

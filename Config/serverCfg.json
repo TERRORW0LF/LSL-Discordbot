@@ -1,6 +1,12 @@
 {
     "574522788967088128": {
         "prefix": "!",
+        "starboard": {
+            "enabled": true,
+            "count": 1,
+            "channel": "764470945331019796",
+            "emoji": "⭐"
+        },
         "seasons": ["1","2","3","4"],
         "categories": ["Standard", "Gravspeed"],
         "stages": ["Hanamura","Horizon Lunar Colony","Paris","Temple of Anubis","Volskaya Industries","Dorado","Havana","Junkertown","Rialto",
