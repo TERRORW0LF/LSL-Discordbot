@@ -32,6 +32,7 @@ async function run(reaction, user) {
                 .setColor(3010349)
                 .setDescription(message.cleanContent)
                 .setAuthor(message.author.tag, message.author.displayAvatarURL())
+                .addField('Source', `[Jump to](${messsage.url})`)
                 .setTimestamp(new Date())
                 .setFooter(`⭐ ${reactionCount} | ${message.id}`)
                 .setImage(attachment);
