@@ -6,8 +6,6 @@ const express = require('express');
 const app = express();
 const Discord = require('discord.js');
 
-require('dotenv').config();
-
 const commands = require('./commands.json');
 const serverCfg = require('./Config/serverCfg.json');
 const { setGoogleAuth } = require('./google-auth');

@@ -58,6 +58,13 @@
         },
         {
             "group": "lookup",
+            "name": "place",
+            "regex": "^(place) (\\d+) (\\S+) (.+) (-?\\d+)$",
+            "help": "place <season> <mode> <map> <place>",
+            "path": "Commands/Lookup/place.js"
+        },
+        {
+            "group": "lookup",
             "name": "top 5",
             "regex": "^(top 5|top5|t5) (\\d+) (\\S+) (.+)",
             "help": "top 5 <season> <mode> <map>",
