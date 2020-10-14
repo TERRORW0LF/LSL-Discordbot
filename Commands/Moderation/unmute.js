@@ -8,7 +8,7 @@ async function run(msg, client, regexGroups) {
     await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Collecting user data, please hold on.');
     try {
-        const answer = await deleteTimeout(msg.guild.id+regexGroups[2]);
+        const answer = await deleteTimeout("mute"+msg.guild.id+regexGroups[2]);
         if (answer) {
             msg.mentions.members.get(regexGroups[2]).roles.remove(serverCfg[msg.guild.id].roles.moderation.mute);
             clearMsg(botMsg, msg);

@@ -8,7 +8,7 @@ module.exports = run;
 async function run(reaction, user) {
     const message = reaction.message;
     try {
-        const starboardCfg = serverCfg[message.guild.id].starboard;
+        const starboardCfg = serverCfg[message.guild.id].features.starboard;
         if (reaction.emoji.name !== starboardCfg.emoji) return;
         if (message.author.id === user.id) {
             message.channel.send(`${user}, you cannot star your own messages.`);

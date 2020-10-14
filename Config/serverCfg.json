@@ -1,11 +1,17 @@
 {
     "574522788967088128": {
         "prefix": "!",
-        "starboard": {
-            "enabled": true,
-            "count": 4,
-            "channel": "764470945331019796",
-            "emoji": "⭐"
+        "features": {
+            "starboard": {
+                "enabled": true,
+                "count": 4,
+                "channel": "764470945331019796",
+                "emoji": "⭐"
+            },
+            "streaming": {
+                "enabled": true,
+                "role": "765963264429391962"
+            }
         },
         "seasons": ["1","2","3","4"],
         "categories": ["Standard", "Gravspeed"],
@@ -76,6 +82,7 @@
             }
         },
         "channels": {
+            "error": "641654895086141440",
             "mute": [
                 "639323235736879124",
                 "577179688645165092"

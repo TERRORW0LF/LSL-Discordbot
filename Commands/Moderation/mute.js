@@ -51,7 +51,7 @@ async function run(msg, client, regexGroups) {
             muteUser.roles.remove(muteRole);
             msg.channel.send(`✅ ${muteUser} can now talk again.`);
         }, timeout);
-        const timeoutid = msg.guild.id+muteUser.id;
+        const timeoutid = "mute"+msg.guild.id+muteUser.id;
         deleteTimeout(timeoutid);
         addTimeout(timeoutid, timeoutFunc);
     } catch (err) {

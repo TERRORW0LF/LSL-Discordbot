@@ -71,8 +71,8 @@ client.on('messageReactionAdd', async (reaction, user) => {
         reaction.message.fetch(),
         user.fetch()
     ]);
-    if (reaction.message.channel.type === 'text' && serverCfg[reaction.message.guild.id].starboard.enabled) {
-        const run = require('./Starboard/addedStar');
+    if (reaction.message.channel.type === 'text' && serverCfg[reaction.message.guild.id].features.starboard.enabled) {
+        const run = require('./Features/Starboard/addedStar');
         run(reaction, user);
     }
 });
@@ -83,14 +83,21 @@ client.on('messageReactionRemove', async (reaction, user) => {
         reaction.message.fetch(),
         user.fetch()
     ]);
-    if (reaction.message.channel.type === 'text' && serverCfg[reaction.message.guild.id].starboard.enabled) {
-        const run = require('./Starboard/removedStar');
+    if (reaction.message.channel.type === 'text' && serverCfg[reaction.message.guild.id].features.starboard.enabled) {
+        const run = require('./Features/Starboard/removedStar');
         run(reaction, user);
     }
 });
 
+client.on('presenceUpdate', (oldPresence, newPresence) => {
+    if (serverCfg[newPresence.guild.id].features.streaming.enabled) {
+        const run = require('./Features/Streaming/streamingRole');
+        run(oldPresence, newPresence);
+    }
+});
+
 client.on('guildMemberRemove', member => {
-    deleteTimeout(member.guild.id+member.id);
+    deleteTimeout("mute"+member.guild.id+member.id);
 });
 
 // Process app / Webhook listener
