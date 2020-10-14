@@ -6,7 +6,7 @@ module.exports = run;
 async function run(oldPresence, newPresence) {
     try {
         const streamingRole = serverCfg[newPresence.guild.id].features.streaming.role;
-        if ((!oldPresence || oldPresence.activities.some(activity => activity.type === 'STREAMING')) && !newPresence.activties.some(activity => activity.type === 'STREAMING')) {
+        if ((!oldPresence || oldPresence.activities.some(activity => activity.type === 'STREAMING')) && !newPresence.activities.some(activity => activity.type === 'STREAMING')) {
             newPresence.member.roles.remove(streamingRole);
             return;
         }
