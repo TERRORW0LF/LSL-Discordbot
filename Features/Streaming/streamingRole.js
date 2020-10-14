@@ -5,7 +5,22 @@ module.exports = run;
 
 async function run(oldPresence, newPresence) {
     try {
+        const streamingCfg = serverCfg[newPresence.guild.id].features.streaming;
         if (!newPresence.member.manageable) return;
+        if (streamingCfg.excludedRoles.length) {
+            for (role of streamingCfg.excludedRoles)
+                if (newPresence.member.roles.cache.has(role)) return;
+        }
+        if (streamingCfg.requiredRoles.length) {
+            let hasRole = false;
+            for (role of streamingCfg.requiredRoles) {
+                if (newPresence.member.roles.cache.has(role)) {
+                    hasRole = true;
+                    break;
+                }
+            }
+            if (!hasrole) return;
+        }
         const streamingRole = serverCfg[newPresence.guild.id].features.streaming.role;
         if ((!oldPresence || oldPresence.activities.some(activity => activity.type === 'STREAMING')) && !newPresence.activities.some(activity => activity.type === 'STREAMING')) {
             newPresence.member.roles.remove(streamingRole).catch(() => {

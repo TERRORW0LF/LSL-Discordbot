@@ -10,6 +10,8 @@
             },
             "streaming": {
                 "enabled": true,
+                "excludedRoles": [],
+                "requiredRoels": ["580568742564724736", "580568703788122119"],
                 "role": "765963264429391962"
             }
         },
