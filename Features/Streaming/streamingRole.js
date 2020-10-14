@@ -5,6 +5,7 @@ module.exports = run;
 
 async function run(oldPresence, newPresence) {
     try {
+        if (!newPresence.member.manageable) return;
         const streamingRole = serverCfg[newPresence.guild.id].features.streaming.role;
         if ((!oldPresence || oldPresence.activities.some(activity => activity.type === 'STREAMING')) && !newPresence.activities.some(activity => activity.type === 'STREAMING')) {
             newPresence.member.roles.remove(streamingRole).catch(() => {
