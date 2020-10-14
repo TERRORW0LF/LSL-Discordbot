@@ -6,16 +6,12 @@ module.exports = run;
 async function run(oldPresence, newPresence) {
     try {
         const streamingRole = serverCfg[newPresence.guild.id].features.streaming.role;
-        if (oldPresence.activities.some(activity => activity.type === 'STREAMING')) {
-            if (!newPresence.activties.some(activity => activity.type === 'STREAMING')) {
-                newPresence.member.roles.remove(streamingRole);
-                return;
-            }
+        if ((!oldPresence || oldPresence.activities.some(activity => activity.type === 'STREAMING')) && !newPresence.activties.some(activity => activity.type === 'STREAMING')) {
+            newPresence.member.roles.remove(streamingRole);
             return;
-        } 
-        if (newPresence.activities.some(activity => activity.type === 'STREAMING')) {
-            newPresence.member.roles.add(streamingRole);
         }
+        if ((!oldPresence || !oldPresence.activities.some(activity => activity.type === 'STREAMING')) && newPresence.activities.some(activity => activity.type === 'STREAMING'))
+            newPresence.member.roles.add(streamingRole);
     } catch (err) {
         if (serverCfg[newPresence.guild.id].channels.error)
             newPresence.guild.channels.cache.get(serverCfg[newPresence.guild.id].channels.error).send('Erro while adding/removing streaming role. No role defined.');
