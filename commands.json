@@ -10,7 +10,7 @@
         {
             "group": "basic",
             "name": "remind me",
-            "regex": "^(remindme|remind me|set reminder|reminder) (((0[1-9]|1[012])/(0[1-9]|[12]\\d|3[01])/\\d{4}( ([01]\\d|2[0123]):[0-5]\\d:[0-5]\\d)?|((\\d+)(weeks?|ws?))?((\\d+)(days?|ds?))?((\\d+)(hours?|hs?))?((\\d+)(mins?|ms?))?((\\d+)(secs?|ss?))?) (.+)",
+            "regex": "^(remindme|remind me|set reminder|reminder) ((0[1-9]|1[012])/(0[1-9]|[12]\\d|3[01])/\\d{4}( ([01]\\d|2[0123]):[0-5]\\d:[0-5]\\d)?|((\\d+)(weeks?|ws?))?((\\d+)(days?|ds?))?((\\d+)(hours?|hs?))?((\\d+)(mins?|ms?))?((\\d+)(secs?|ss?))?) (.+)",
             "help": "remind me <date (mm/dd/yyyy [hh:mm:ss])|time ([w][d][h][m][s])> <reminder>",
             "path": "Commands/Basic/remindMe.js"
         },

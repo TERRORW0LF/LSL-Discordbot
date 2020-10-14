@@ -59,6 +59,7 @@ client.on('message', async msg => {
             const run = require(`./${command.path}`);
             run(msg, client, pattern.exec(msg.content.replace(prefix, '').trim()));
             answered = true;
+            break;
         }
     }
     if (!answered) 
