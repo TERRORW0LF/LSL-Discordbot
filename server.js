@@ -141,7 +141,7 @@ function pingSelf () {
     if (!process.env.PORT) 
         return;
     setInterval(async () => {
-        axios.get(`https://lsl-discordbot-v12.herokuapp.com/ping?auth=${process.env.herokuAUTH}`).catch(err => { return; });
-        axios.get(`https://discord-lsl.herokuapp.com/ping?auth=${process.env.herokuAUTH}`).catch(err => { return; });
-    }, 1700000);
+        axios.get(`https://lsl-discordbot-v12.herokuapp.com/ping?auth=${process.env.herokuAUTH}`).catch(err => { });
+        axios.get(`https://discord-lsl.herokuapp.com/ping?auth=${process.env.herokuAUTH}`).catch(err => { });
+    }, 1200000);
 }
