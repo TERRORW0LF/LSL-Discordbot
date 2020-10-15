@@ -91,7 +91,10 @@ client.on('messageReactionRemove', async (reaction, user) => {
 });
 
 client.on('presenceUpdate', (oldPresence, newPresence) => {
-    if (serverCfg[newPresence.guild.id].features.streaming.enabled) {
+    let featureCfg;
+    if (serverCfg[newPresence.guild.id]) featureCfg = serverCfg[newPresence.guild.id].features;
+    else featureCfg = serverCfg["574522788967088128"].features;
+    if (featureCfg.streaming.enabled) {
         const run = require('./Features/Streaming/streamingRole');
         run(oldPresence, newPresence);
     }
