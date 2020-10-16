@@ -1,5 +1,5 @@
 const base = require('path').resolve('.');
-const serverCfg = require(base+'Config/serverCfg.json');
+const serverCfg = require(base+'/Config/serverCfg.json');
 
 module.exports = run;
 

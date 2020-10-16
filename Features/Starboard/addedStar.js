@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
 
 const base = require('path').resolve('.');
-console.log(base);
 const serverCfg = require(base+'/Config/serverCfg.json');
 
 module.exports = run;
