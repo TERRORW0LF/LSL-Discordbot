@@ -72,10 +72,8 @@ client.on('messageReactionAdd', async (reaction, user) => {
         reaction.message.fetch(),
         user.fetch()
     ]);
-    if (reaction.message.channel.type === 'text' && serverCfg[reaction.message.guild.id].features.starboard.enabled) {
-        const run = require('./Features/Starboard/addedStar');
-        run(reaction, user);
-    }
+    require('./Features/Starboard/addedStar')(reaction, user);
+    require('./Features/ReactionRoles/addedReaction')(reaction, user);
 });
 
 client.on('messageReactionRemove', async (reaction, user) => {
@@ -84,10 +82,8 @@ client.on('messageReactionRemove', async (reaction, user) => {
         reaction.message.fetch(),
         user.fetch()
     ]);
-    if (reaction.message.channel.type === 'text' && serverCfg[reaction.message.guild.id].features.starboard.enabled) {
-        const run = require('./Features/Starboard/removedStar');
-        run(reaction, user);
-    }
+    require('./Features/Starboard/removedStar')(reaction, user);
+    require('./Features/ReactionRoles/removedReaction')(reaction, user);
 });
 
 client.on('presenceUpdate', (oldPresence, newPresence) => {

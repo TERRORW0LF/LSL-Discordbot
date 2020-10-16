@@ -8,10 +8,12 @@ module.exports = run;
 async function run(reaction, user) {
     const message = reaction.message;
     try {
+        if (!message.guild) return;
         const starboardCfg = serverCfg[message.guild.id].features.starboard;
+        if (!starboardCfg.enabled) return;
         if (reaction.emoji.name !== starboardCfg.emoji) return;
         if (message.author.id === user.id) return;
-        if (!serverCfg[reaction.message.guild.id].starboard.channel) return;
+        if (!starboardCfg.channel) return;
         const boardChannel = message.guild.channels.cache.get(starboardCfg.channel),
             boardMessage = (await boardChannel.messages.fetch({ limit: 100 })).find(msg => msg.embeds[0].footer.text.startsWith('⭐') && msg.embeds[0].footer.text.endsWith(message.id));
         const reactionCount = reaction.users.cache.has(message.author.id) ? reaction.count-1 : reaction.count;

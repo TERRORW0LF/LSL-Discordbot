@@ -8,7 +8,9 @@ module.exports = run;
 async function run(reaction, user) {
     const message = reaction.message;
     try {
+        if (!message.guild) return;
         const starboardCfg = serverCfg[message.guild.id].features.starboard;
+        if (!starboardCfg.enabled) return;
         if (reaction.emoji.name !== starboardCfg.emoji) return;
         if (message.author.id === user.id) {
             message.channel.send(`${user}, you cannot star your own messages.`);
@@ -16,7 +18,7 @@ async function run(reaction, user) {
         }
         const reactionCount = reaction.users.cache.has(message.author.id) ? reaction.count-1 : reaction.count;
         if (reactionCount < starboardCfg.count) return;
-        if (!serverCfg[reaction.message.guild.id].starboard.channel) {
+        if (!starboardCfg.channel) {
             message.channel.send(`❌ ${user} This server does not have a starboard channel set up.`);
             return;
         }
