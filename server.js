@@ -35,25 +35,34 @@ client.once('ready', () => {
 });
 
 client.on('message', async msg => {
-    const prefix = serverCfg[msg.guild.id].prefix;
+    const guildCfg = serverCfg[msg.guild.id] || serverCfg.default;
+    const prefix = guildCfg.prefix;
     if (!msg.content.startsWith(prefix) || msg.author.bot) 
         return;
-    if (!serverCfg[msg.guild.id].channels.commands.length || !serverCfg[msg.guild.id].channels.commands.some(value => value === msg.channel.id)) {
-        msg.channel.send('please post commands in the designated channels.');
-        return;
-    }
     let answered = false;
     for (let command of commands.commandList) {
-        let pattern = new RegExp(command.regex, "i");
+        let pattern = new RegExp(command.regex, "iu");
         if (pattern.test(msg.content.replace(prefix, '').trim())) {
-            const permission = serverCfg[msg.guild.id].permissions[command.group];
+            let commandCfg;
+            if (guildCfg.channels.commands[command.group] && guildCfg.channels.commands[command.group][command.name])
+                commandCfg = guildCfg.channels.commands[command.group][command.name];
+            else if (guildCfg.channels.commands[command.group])
+                commandCfg =  guildCfg.channels.commands[command.group].default;
+            else commandCfg = guildCfg.channels.commands.default;
+            if (commandCfg.include.length)
+                if (!commandCfg.include.some(channel => msg.channel.id === channel))
+                    return msg.channel.send('please post commands in the designated channels.');
+            if (commandCfg.exclude.length)
+                if (commandCfg.exclude.some(channel => msg.channel.id === channel))
+                    return msg.channel.send('please post commands in the designated channels.');
+            const permission = guildCfg.permissions[command.group];
             if (permission) {
                 let hasPermission = false;
                 for (let role of permission) {
-                    if (msg.member.roles.cache.has(role)) 
+                    if (msg.member.roles.cache.has(role))
                         hasPermission = true;
                 }
-                if (!hasPermission) 
+                if (!hasPermission)
                     break;
             }
             const run = require(`./${command.path}`);
@@ -62,8 +71,8 @@ client.on('message', async msg => {
             break;
         }
     }
-    if (!answered) 
-        msg.channel.send("❌ No matching command found / missing permission.")
+    if (!answered)
+        msg.channel.send("❌ No matching command found / missing permission.");
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {

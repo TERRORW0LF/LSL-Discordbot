@@ -57,6 +57,20 @@
             "path": "Commands/Moderation/unban.js"
         },
         {
+            "group": "moderation",
+            "name": "reaction role new",
+            "regex": "^(reaction role new|reactionrole new|rr new)$",
+            "help": "rr new",
+            "path": "Commands/Moderation/reactionRoleNew.js"
+        },
+        {
+            "group": "moderation",
+            "name": "reaction role add",
+            "regex": "^(reaction role add|reactionrole add|rr add) (https://discordapp.com/channels/\\d+/\\d+/\\d+ )?(\\p{Emoji_Presentation}|\\p{Extended_Pictographic}|<:\\S+:\\d+>) <@&(\\d+)>(\\s*.+)?",
+            "help": "rr add [<message>] <emoji> <role> [<explanation>]",
+            "path": "Commands/Moderation/reactionRoleAdd.js"
+        },
+        {
             "group": "lookup",
             "name": "world record",
             "regex": "^(wr|world-record|world record) (\\d+) (\\S+) (.+)",

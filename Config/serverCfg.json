@@ -1,4 +1,84 @@
 {
+    "default": {
+        "prefix": "!",
+        "features": {
+            "starboard": {
+                "enabled": false,
+                "count": 5,
+                "channel": null,
+                "emoji": "⭐"
+            },
+            "streaming": {
+                "enabled": false,
+                "excludedRoles": [],
+                "requiredRoles": [],
+                "role": null
+            },
+            "reactionRole": {
+                
+            }
+        },
+        "channels": {
+            "error": null,
+            "mute": [],
+            "commands": {
+                "default": {
+                    "include": [],
+                    "exclude": []
+                }
+            },
+            "wr": {
+                "enabled": false,
+                "channel": null
+            },
+            "pb": {
+                "enabled": false,
+                "channel": null
+            },
+            "submit": {
+                "enabled": false,
+                "channel": null
+            }
+        },
+        "permissions": {
+            "basic": [],
+            "lookup": [],
+            "submit": [],
+            "tournament": [],
+            "moderation": []
+        },
+        "seasons": [],
+        "categories": [],
+        "stages": [],
+        "roleOptions": {
+            "role": "highestTotal",
+            "firstPlace": false,
+            "firstPlaceRole": "total"
+        },
+        "tieOptions": {
+            "stageTie": true,
+            "stageFirstPlaceTie": true,
+            "modeTie": true,
+            "seasonTie": true
+        },
+        "roles": {
+            "moderation": {
+                "mute": null
+            },
+            "firstPlace": {
+
+            }
+        },
+        "tournaments": {
+
+        },
+        "googleForms": {
+
+        },
+        "googleSheets": {
+            
+        }
+    },
     "574522788967088128": {
         "prefix": "!",
         "features": {
@@ -15,10 +95,55 @@
                 "role": "765963264429391962"
             },
             "reactionRole": {
-                "": {
-                    "": ""
-                }
+                
             }
+        },
+        "channels": {
+            "error": "641654895086141440",
+            "mute": [
+                "639323235736879124",
+                "577179688645165092"
+            ],
+            "commands": {
+                "default": {
+                    "include": ["639323235736879124"],
+                    "exclude": []
+                },
+                "moderation": {
+                    "default": {
+                        "include": [],
+                        "exclude": []
+                    }
+                }
+            },
+            "wr": {
+                "enabled": true,
+                "channel": "644457453093781504"
+            },
+            "pb": {
+                "enabled": false,
+                "channel": 0
+            },
+            "submit": {
+                "enabled": true,
+                "channel": "685602798016004118"
+            }
+        },
+        "permissions": {
+            "basic": false,
+            "lookup": false,
+            "submit": [
+                "580568742564724736",
+                "580568703788122119"
+            ],
+            "tournament": [
+                "580568742564724736",
+                "580568703788122119"
+            ],
+            "moderation": [
+                "574732901208424449",
+                "574523898784251908"
+            ]
         },
         "seasons": ["1","2","3","4"],
         "categories": ["Standard", "Gravspeed"],
@@ -87,44 +212,6 @@
                 "761721687632642118": 1000,
                 "761721582774910996": 300
             }
-        },
-        "channels": {
-            "error": "641654895086141440",
-            "mute": [
-                "639323235736879124",
-                "577179688645165092"
-            ],
-            "commands": [
-                "639323235736879124"
-            ],
-            "wr": {
-                "enabled": true,
-                "channel": "644457453093781504"
-            },
-            "pb": {
-                "enabled": false,
-                "channel": 0
-            },
-            "submit": {
-                "enabled": true,
-                "channel": "685602798016004118"
-            }
-        },
-        "permissions": {
-            "basic": false,
-            "lookup": false,
-            "submit": [
-                "580568742564724736",
-                "580568703788122119"
-            ],
-            "tournament": [
-                "580568742564724736",
-                "580568703788122119"
-            ],
-            "moderation": [
-                "574732901208424449",
-                "574523898784251908"
-            ]
         },
         "tournaments": {
 
