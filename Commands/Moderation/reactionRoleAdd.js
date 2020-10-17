@@ -1,5 +1,3 @@
-const { clearMsg } = require("../../Util/misc");
-
 module.exports = run;
 
 async function run(msg, client, regexGroups) {
@@ -20,8 +18,10 @@ async function run(msg, client, regexGroups) {
             message = idArray[6];
             channel = msg.guild.channels.cache.get(channel);
             if (!channel) return botMsg.edit('❌ No message found in this server'), botMsg.delete({timeout: 5000});
+
             message = await channel.messages.fetch(message);
             if (!message) return botMsg.edit('❌ No message found in this server.'), botMsg.delete({timeout: 5000});
+
             if (!message.author.id === msg.guild.me.id) return botMsg.edit('❌ Please mention a message by me.'), botMsg.delete({timeout: 5000});
             if (!message.content.startsWith('**Reaction Role Menu**')) return botMsg.edit('❌ Message is not a reaction role message.'), botMsg.delete({timeout: 5000});
         }
@@ -39,7 +39,6 @@ async function run(msg, client, regexGroups) {
         msg.delete();
         botMsg.delete();
     } catch (err) {
-        clearMsg(botMsg, undefined);
         botMsg.edit('❌ An error occurred while handling your command.');
         botMsg.delete({timeout: 5000});
         console.log('Error in reactionRole: ' + err.message);

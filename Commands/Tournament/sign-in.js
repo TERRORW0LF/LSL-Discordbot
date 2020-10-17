@@ -1,10 +1,11 @@
 const axios = require('axios');
-const serverCfg = require('../../Config/serverCfg.json');
+
+const base = require('path').resolve('.');
+const serverCfg = require(base+'/Config/serverCfg.json');
 
 module.exports = run;
 
 async function run(msg, client, regexGroups) {
-    await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Processing submission. Please hold on.');
     try {
         const discordtag = msg.author.tag,
@@ -12,26 +13,15 @@ async function run(msg, client, regexGroups) {
             region = getRegion(regexGroups[4]),
             role = msg.guild.roles.cache.find(value => value.name === regexGroups[5]) ? regexGroups[5] : undefined,
             hours = regexGroups[6];
-        if (!region || !role) {
-            clearMsg(botMsg, msg);
-            msg.react('❌');
-            botMsg.edit('❌ Incorrect region or role.');
-            return;
-        }
+        if (!region || !role) return botMsg.edit('❌ Incorrect region or role.');
+            
         const signinUrl = getSigninUrl(msg.author.tag, battletag, region, role, hours);
         var resp = await axios.post(signinUrl);
-        if (resp.status === 200) {
-            clearMsg(botMsg, msg);
-            msg.react('✅');
-            botMsg.edit(`✅ ${msg.author} successfully signed into the tournament.`);
-        } else {
-            clearMsg(botMsg, msg);
-            msg.react('❌');
-            botMsg.edit('❌ Failed to sign in.');
-        }
+        if (resp.status !== 200)
+            return botMsg.edit('❌ Failed to sign in.');
+
+        botMsg.edit(`✅ ${msg.author} successfully signed into the tournament.`);
     } catch (err) {
-        clearMsg(botMsg, msg);
-        msg.react('❌');
         botMsg.edit('❌ An error occurred while handling your command.');
         console.log('Error in sign-in: ' + err.message);
         console.log(err.stack);

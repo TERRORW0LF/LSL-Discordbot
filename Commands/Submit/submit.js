@@ -1,13 +1,13 @@
 const { google } = require('googleapis');
 const axios = require('axios');
 
-const { clearMsg, getUserReaction, getOptions } = require('../../Util/misc');
-const serverCfg = require('../../Config/serverCfg.json');
+const base = require('path').resolve('.');
+const { getUserReaction, getOptions } = require(base+'/Util/misc');
+const serverCfg = require(base+'/Config/serverCfg.json');
 
 module.exports = run;
 
 async function run(msg, client, regexGroups) {
-    await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Processing submission. Please hold on.');
     try {
         const guildId = msg.guild.id,
@@ -16,47 +16,24 @@ async function run(msg, client, regexGroups) {
               stageOpts = getOptions(regexGroups[4], serverCfg[guildId].stages),
               time = regexGroups[5],
               link = regexGroups[6];
-        if (!seasonOpts.length || !categoryOpts.length || !stageOpts.length) {
-            clearMsg(botMsg, msg);
-            msg.react('❌');
-            botMsg.edit('❌ Incorrect season, mode or map.');
-            return;
-        }
+        if (!seasonOpts.length || !categoryOpts.length || !stageOpts.length) return botMsg.edit('❌ Incorrect season, mode or map.');
+            
         const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg, botMsg, seasonOpts);
-        if (!season) {
-            clearMsg(botMsg, msg);
-            msg.react('⌛');
-            botMsg.edit('⌛ No season selected.');
-            return;
-        }
+        if (!season) return botMsg.edit('⌛ No season selected.');
+            
         const category = categoryOpts.length === 1 ? categoryOpts[0] : await getUserReaction(msg, botMsg, categoryOpts);
-        if (!category) {
-            clearMsg(botMsg, msg);
-            msg.react('⌛');
-            botMsg.edit('⌛ No category selected.');
-            return;
-        }
+        if (!category) return botMsg.edit('⌛ No category selected.');
+            
         const stage = stageOpts.length === 1 ? stageOpts[0] : await getUserReaction(msg, botMsg, stageOpts);
-        if (!stage) {
-            clearMsg(botMsg, msg);
-            msg.react('⌛');
-            botMsg.edit('⌛ No map selected.');
-            return;
-        }
+        if (!stage) return botMsg.edit('⌛ No map selected.');
+            
         const submitUrl = getSubmitUrl(msg, season, category, stage, time, link);
         var resp = await axios.post(submitUrl);
-        if (resp.status === 200) {
-            clearMsg(botMsg, msg);
-            msg.react('✅');
-            botMsg.edit(`✅ New run submitted by ${msg.author}`);
-        } else {
-            clearMsg(botMsg, msg);
-            msg.react('❌');
-            botMsg.edit('❌ Failed to submit run.');
-        }
+        if (resp.status !== 200)
+            return botMsg.edit('❌ Failed to submit run.');
+
+        return botMsg.edit(`✅ New run submitted by ${msg.author}`);
     } catch (err) {
-        clearMsg(botMsg, msg);
-        msg.react('❌');
         botMsg.edit('❌ An error occurred while handling your command.');
         console.log('Error in submit: ' + err.message);
         console.log(err.stack);

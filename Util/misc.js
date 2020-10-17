@@ -6,7 +6,7 @@ const { getEmojiFromNum, getNumFromEmoji,  reactionFilter } = require('./reactio
 
 module.exports = { clearMsg, getAllSubmits, getPoints, getMapPoints, getPlacePoints, getUserReaction, getOptions };
 
-async function clearMsg(botMsg, msg) {
+async function clearMsg(botMsg=undefined, msg=undefined) {
     if (msg) msg.reactions.removeAll();
     if (botMsg) botMsg.reactions.removeAll();
 }
@@ -49,28 +49,33 @@ function getOptions(input, opts, min = 0.35, max = 0.7) {
 }
 
 async function getUserReaction(msg, botMsg, opts) {
-    clearMsg(botMsg, msg);
-    msg.react('❔');
-    let userChoice,
-        page = 0;
-    const reactOpts = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','▶'];
-    do {
-        if (opts.slice((page-1)*5, page*5).length < 5) page = 0;
-        page++;
-        for (i = 0; i <= 4; i++) {
-            if (i < opts.slice((page-1)*5, page*5).length && !msg.reactions.cache.find(reaction => reaction.emoji.name === reactOpts[i])) botMsg.react(reactOpts[i]);
-            else if (msg.reactions.cache.find(reaction => reaction.emoji.name === reactOpts[i])) msg.reactions.find(reaction => reaction.emoji.name === reactOpts[i]).remove();
-        }
-        botMsg.react('▶');
-        if (botMsg.reactions.cache.find(reaction => reaction.emoji.name === '▶') && botMsg.reactions.cache.find(reaction => reaction.emoji.name === '▶').users.cache.has(msg.author.id)) botMsg.reactions.cache.find(reaction => reaction.emoji.name === '▶').users.remove(msg.author.id);
-        botMsg.edit('❔ React to select the desired Option!' + opts.slice((page-1)*5, page*5).map((o, i) => '```'+reactOpts[i]+' '+(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)+'```').join(''));
-        userChoice = await botMsg.awaitReactions(reactionFilter(reactOpts, msg.author.id), {max: 1, time: 15000});
-    } while (userChoice.first() && userChoice.first().emoji.name === '▶');
-    if (!userChoice || !userChoice.first()) return;
-    const opt = getNumFromEmoji(userChoice.first().emoji.name);
-    const map = opts[opt - 1];
-    clearMsg(botMsg, msg);
-    return map;
+    try {
+        clearMsg(botMsg);
+        let userChoice,
+            page = 0;
+        const reactOpts = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','▶'];
+        do {
+            if (opts.slice((page-1)*5, page*5).length < 5) page = 0;
+            page++;
+            for (i = 0; i <= 4; i++) {
+                if (i < opts.slice((page-1)*5, page*5).length && !msg.reactions.cache.find(reaction => reaction.emoji.name === reactOpts[i])) botMsg.react(reactOpts[i]);
+                else if (msg.reactions.cache.find(reaction => reaction.emoji.name === reactOpts[i])) msg.reactions.find(reaction => reaction.emoji.name === reactOpts[i]).remove();
+            }
+            botMsg.react('▶');
+            if (botMsg.reactions.cache.find(reaction => reaction.emoji.name === '▶') && botMsg.reactions.cache.find(reaction => reaction.emoji.name === '▶').users.cache.has(msg.author.id)) botMsg.reactions.cache.find(reaction => reaction.emoji.name === '▶').users.remove(msg.author.id);
+            botMsg.edit('❔ React to select the desired Option!' + opts.slice((page-1)*5, page*5).map((o, i) => '```'+reactOpts[i]+' '+(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)+'```').join(''));
+            userChoice = await botMsg.awaitReactions(reactionFilter(reactOpts, msg.author.id), {max: 1, time: 15000});
+        } while (userChoice.first() && userChoice.first().emoji.name === '▶');
+        clearMsg(botMsg);
+        if (!userChoice || !userChoice.first()) return;
+        const opt = getNumFromEmoji(userChoice.first().emoji.name);
+        const map = opts[opt - 1];
+        return map;
+    } catch (err) {
+        clearMsg(botMsg);
+        console.log('Error in getUserReaction: '+err.message);
+        console.log(err.stack);
+    }
 }
 
 function getMapPoints(map, mode) {

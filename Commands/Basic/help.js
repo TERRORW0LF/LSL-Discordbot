@@ -1,11 +1,10 @@
-const { clearMsg } = require('../../Util/misc');
-const serverCfg = require('../../Config/serverCfg.json');
-const commands = require('../../commands.json');
+const base = require('path').resolve('.');
+const serverCfg = require(base+'/Config/serverCfg.json');
+const commands = require(base+'/commands.json');
 
 module.exports = run;
 
 async function run(msg, client, regexGroups) {
-    await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Collecting commands, please hold on.');
     try {
         const guildId = msg.guild.id,
@@ -27,15 +26,11 @@ async function run(msg, client, regexGroups) {
             answer += `\n${group}${name}: ${help}`;
         }
         answer += '```';
-        clearMsg(botMsg, msg);
-        if (answer === '✅ Command list:``````') {
+        if (answer === '✅ Command list:``````')
             answer = '❌ No commands found.';
-            msg.react('❌');
-        } else msg.react('✅');
+
         msg.channel.send(answer);
     } catch (err) {
-        clearMsg(botMsg, msg);
-        msg.react('❌');
         botMsg.edit('❌ An error occurred while handling your command. Informing staff.');
         console.log('An error occured in help: '+err.message);
         console.log(err.stack);

@@ -1,43 +1,19 @@
-const { clearMsg } = require("../../Util/misc");
-
 module.exports = run;
 
 async function run(msg, client, regexGroups) {
-    await msg.react('💬');
     const botMsg = await msg.channel.send('💬 Searching user data, please hold on.');
     try {
         const kickUser = msg.mentions.members.first();
-        if (!kickUser) {
-            clearMsg(botMsg, msg);
-            msg.react('❌');
-            botMsg.edit('❌ Please mention a user to kick.');
-            return;
-        }
-        if (msg.mentions.members.length > 1) {
-            clearMsg(botMsg, msg);
-            msg.react('❌');
-            botMsg.edit('❌ Please only mention one user.');
-            return;
-        }
-        if (!kickUser.kickable) {
-            clearMsg(botMsg, msg);
-            msg.react('❌');
-            botMsg.edit('❌ Unable to kick this user.');
-            return;
-        }
-        if (kickUser.roles.highest.comparePositionTo(msg.member.roles.highest) >= 0) {
-            clearMsg(botMsg, msg);
-            msg.react('❌');
-            botMsg.edit('❌ You can only kick members with a lower highest role than yours.');
-            return;
-        }
-        kickUser.kick(regexGroups[3]);
-        clearMsg(botMsg, msg);
-        msg.react('✅');
+        if (!kickUser) return botMsg.edit('❌ Please mention a user to kick.');
+        if (msg.mentions.members.length > 1) return botMsg.edit('❌ Please only mention one user.');
+        if (!kickUser.kickable) return botMsg.edit('❌ Unable to kick this user.');
+        if (kickUser.roles.highest.comparePositionTo(msg.member.roles.highest) >= 0) return botMsg.edit('❌ You can only kick members with a lower highest role than yours.');
+            
+        if (regexGroups[3]) kickUser.kick(regexGroups[3]);
+        else kickUser.kick();
+        
         botMsg.edit(`✅ Successfully kicked ${kickUser}.`);
     } catch (err) {
-        clearMsg(botMsg, msg);
-        msg.react('❌');
         botMsg.edit('❌ An error occurred while handling your command.');
         console.log('Error in kick: ' + err.message);
         console.log(err.stack);

@@ -1,6 +1,6 @@
-const { clearMsg } = require('../../Util/misc');
-const serverCfg = require('../../Config/serverCfg.json');
-const commands = require('../../commands.json');
+const base = require('path').resolve('.');
+const serverCfg = require(base+'/Config/serverCfg.json');
+const commands = require(base+'/commands.json');
 
 module.exports = run;
 
@@ -10,7 +10,6 @@ async function run(msg, client, regexGroups) {
         msg.delete();
         // TODO: Add to database
     } catch (err) {
-        clearMsg(botMsg, undefined);
         botMsg.edit('❌ An error occurred while handling your command. Informing staff.');
         botMsg.delete({timeout: 5000});
         console.log('An error occured in help: '+err.message);
