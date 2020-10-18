@@ -78,6 +78,20 @@
             "path": "Commands/Fun/dadJoke.js"
         },
         {
+            "group": "fun",
+            "name": "coin flip",
+            "regex": "^(coin flip|coinflip|flip)$",
+            "help": "coin flip",
+            "path": "Commands/Fun/coinFlip.js"
+        },
+        {
+            "group": "fun",
+            "name": "dice roll",
+            "regex": "^(dice roll|diceroll|roll) (\\d+)?\\s?d(\\d+)$",
+            "help": "roll <count> d<dice>",
+            "path": "Commands/Fun/diceRoll.js"
+        },
+        {
             "group": "lookup",
             "name": "world record",
             "regex": "^(wr|world-record|world record) (\\d+) (\\S+) (.+)",
