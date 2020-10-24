@@ -9,6 +9,7 @@ async function run(reaction, user) {
     const message = reaction.message;
     try {
         if (!message.guild) return;
+        if (!serverCfg[message.guild.id]) return;
         const starboardCfg = serverCfg[message.guild.id].features.starboard;
         if (!starboardCfg.enabled) return;
         if (reaction.emoji.name !== starboardCfg.emoji) return;

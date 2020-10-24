@@ -5,6 +5,7 @@ module.exports = run;
 
 async function run(oldPresence, newPresence) {
     try {
+        if (!serverCfg[newPresence.guild.id]) return;
         const streamingCfg = serverCfg[newPresence.guild.id].features.streaming;
         if (!newPresence.member.manageable) return;
         if (streamingCfg.excludedRoles.length) {
