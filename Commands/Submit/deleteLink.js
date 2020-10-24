@@ -16,7 +16,7 @@ async function run(msg, client, regexGroups) {
               link = regexGroups[3];
         if (!seasonOpts.length) return botMsg.edit('❌ Incorrect season.');
             
-        const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg, botMsg, seasonOpts);
+        const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg.author, botMsg, seasonOpts);
         if (!season) return botMsg.edit('⌛ No season selected.');
             
         let runs = [];

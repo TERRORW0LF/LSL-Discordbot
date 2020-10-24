@@ -1,5 +1,5 @@
 const base = require('path').resolve('.');
-const { getPoints, getAllSubmits, getOptions } = require(base+'/Util/misc');
+const { getUserReaction, getPoints, getAllSubmits, getOptions } = require(base+'/Util/misc');
 const serverCfg = require(base+'/Config/serverCfg.json');
 
 module.exports = run;
@@ -11,7 +11,7 @@ async function run(msg, client, regexGroups) {
               seasonOpts = getOptions(regexGroups[2], serverCfg[guildId].seasons);
         if (!seasonOpts.length) return botMsg.edit('❌ Incorrect season.');
             
-        const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg, botMsg, seasonOpts);
+        const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg.author, botMsg, seasonOpts);
         if (!season) return botMsg.edit('⌛ No season selected.');
             
         const user = msg.author.tag,

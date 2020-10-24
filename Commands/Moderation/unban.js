@@ -21,7 +21,7 @@ async function run(msg, client, regexGroups) {
         }
         if (!bannedUserOpts.length) return botMsg.edit('❌ No banned user found for '+regexGroups[2]);
             
-        bannedUser = bannedUserOpts.length === 1 ? bannedUserOpts[0] : await getUserReaction(msg, botMsg, bannedUserOpts);
+        bannedUser = bannedUserOpts.length === 1 ? bannedUserOpts[0] : await getUserReaction(msg.author, botMsg, bannedUserOpts);
         if (!bannedUser) return botMsg.edit('⌛ No user selected.');
             
         bannedUser = bannedUsers.find(value => value.user.tag === bannedUser).user;

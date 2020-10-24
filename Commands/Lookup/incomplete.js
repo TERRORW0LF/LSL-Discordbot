@@ -1,5 +1,5 @@
 const base = require('path').resolve('.');
-const { getAllSubmits, getOptions } = require(base+'/Util/misc');
+const { getUserReaction, getAllSubmits, getOptions } = require(base+'/Util/misc');
 const serverCfg = require(base+'/Config/serverCfg.json');
 
 module.exports = run;
@@ -12,10 +12,10 @@ async function run(msg, client, regexGroups) {
               categoryOpts = getOptions(regexGroups[3], serverCfg[guildId].categories);
         if (!seasonOpts.length || !categoryOpts.length) return botMsg.edit('❌ Incorrect season or mode.');
 
-        const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg, botMsg, seasonOpts);
+        const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg.author, botMsg, seasonOpts);
         if (!season) return botMsg.edit('⌛ No season selected.');
 
-        const category = categoryOpts.length === 1 ? categoryOpts[0] : await getUserReaction(msg, botMsg, categoryOpts);
+        const category = categoryOpts.length === 1 ? categoryOpts[0] : await getUserReaction(msg.author, botMsg, categoryOpts);
         if (!category) return botMsg.edit('⌛ No category selected.');
 
         let stageOptions = serverCfg[guildId].stages;
