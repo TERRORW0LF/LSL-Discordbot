@@ -80,9 +80,19 @@ function createPlayfield(playField) {
 
 function checkWin(playField) {
     const center = playField[4];
-    if (!center) return false;
-    for (let i = 0; i < 4; i++)
-        if (playField[i] === center && playField[8-i] === center) return true;
+    if (center)
+        for (let i = 0; i < 4; i++)
+            if (playField[i] === center && playField[8-i] === center) return true;
+    const topLeft = playField[0];
+    if (topLeft) {
+        if (playField[1] === topLeft && playField[2] === topLeft) return true;
+        if (playField[3] === topLeft && playField[6] === topLeft) return true;
+    }
+    const bottomRight = playField[8];
+    if (bottomRight) {
+        if (playField[7] === bottomRight && playField[6] === bottomRight) return true;
+        if (playField[2] === bottomRight && playField[5] === bottomRight) return true;
+    }
     return false;
 }
 
