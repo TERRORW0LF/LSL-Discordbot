@@ -2,14 +2,9 @@ const { getGoogleAuth } = require('../google-auth');
 const { google } = require('googleapis');
 const strComp = require('string-similarity');
 
-const { getEmojiFromNum, getNumFromEmoji,  reactionFilter } = require('./reactionEmj');
+const { getNumFromEmoji,  reactionFilter } = require('./reactionEmj');
 
-module.exports = { clearMsg, getAllSubmits, getPoints, getMapPoints, getPlacePoints, getUserReaction, getOptions };
-
-async function clearMsg(botMsg=undefined, msg=undefined) {
-    if (msg) msg.reactions.removeAll();
-    if (botMsg) botMsg.reactions.removeAll();
-}
+module.exports = { getAllSubmits, getPoints, getMapPoints, getPlacePoints, getUserReaction,  getUserDecision, getOptions };
 
 async function getAllSubmits(sheet, sheetrange) {
     if (!sheet || !sheetrange) return [];
@@ -48,33 +43,73 @@ function getOptions(input, opts, min = 0.35, max = 0.7) {
     return similars;
 }
 
-async function getUserReaction(msg, botMsg, opts) {
+async function getUserReaction(user, botMsg, opts, timeout=20000) {
     try {
-        clearMsg(botMsg);
+        botMsg.reactions.removeAll();
         let userChoice,
-            page = 0;
+            page = -1,
+            maxPage = Math.floor((opts.length- 1) / 5),
+            pageLength;
         const reactOpts = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','▶'];
         do {
-            if (opts.slice((page-1)*5, page*5).length < 5) page = 0;
             page++;
+            pageLength = opts.slice(page*5, (page+1)*5).length;
+            if (page > maxPage) page = 0;
+            let newNextPage = false;
             for (i = 0; i <= 4; i++) {
-                if (i < opts.slice((page-1)*5, page*5).length && !msg.reactions.cache.find(reaction => reaction.emoji.name === reactOpts[i])) botMsg.react(reactOpts[i]);
-                else if (msg.reactions.cache.find(reaction => reaction.emoji.name === reactOpts[i])) msg.reactions.find(reaction => reaction.emoji.name === reactOpts[i]).remove();
+                if (pageLength > i && !botMsg.reactions.cache.has(reactOpts[i])) {
+                    botMsg.react(reactOpts[i]);
+                    newNextPage = true;
+                }
+                else if (pageLength <= i && botMsg.reactions.cache.has(reactOpts[i]))
+                    botMsg.reactions.cache.get(reactOpts[i]).remove();
             }
-            botMsg.react('▶');
-            if (botMsg.reactions.cache.find(reaction => reaction.emoji.name === '▶') && botMsg.reactions.cache.find(reaction => reaction.emoji.name === '▶').users.cache.has(msg.author.id)) botMsg.reactions.cache.find(reaction => reaction.emoji.name === '▶').users.remove(msg.author.id);
-            botMsg.edit('❔ React to select the desired Option!' + opts.slice((page-1)*5, page*5).map((o, i) => '```'+reactOpts[i]+' '+(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)+'```').join(''));
-            userChoice = await botMsg.awaitReactions(reactionFilter(reactOpts, msg.author.id), {max: 1, time: 15000});
+            if (newNextPage) {
+                if (botMsg.reactions.cache.has('▶')) botMsg.reactions.cache.get('▶').remove();
+                await botMsg.react('▶');
+            }
+            if (botMsg.reactions.cache.get('▶').users.cache.has(user.id))
+                await botMsg.reactions.cache.get('▶').users.remove(user.id);
+            botMsg.edit('❔ React to select the desired Option!' + opts.slice(page*5, (page+1)*5).map((o, i) => '```'+reactOpts[i]+' '+(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)+'```').join(''));
+            userChoice = await botMsg.awaitReactions(reactionFilter(reactOpts, user.id), {max: 1, time: timeout});
         } while (userChoice.first() && userChoice.first().emoji.name === '▶');
-        clearMsg(botMsg);
+        botMsg.reactions.removeAll();
         if (!userChoice || !userChoice.first()) return;
-        const opt = getNumFromEmoji(userChoice.first().emoji.name);
-        const map = opts[opt - 1];
-        return map;
+        const index = getNumFromEmoji(userChoice.first().emoji.name) - 1;
+        const opt = opts[index];
+        return opt;
     } catch (err) {
-        clearMsg(botMsg);
+        botMsg.reactions.removeAll();
         console.log('Error in getUserReaction: '+err.message);
         console.log(err.stack);
+    }
+}
+
+async function getUserDecision(user, botMsg, decision, timeout=60000) {
+    try {
+        botMsg.reactions.removeAll();
+        botMsg.edit('❔ React to made a decision!', {embed: {description: decision, color: 3010349}});
+        await Promise.all([
+            botMsg.react('✅'),
+            botMsg.react('❌')
+        ]);
+        try {
+            userDecision = await botMsg.awaitReactions(reactionFilter(['✅', '❌'], user.id), {max: 1, time: timeout, errors: ['time']});
+        } catch (err) {
+            err.ignore = true;
+            throw err;
+        }
+        botMsg.edit(botMsg.content, {embed: null});
+        botMsg.reactions.removeAll();
+        if (userDecision.first().emoji.name === '✅') return true;
+        return false;
+    } catch (err) {
+        botMsg.reactions.removeAll();
+        if (!err.ignore) {
+            console.log('Error in getUserDecision: '+err.message);
+            console.log(err.stack);
+        }
+        throw err;
     }
 }
 
