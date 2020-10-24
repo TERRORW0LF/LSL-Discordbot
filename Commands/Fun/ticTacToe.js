@@ -44,7 +44,7 @@ async function run(msg, client, regexGroups) {
         await Promise.all(promiseArray);
 
         // Play the game
-        const collector = playMsg.createReactionCollector((reaction, user) => {return (user.id === currPlayer.id && playEmojis.includes(reaction.emoji.name))}, {max: 9, idle: 20000});
+        const collector = playMsg.createReactionCollector((reaction, user) => {return (user.id === currPlayer.id && playEmojis.includes(reaction.emoji.name))}, {max: 9, idle: 30000});
         collector.on('collect', reaction => {
             playField[opts.indexOf(reaction.emoji.name)] = (currPlayer === player1 ? 1 : 2);
             playMsg.reactions.cache.get(reaction.emoji.name).remove();
