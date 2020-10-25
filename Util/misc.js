@@ -104,6 +104,7 @@ async function getUserDecision(user, botMsg, decision, timeout=60000) {
         if (userDecision.first().emoji.name === '✅') return true;
         return false;
     } catch (err) {
+        botMsg.edit(botMsg.content, {embed: null});
         botMsg.reactions.removeAll();
         if (!err.ignore) {
             console.log('Error in getUserDecision: '+err.message);
