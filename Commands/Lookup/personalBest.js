@@ -22,8 +22,9 @@ async function run(msg, client, regexGroups) {
         const stage = stageOpts.length === 1 ? stageOpts[0] : await getUserReaction(msg.author, botMsg, stageOpts);
         if (!stage) return botMsg.edit('⌛ No map selected.');
             
-        const runsPreProc = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((runA, runB) => Number(runA.time) - Number(runB.time)),
-              user = msg.author.tag,
+        const runsPreProc = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((runA, runB) => Number(runA.time) - Number(runB.time));
+        if (!runsPreProc.length) return botMsg.edit('❌ No submit found.');
+        const user = msg.author.tag,
               wrTime = Number(runsPreProc[0].time),
               pb = runsPreProc.find(run => run.name === user);
         if (!pb) return botMsg.edit('❌ No personal best found.');
