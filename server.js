@@ -95,7 +95,7 @@ client.on('messageReactionRemove', async (reaction, user) => {
     require('./Features/ReactionRoles/removedReaction')(reaction, user);
 });
 
-client.on('presenceUpdate', (oldPresence, newPresence) => {
+client.on('presenceUpdate', async (oldPresence, newPresence) => {
     if (!serverCfg[newPresence.guild.id]) return;
     const featureCfg = serverCfg[newPresence.guild.id].features;
     if (featureCfg.streaming.enabled) {
@@ -104,8 +104,8 @@ client.on('presenceUpdate', (oldPresence, newPresence) => {
     }
 });
 
-client.on('guildMemberAdd', member => {
-    member.fetch();
+client.on('guildMemberAdd', async member => {
+    await member.fetch();
     if (!serverCfg[newPresence.guild.id]) return;
     const autoRolesCfg = serverCfg[newPresence.guild.id].features.autoRoles;
     for (role of autoRolesCfg) 
