@@ -104,6 +104,14 @@ client.on('presenceUpdate', (oldPresence, newPresence) => {
     }
 });
 
+client.on('guildMemberAdd', member => {
+    member.fetch();
+    if (!serverCfg[newPresence.guild.id]) return;
+    const autoRolesCfg = serverCfg[newPresence.guild.id].features.autoRoles;
+    for (role of autoRolesCfg) 
+        member.roles.add(role).catch(err => {});
+});
+
 client.on('guildMemberRemove', member => {
     deleteTimeout("mute"+member.guild.id+member.id);
 });
