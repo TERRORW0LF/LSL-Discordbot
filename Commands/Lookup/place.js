@@ -27,8 +27,9 @@ async function run(msg, client, regexGroups) {
         const stage = stageOpts.length === 1 ? stageOpts[0] : await getUserReaction(msg.author, botMsg, stageOpts);
         if (!stage) return botMsg.edit(createEmbed('No map selected.', 'Timeout', guildId)), videoMsg.delete();
             
-        const runsPreProc = (await getAllSubmits(Cfg.googleSheets.submit[season][category].id, Cfg.googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((runA, runB) => Number(runA.time) - Number(runB.time)),
-              wrTime = Number(runsPreProc[0].time);
+        const runsPreProc = (await getAllSubmits(Cfg.googleSheets.submit[season][category].id, Cfg.googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((runA, runB) => Number(runA.time) - Number(runB.time));
+        if (!runsPreProc.length) return botMsg.edit('❌no submits found.');          
+        const wrTime = Number(runsPreProc[0].time);
         let runs = [],
             placeRuns = [];
         for (let run of runsPreProc) {

@@ -123,6 +123,7 @@ async function getUserDecision(user, botMsg, decision, timeout=60000) {
         botMsg.edit(createEmbed(`Rejected: *${decision}*`, 'Error', botMsg.guild.id));
         return false;
     } catch (err) {
+        botMsg.edit(botMsg.content, {embed: null});
         botMsg.reactions.removeAll();
         botMsg.edit('', createEmbed('No decision made.', 'Timeout', botrMsg.guild.id));
         if (!err.ignore) {
