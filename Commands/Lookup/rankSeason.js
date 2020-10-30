@@ -1,18 +1,18 @@
 const base = require('path').resolve('.');
-const { getUserReaction, getPoints, getAllSubmits, getOptions } = require(base+'/Util/misc');
+const { createEmbed, getUserReaction, getPoints, getAllSubmits, getOptions } = require(base+'/Util/misc');
 const serverCfg = require(base+'/Config/serverCfg.json');
 
 module.exports = run;
 
 async function run(msg, client, regexGroups) {
-    const botMsg = await msg.channel.send('💬 Collecting data, please hold on.');
+    const botMsg = await msg.channel.send(createEmbed('Searching submit data, please hold on.', 'Working', msg.guild.id));
     try {
         const guildId = msg.guild.id,
               seasonOpts = getOptions(regexGroups[2], serverCfg[guildId].seasons);
-        if (!seasonOpts.length) return botMsg.edit('❌ Incorrect season.');
+        if (!seasonOpts.length) return botMsg.edit(createEmbed('Incorrect season.', 'Error', guildId));
             
         const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg.author, botMsg, seasonOpts);
-        if (!season) return botMsg.edit('⌛ No season selected.');
+        if (!season) return botMsg.edit(createEmbed('No season selected.', 'Timeout', guildId));
             
         const user = msg.author.tag,
               pairs = await getPoints(serverCfg[guildId].googleSheets.points[season].Total.id, serverCfg[guildId].googleSheets.points[season].Total.range),
@@ -33,9 +33,9 @@ async function run(msg, client, regexGroups) {
         const length = runs.size,
               points = pair ? pair.points : 0;
 
-        botMsg.edit(`✅ Season rank found!\n**Rank:** ${rank}\n**Points:** ${points}\n**Maps:** ${length}`);
+        botMsg.edit(createEmbed(`**Season rank**\nRank: *${rank}*\nPoints: *${points}*\nMaps: *${length}*`, 'Success', guildId));
     } catch(err) {
-        botMsg.edit('❌ An error occurred while handling your command.');
+        botMsg.edit(createEmbed('An error occurred while handling your command.', 'Error', msg.guild.id));
         console.log('Error in rankSeason: ' + err.message);
         console.log(err.stack);
     }

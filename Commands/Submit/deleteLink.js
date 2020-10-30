@@ -3,21 +3,21 @@ const assert = require('assert').strict;
 
 const base = require('path').resolve('.');
 const { getGoogleAuth } = require(base+'/google-auth');
-const { getAllSubmits, getUserReaction, getOptions } = require(base+'/Util/misc');
+const { createEmbed, getAllSubmits, getUserReaction, getOptions } = require(base+'/Util/misc');
 const serverCfg = require(base+'/Config/serverCfg.json');
 
 module.exports = run;
 
 async function run(msg, client, regexGroups) {
-    const botMsg = await msg.channel.send('💬 Processing deletion. Please hold on.');
+    const botMsg = await msg.channel.send(createEmbed('Processing deletion, please hold on.', 'Working', msg.guild.id));
     try {
         const guildId = msg.guild.id,
               seasonOpts = getOptions(regexGroups[2], serverCfg[guildId].seasons),
               link = regexGroups[3];
-        if (!seasonOpts.length) return botMsg.edit('❌ Incorrect season.');
+        if (!seasonOpts.length) return botMsg.edit(createEmbed('Incorrect season.', 'Error', guildId));
             
         const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg.author, botMsg, seasonOpts);
-        if (!season) return botMsg.edit('⌛ No season selected.');
+        if (!season) return botMsg.edit(createEmbed('No season selected.', 'Timeout', guildId));
             
         let runs = [];
         for (let category of serverCfg[guildId].categories) {
@@ -30,16 +30,16 @@ async function run(msg, client, regexGroups) {
                 if (submitFilter.length) submitFilter.forEach(value => runs.push(value));
             }
         }
-        if (!runs.length) return botMsg.edit('❌ No run found.');
+        if (!runs.length) return botMsg.edit(createEmbed('No run found.', 'Error', guildId));
             
-        const run = runs.length === 1 ? runs[0] : await getUserReaction(msg, botMsg, runs.reverse());
-        if (!run) return botMsg.edit('⌛ No run selected.');
+        const run = runs.length === 1 ? runs[0] : await getUserReaction(msg.author, botMsg, runs.reverse());
+        if (!run) return botMsg.edit(createEmbed('No run selected.', 'Timeout', guildId));
             
         const row = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][run.category].id, serverCfg[guildId].googleSheets.submit[season][run.category].range)).findIndex(value => { try {return !assert.deepStrictEqual(run, value);} catch(err) {return false}}),
               client = google.sheets('v4'),
               token = await getGoogleAuth(),
               gid = serverCfg[guildId].googleSheets.submit[season][run.category].gid;
-        if (row === -1) return botMsg.edit('❌ Assert broke. Please blame assert and not my incompetence to find a more suitable package.');
+        if (row === -1) return botMsg.edit(createEmbed('Assert broke. Please blame assert and not my incompetence to find a more suitable package.', 'Error', guildId));
             
         let requests = [];
         requests.push({
@@ -65,12 +65,12 @@ async function run(msg, client, regexGroups) {
             spreadsheetId: serverCfg[guildId].googleSheets.submit[season][run.category].id,
             resource: resourceVals,
         }, async (err, res) => {
-            if (err) return botMsg.edit('❌ Failed to delete run.');
+            if (err) return botMsg.edit(createEmbed('Failed to delete run.', 'Error', guildId));
             
-            botMsg.edit('✅ Sucessfully deleted run!');
+            botMsg.edit(createEmbed('Sucessfully deleted run!', 'Success', guildId));
         });
     } catch (err) {
-        botMsg.edit('❌ An error occurred while handling your command.');
+        botMsg.edit(createEmbed('An error occurred while handling your command.', 'Error', msg.guild.id));
         console.log('Error in deleteLink: ' + err.message);
         console.log(err.stack);
     }

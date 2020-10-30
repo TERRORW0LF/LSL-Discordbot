@@ -1,11 +1,11 @@
 const strComp = require('string-similarity');
 const base = require('path').resolve('.');
-const { getUserReaction } = require(base+'/Util/misc');
+const { createEmbed, getUserReaction } = require(base+'/Util/misc');
 
 module.exports = run;
 
 async function run(msg, client, regexGroups) {
-    const botMsg = await msg.channel.send('💬 Searching user data, please hold on.');
+    const botMsg = await msg.channel.send(createEmbed('Searching user data, please hold on.', 'Working', msg.guild.id));
     try {
         const bannedUsers = await msg.guild.fetchBans(),
               bannedUserOpts = [];
@@ -19,18 +19,18 @@ async function run(msg, client, regexGroups) {
             if (value.rating < 0.7) continue;
             bannedUserOpts.push(bannedUsersTag[index]);
         }
-        if (!bannedUserOpts.length) return botMsg.edit('❌ No banned user found for '+regexGroups[2]);
+        if (!bannedUserOpts.length) return botMsg.edit(createEmbed('No banned user found for '+regexGroups[2], 'Error', msg.guild.id));
             
         bannedUser = bannedUserOpts.length === 1 ? bannedUserOpts[0] : await getUserReaction(msg.author, botMsg, bannedUserOpts);
-        if (!bannedUser) return botMsg.edit('⌛ No user selected.');
+        if (!bannedUser) return botMsg.edit(createEmbed('No user selected.', 'Timeout', msg.guild.id));
             
         bannedUser = bannedUsers.find(value => value.user.tag === bannedUser).user;
         if (regexGroups[4]) msg.guild.members.unban(bannedUser, regexGroup[4]);
         else msg.guild.members.unban(bannedUser);
         
-        botMsg.edit(`✅ Successfully unbanned ${bannedUser}.`);
+        botMsg.edit(createEmbed(`Successfully unbanned ${bannedUser}.`, 'Success', msg.guild.id));
     } catch (err) {
-        botMsg.edit('❌ An error occurred while handling your command.');
+        botMsg.edit(createEmbed('An error occurred while handling your command.', 'Error', msg.guild.id));
         console.log('Error in unban: ' + err.message);
         console.log(err.stack);
     }

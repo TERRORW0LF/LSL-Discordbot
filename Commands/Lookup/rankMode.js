@@ -1,22 +1,22 @@
 const base = require('path').resolve('.');
-const { getUserReaction, getPoints, getAllSubmits, getOptions } = require(base+'/Util/misc');
+const { createEmbed, getUserReaction, getPoints, getAllSubmits, getOptions } = require(base+'/Util/misc');
 const serverCfg = require(base+'/Config/serverCfg.json');
 
 module.exports = run;
 
 async function run(msg, client, regexGroups) {
-    const botMsg = await msg.channel.send('💬 Collecting data, please hold on.');
+    const botMsg = await msg.channel.send(createEmbed('Searching submit data, please hold on.', 'Working', msg.guild.id));
     try {
         const guildId = msg.guild.id,
               seasonOpts = getOptions(regexGroups[2], serverCfg[guildId].seasons),
               categoryOpts = getOptions(regexGroups[3], serverCfg[guildId].categories);
-        if (!seasonOpts.length || !categoryOpts.length) return botMsg.edit('❌ Incorrect season or mode.');
+        if (!seasonOpts.length || !categoryOpts.length) return botMsg.edit(createEmbed('Incorrect season or mode.', 'Error', guildId));
             
         const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg.author, botMsg, seasonOpts);
-        if (!season) return botMsg.edit('⌛ No season selected.');
+        if (!season) return botMsg.edit(createEmbed('No season selected.', 'Timeout', guildId));
             
         const category = categoryOpts.length === 1 ? categoryOpts[0] : await getUserReaction(msg.author, botMsg, categoryOpts);
-        if (!category) return botMsg.edit('⌛ No category selected.');
+        if (!category) return botMsg.edit(createEmbed('No category selected.', 'Timeout', guildId));
             
         const user = msg.author.tag,
               pairs = await getPoints(serverCfg[guildId].googleSheets.points[season][category].id, serverCfg[guildId].googleSheets.points[season][category].range),
@@ -33,9 +33,9 @@ async function run(msg, client, regexGroups) {
         const length = runs.size,
               points = pair ? pair.points : 0;
 
-        botMsg.edit(`✅ Mode rank found!\n**Rank:** ${rank}\n**Points:** ${points}\n**Maps:** ${length}`);
+        botMsg.edit(createEmbed(`**Mode rank**\nRank: *${rank}*\nPoints: *${points}*\nMaps: *${length}*`, 'Success', guildId));
     } catch(err) {
-        botMsg.edit('❌ An error occurred while handling your command.');
+        botMsg.edit(createEmbed('An error occurred while handling your command.', 'Error', msg.guild.id));
         console.log('Error in rankMode: ' + err.message);
         console.log(err.stack);
     }

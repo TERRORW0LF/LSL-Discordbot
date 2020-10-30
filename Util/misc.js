@@ -1,10 +1,19 @@
+const base = require('path').resolve('.');
 const { getGoogleAuth } = require('../google-auth');
+const serverCfg = require(base+'/Config/serverCfg.json');
 const { google } = require('googleapis');
 const strComp = require('string-similarity');
 
 const { getNumFromEmoji,  reactionFilter } = require('./reactionEmj');
 
-module.exports = { getAllSubmits, getPoints, getMapPoints, getPlacePoints, getUserReaction,  getUserDecision, getOptions };
+module.exports = { createEmbed, getAllSubmits, getPoints, getMapPoints, getPlacePoints, getUserReaction,  getUserDecision, getOptions };
+
+function createEmbed(text, func, guild) {
+    const embedCfg = serverCfg[guild] ? serverCfg[guild].embeds : serverCfg.default.embeds,
+          color = embedCfg[func].color || 0,
+          emoji = embedCfg[func].emoji || '';
+    return {embed: {description: emoji+text, color: color}};
+}
 
 async function getAllSubmits(sheet, sheetrange) {
     if (!sheet || !sheetrange) return [];
@@ -46,6 +55,7 @@ function getOptions(input, opts, min = 0.35, max = 0.7) {
 async function getUserReaction(user, botMsg, opts, timeout=20000) {
     try {
         botMsg.reactions.removeAll();
+        botMsg.edit('.')
         let userChoice,
             page = -1,
             maxPage = Math.floor((opts.length- 1) / 5),
@@ -56,6 +66,7 @@ async function getUserReaction(user, botMsg, opts, timeout=20000) {
             pageLength = opts.slice(page*5, (page+1)*5).length;
             if (page > maxPage) page = 0;
             let newNextPage = false;
+            botMsg.edit('❔ React to select the desired Option!' + opts.slice(page*5, (page+1)*5).map((o, i) => '```'+reactOpts[i]+' '+(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)+'```').join(''), {embed: null});
             for (i = 0; i <= 4; i++) {
                 if (pageLength > i && !botMsg.reactions.cache.has(reactOpts[i])) {
                     botMsg.react(reactOpts[i]);
@@ -70,15 +81,20 @@ async function getUserReaction(user, botMsg, opts, timeout=20000) {
             }
             if (botMsg.reactions.cache.get('▶').users.cache.has(user.id))
                 await botMsg.reactions.cache.get('▶').users.remove(user.id);
-            botMsg.edit('❔ React to select the desired Option!' + opts.slice(page*5, (page+1)*5).map((o, i) => '```'+reactOpts[i]+' '+(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)+'```').join(''));
+
             userChoice = await botMsg.awaitReactions(reactionFilter(reactOpts, user.id), {max: 1, time: timeout});
         } while (userChoice.first() && userChoice.first().emoji.name === '▶');
         botMsg.reactions.removeAll();
-        if (!userChoice || !userChoice.first()) return;
+        if (!userChoice || !userChoice.first()) {
+            botMsg.edit('', createEmbed('No option selected.', 'Timeout', botMsg.guild.id));   
+            return;
+        }
         const index = getNumFromEmoji(userChoice.first().emoji.name) - 1;
         const opt = opts[index];
+        botMsg.edit('', createEmbed(`Option *${opt}* selected.`, 'Success', botMsg.guild.id));
         return opt;
     } catch (err) {
+        botMsg.edit('', createEmbed('An error occurred while selecting an option.', 'Error', botMsg.guild.id));
         botMsg.reactions.removeAll();
         console.log('Error in getUserReaction: '+err.message);
         console.log(err.stack);
@@ -99,13 +115,18 @@ async function getUserDecision(user, botMsg, decision, timeout=60000) {
             err.ignore = true;
             throw err;
         }
-        botMsg.edit(botMsg.content, {embed: null});
         botMsg.reactions.removeAll();
-        if (userDecision.first().emoji.name === '✅') return true;
+        if (userDecision.first().emoji.name === '✅') {
+            botMsg.edit('', createEmbed(`Agreed to: *${decision}*`, 'Success', botMsg.guild.id));
+            return true;
+        }
+        botMsg.edit(createEmbed(`Rejected: *${decision}*`, 'Error', botMsg.guild.id));
         return false;
     } catch (err) {
         botMsg.reactions.removeAll();
+        botMsg.edit('', createEmbed('No decision made.', 'Timeout', botrMsg.guild.id));
         if (!err.ignore) {
+            botMsg.edit('', createEmbed('An error occurred while making a decision.', 'Error', botMsg.guild.id));
             console.log('Error in getUserDecision: '+err.message);
             console.log(err.stack);
         }

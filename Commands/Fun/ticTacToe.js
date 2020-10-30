@@ -1,29 +1,30 @@
 const base = require('path').resolve('.');
+const { createEmbed } = require(base+'/Util/misc');
 const { getUserDecision } = require(base+'/Util/misc');
 
 
 module.exports = run;
 
 async function run(msg, client, regexGroups) {
-    const botMsg = await msg.channel.send('💬 Setting up game, please hold on.'),
+    const botMsg = await msg.channel.send(createEmbed('Setting up game, please hold on.', 'Working', msg.guild.id)),
           playMsg = await msg.channel.send('.');
     try {
         let player1 = msg.member,
             player2 = null;
-        if (msg.mentions.members.size > 1) return botMsg.edit('❌ You can only challenge one member.');
+        if (msg.mentions.members.size > 1) return botMsg.edit(createEmbed('You can only challenge one member.', 'Error', msg.guild.id));
         if (msg.mentions.members.first()) {
             try {
                 if (!await getUserDecision(msg.mentions.users.first(), botMsg, `${msg.author} challanged you to tictactoe, do you accept?`)) {
                     try {
                         if (!await getUserDecision(msg.author, botMsg, 'Opponent declined match, do you want to play against me instead?')) {
-                            return botMsg.edit('❌ Match aborted.');
+                            return botMsg.edit(createEmbed('Challanger declined bot duel. Match aborted.', 'Error', msg.guild.id));
                         }
                     } catch (err) {
-                        return botMsg.edit('❌ No decision made, aborting match.');
+                        return botMsg.edit(createEmbed(`Challanger did not answer bot duel request. Match aborted.`, 'Error', msg.guild.id));
                     }
                 }
             } catch (err) {
-                return botMsg.edit('❌ Opponent did not answer, aborting match.');
+                return botMsg.edit(createEmbed('Opponent did not answer. Match aborted.', 'Error', msg.guild.id));
             }
             player2 = msg.mentions.users.first();
         }
@@ -36,7 +37,7 @@ async function run(msg, client, regexGroups) {
             playField = [0, 0, 0, 0, 0, 0, 0, 0, 0],
             currPlayer = Math.random() < 0.5 ? player1 : player2;
         botMsg.reactions.removeAll();
-        botMsg.edit(`It's ${currPlayer}'s turn.`);
+        botMsg.edit(createEmbed(`It's ${currPlayer}'s turn.`, '', msg.guild.id));
         playMsg.edit(createPlayfield(playField));
         let promiseArray = []
         for (opt of opts)
@@ -53,16 +54,16 @@ async function run(msg, client, regexGroups) {
             playMsg.edit(createPlayfield(playField));
             if (checkWin(playField)) return collector.stop('winner');
             currPlayer = currPlayer === player1 ? player2 : player1;
-            botMsg.edit(`It's ${currPlayer}'s turn.`);
+            botMsg.edit(createEmbed(`It's ${currPlayer}'s turn.`, '', msg.guild.id));
         });
         collector.on('end', (_, reason) => {
             playMsg.reactions.removeAll();
-            if (reason === 'winner') return botMsg.edit(`🏆 ${currPlayer} won the game!`);
-            if (reason === 'idle') return botMsg.edit(`🏆 ${currPlayer} didn't make a move in time, ${currPlayer === player1 ? player2 : player1} won the game!`);
-            return botMsg.edit(`The match ended in a draw, no winner can be determined.`);
+            if (reason === 'winner') return botMsg.edit(createEmbed(`🏆 ${currPlayer} won the game!`, '', msg.guild.id));
+            if (reason === 'idle') return botMsg.edit(createEmbed(`🏆 ${currPlayer} didn't make a move in time, ${currPlayer === player1 ? player2 : player1} won the game!`, '', msg.guild.id));
+            return botMsg.edit(createEmbed(`The match ended in a draw, no winner can be determined.`, '', msg.guild.id));
         });
     } catch (err) {
-        botMsg.edit('❌ An error occurred while handling your command. Informing staff.');
+        botMsg.edit(createEmbed('An error occurred while handling your command. Informing staff.', '', msg.guild.id));
         console.log('An error occured in TickTacToe: '+err.message);
         console.log(err.stack);
     }
