@@ -26,7 +26,7 @@ async function run(msg, client, regexGroups) {
         if (!stage) return botMsg.edit(createEmbed('No map selected.', 'Timeout', guildId)), videoMsg.delete();
             
         const runsPreProc = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((runA, runB) => Number(runA.time) - Number(runB.time));
-        if (!runsPreProc.length) return botMsg.edit('❌ No submit found.');
+        if (!runsPreProc.length) return botMsg.edit(createEmbed('No submit found.', 'Error', msg.guild.id)), videoMsg.delete();
         const user = msg.author.tag,
               wrTime = Number(runsPreProc[0].time),
               pb = runsPreProc.find(run => run.name === user);
@@ -55,7 +55,7 @@ async function run(msg, client, regexGroups) {
         if ((normalizedTime = 1-((pbTime-wrTime)/wrTime)) < 0) normalizedTime = 0;
         const points = Math.round((0.4*Math.pow(normalizedTime, 25)+0.05*Math.pow(normalizedTime, 4)+0.25*Math.pow(normalizedTime, 3)+0.3*Math.pow(normalizedTime, 2))*100 + getMapPoints(stage, category) + getPlacePoints(rank));
         
-        botMsg.edit(createEmbed(`**Personal Best**\nTime: *${pb.time}*\nRank: *${rank}*\nPoints: *${points}*\nSubmitted: *${pb.date}*`, 'Success', guildId), pb.proof);
+        botMsg.edit(createEmbed(`**Personal Best**\nTime: *${pb.time}*\nRank: *${rank}*\nPoints: *${points}*\nSubmitted: *${pb.date}*`, 'Success', guildId));
         videoMsg.edit(pb.proof);
     } catch (err) {
         videoMsg.delete();
