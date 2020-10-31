@@ -31,7 +31,7 @@ async function run(msg, client, regexGroups) {
         if (resp.status !== 200)
             return botMsg.edit(createEmbed('Failed to submit run.', 'Error', guildId));
 
-        return botMsg.edit(createEmbed(`New run submitted by ${msg.member.nickname || msg.author.username}`, 'Success', guildId));
+        return botMsg.edit(createEmbed(`New run submitted by **${msg.member.nickname || msg.author.username}**`, 'Success', guildId));
     } catch (err) {
         botMsg.edit(createEmbed('An error occurred while handling your command.', 'Error', msg.guild.id));
         console.log('Error in submit: ' + err.message);

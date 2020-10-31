@@ -98,10 +98,8 @@ client.on('messageReactionRemove', async (reaction, user) => {
 client.on('presenceUpdate', async (oldPresence, newPresence) => {
     if (!serverCfg[newPresence.guild.id]) return;
     const featureCfg = serverCfg[newPresence.guild.id].features;
-    if (featureCfg.streaming.enabled) {
-        const run = require('./Features/Streaming/streamingRole');
-        run(oldPresence, newPresence);
-    }
+    if (featureCfg.streaming.enabled)
+        require('./Features/Streaming/streamingRole')(oldPresence, newPresence);
 });
 
 client.on('guildMemberAdd', async member => {
@@ -110,6 +108,11 @@ client.on('guildMemberAdd', async member => {
     const autoRolesCfg = serverCfg[newPresence.guild.id].features.autoRoles;
     for (role of autoRolesCfg) 
         member.roles.add(role).catch(err => {});
+});
+
+client.on('guildMemberUpdate', async (oldMember, newMember) => {
+    if (!newMember.guild.id === '574522788967088128') return;
+    if (oldMember.nickname !== newMember.nickname) axions.post('https://luciosurfleague.com/routines/discord.php', {action: "userUpdate", user: newMember.user.tag, name: newMember.nickname, id: "574522788967088128"}, { headers: { "User-Agent": "LSL-Discordbot"}, contentType: "application/json"}).catch(err => {});
 });
 
 client.on('guildMemberRemove', member => {
