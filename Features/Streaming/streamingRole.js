@@ -16,7 +16,7 @@ async function run(oldPresence, newPresence) {
         }
         if (streamingCfg.requiredRoles.length) {
             let hasRole = false;
-            for (role of streamingCfg.requiredRoles) {
+            for (let role of streamingCfg.requiredRoles) {
                 if (newPresence.member.roles.cache.has(role)) {
                     hasRole = true;
                     break;

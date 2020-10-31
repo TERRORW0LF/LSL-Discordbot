@@ -17,7 +17,7 @@ async function run(msg, client, regexGroups) {
         let d;
         if (regexGroups[2].includes('#')) d = strComp.findBestMatch(regexGroups[2], bannedUsersTag);
         else d = strComp.findBestMatch(regexGroups[2], bannedUsersTag.map(value => value = value.split('#')[0]));
-        for ([index, value] of d.ratings.entries()) {
+        for (let [index, value] of d.ratings.entries()) {
             if (value.rating < 0.7) continue;
             bannedUserOpts.push(bannedUsersTag[index]);
         }

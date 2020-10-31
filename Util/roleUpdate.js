@@ -77,18 +77,20 @@ async function roleUpdate(guild, season) {
                     }
                 }
                 // loop over users and give corresponding role.
-                for ([key, value] of highestPoints) {
+                for (let [key, value] of highestPoints) {
                     try {
                         const guildmem = allUsers.find(member => member.user.tag === key),
                               role = getRole(roles, value);
                         if (!guildmem) continue;
-                        for ([key, value] of newFirstPlaces) {
-                            if (guildmem.roles.cache.has(key) && guildmem.user.tag !== value) guildmem.roles.remove(key);
-                        }
+                        for (let [key, value] of newFirstPlaces)
+                            if (guildmem.roles.cache.has(key) && guildmem.user.tag !== value) 
+                                guildmem.roles.remove(key);
                         const currUserRoles = Object.keys(roles).filter(key => guildmem.roles.cache.has(key) && key !== role);
-                        for (currRole of currUserRoles) guildmem.roles.remove(currRole);
+                        for (let currRole of currUserRoles) 
+                            guildmem.roles.remove(currRole);
                         if (!role) continue;
-                        if (!guildmem.roles.cache.has(role)) guildmem.roles.add(role);
+                        if (!guildmem.roles.cache.has(role)) 
+                            guildmem.roles.add(role);
                     } catch (err) {
                         console.log(`Failed to give or remove role from user "${key}"\n`+err);
                     }

@@ -42,7 +42,7 @@ async function run(msg, client, regexGroups) {
         botMsg.edit(createEmbed(`It's ${currPlayer}'s turn.`, '', msg.guild.id));
         playMsg.edit(createPlayfield(playField));
         let promiseArray = []
-        for (opt of opts)
+        for (let opt of opts)
             promiseArray.push(playMsg.react(opt));
         await Promise.all(promiseArray);
 

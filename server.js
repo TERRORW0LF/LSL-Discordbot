@@ -106,7 +106,7 @@ client.on('guildMemberAdd', async member => {
     await member.fetch();
     if (!serverCfg[newPresence.guild.id]) return;
     const autoRolesCfg = serverCfg[newPresence.guild.id].features.autoRoles;
-    for (role of autoRolesCfg) 
+    for (let role of autoRolesCfg) 
         member.roles.add(role).catch(err => {});
 });
 

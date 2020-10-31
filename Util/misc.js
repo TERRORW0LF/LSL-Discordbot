@@ -47,7 +47,7 @@ function getOptions(input, opts, min = 0.35, max = 0.7) {
     let similars = [];
     const d = strComp.findBestMatch(input.toLowerCase(), optionsLow);
     if (d.bestMatch.rating >= max) return [options[d.bestMatchIndex]];
-    for ([index, rating] of d.ratings.entries()) {
+    for (let [index, rating] of d.ratings.entries()) {
         if (rating.rating <= min) continue;
         similars.push(options[index]);
     }
@@ -69,7 +69,7 @@ async function getUserReaction(user, botMsg, opts, timeout=20000) {
             if (page > maxPage) page = 0;
             let newNextPage = false;
             botMsg.edit('❔ React to select the desired Option!' + opts.slice(page*5, (page+1)*5).map((o, i) => '```'+reactOpts[i]+' '+(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)+'```').join(''), {embed: null});
-            for (i = 0; i <= 4; i++) {
+            for (let i = 0; i <= 4; i++) {
                 if (pageLength > i && !botMsg.reactions.cache.has(reactOpts[i])) {
                     botMsg.react(reactOpts[i]);
                     newNextPage = true;
