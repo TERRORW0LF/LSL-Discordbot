@@ -1,3 +1,5 @@
+'use strict';
+
 const base = require('path').resolve('.');
 const serverCfg = require(base+'/Config/serverCfg.json');
 

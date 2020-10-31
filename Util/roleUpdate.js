@@ -1,3 +1,5 @@
+'use strict';
+
 const { getGoogleAuth } = require('../google-auth'); 
 const { google } = require('googleapis');
 const serverCfg = require('../Config/serverCfg.json');

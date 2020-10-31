@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = { addTimeout, deleteTimeout };
 
 let timeouts = new Map();

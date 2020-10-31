@@ -1,3 +1,5 @@
+'use strict';
+
 const base = require('path').resolve('.');
 const { createEmbed } = require(base+'/Util/misc');
 const { addTimeout, deleteTimeout } = require(base+'/Util/timeouts');

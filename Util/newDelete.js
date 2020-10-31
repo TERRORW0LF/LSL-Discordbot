@@ -1,3 +1,5 @@
+'use strict';
+
 const roleUpdate = require('./roleUpdate');
 
 module.exports = newDelete;

@@ -1,3 +1,5 @@
+'use strict';
+
 const sendSubmit = require('./sendSubmit');
 const sendWr = require('./sendWR');
 const roleUpdate = require('./roleUpdate');

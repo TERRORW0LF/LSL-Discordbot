@@ -1,3 +1,5 @@
+'use strict';
+
 const base = require('path').resolve('.');
 const { createEmbed, getAllSubmits, getMapPoints, getPlacePoints, getUserReaction, getOptions } = require(base+'/Util/misc');
 const serverCfg = require(base+'/Config/serverCfg.json');

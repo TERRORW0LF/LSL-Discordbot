@@ -1,3 +1,5 @@
+'use strict';
+
 const getUser = require('./getUser');
 const serverCfg = require('../Config/serverCfg.json');
 

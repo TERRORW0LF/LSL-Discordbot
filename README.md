@@ -1,50 +1,88 @@
 # LSL-discordbot
 
 ## Notice
-This is a discord bot specifically written for the Lucio Surf League discord. 
-The code in this project will most likely not be usefull for anything else.
+This bot is written specifically for the Lucio Surf League discord server. It is planned to make this bot accessible to any kind of speedrunning server in the future.
+If you want to help progress the bot developement, send me ideas, constructive critism, or even your own modules/code.
 
-## Implemented:
-- Commands:
-  - `!help` sends an overview of the available commands.
-  - `!help [command]` sends a detailed information about the given command.
-  - `!version` sends the current version of the bot.
-  - `!incomplete` sends all completed and incompleted maps.
-  - `!rank` sends the current rank of the user on the given season, mode, or map.
-  - `!submit` submits a run to the google Form corresponding to the given season.
-  - `!delete` deletes a run from the google Spreadsheet corresponding to the given season.
-  - `!wr` sends the current wr corresponding to the given parameters.
-  - `!pb` sends the current pb corresponding to the given parameters.
+## Commands
+### Basic
+- `help` sends an overview of the available commands.
+- `[group] help` sends an overview of the available commands in the given group.
+- `remind me` adds a reminder to notify you in the specified amount of time.
+- `reminders` lists all your currently active reminders.
 
-- Updates:
-  - Bot automatically sends updates when a new run is submitted (either through `!submit`, or the google Forms).
-  - Bot automatically sends a seperate, more detailed, update when the submitted run is a new word record.
+### Fun
+- `coin flip` flips a coin.
+- `roll` rolls a dice.
+- `tictactoe` play tictactoe against another user or the bot.
+- `joke` sends a joke.
 
-- Caching:
-  - Bot caches world records for `!wr`, so spreadsheet requests are kept to a minimum.
-  - Bot caches personal bests for `!pb`, so spreadsheet requests are kept to a minimun.
-  - Bot caches personal bests for `!incomplete`, so spreadsheet requests are kept to a minimun.
-  - Bot caches personal bests for `!rank`, so spreadsheet requests are kept to a minimun.
+### Moderation
+- `mute` mute a member for specified amount of time or until manually unmuted.
+- `unmute` unmute a member.
+- `kick` kick a member.
+- `ban` ban a member for a specified amount of time or until manually unbanned.
+- `unban`unban a user.
+- `rr new` create a new reaction role message.
+- `rr add` add a reaction role to a reaction role message.
+
+### Lookup
+- `wr` sends the current wr corresponding to the given parameters.
+- `pb` sends the current pb corresponding to the given parameters.
+- `place` sends the run of the specified place/rank.
+- `top5` sends the 5 best runs.
+- `rank` sends the current rank of the user in the given season or mode.
+- `incomplete` sends all completed and incompleted maps.
+
+### Submit
+- `submit` submits a run to the google Form corresponding to the given season.
+- `delete` deletes a run from the google Spreadsheet corresponding to the given season.
+
+### Tournament (Work in progress)
+- `create` create a tournament.
+- `sign-in` join a tournament.
 
 
-## Todo:
-- Update bot to work with `discord.js v12` and higher (Not gonna happen anytime soon. To many changes).
-- Change `onChange` event to `onEdit` in the google sheet, to get the deleted data.
-  - Change `setCache` to `updateCache` in `newDelete` and `newDeleteDiscord`.
-  - Send a message when a run gets deleted.
-- Redo `!delete` so a user can pick from the last 5 runs submitted for the given map.
-- Add an optional `user` parameter for `!rank` and `!pb` to look up scores from other users.
-- Check for new runs on startup. (Add an announced column in Record Log modified).
-- Unify embeds even more, so the bot has an even clearer structure.
+## Features
+### Submit updates
+- Bot sends updates when a new run is submitted.
+- Bot sends a comparison when a submitted run is a world record.
+
+### Auto roles
+- Bot adds a `streaming` role for users who have `streaming` in their activity.
+- Bot adds `auto roles` when a user joins the guild.
+
+### Starboard
+- Bot adds message with enough star reaction to a separate starboard channel.
+- Bot update star count on starboard messages.
+- Bot removes starboard messages if they drop under the required star count.
 
 
-## MOM! There's a bug in my code!
-- `roleUpdate` currently loops through every player 2 or 3 times, causing a massive performance problem on seasons with more than 20 players.
-- Theoretically possible but not seen: To many submits/deletes at the same time could cause `roleUpdates` to crash, due to discord enforcing a short wait after a great amount of roleAdd/delete requests.
+## In the making
+- Moving sheets to our own website.
+- Use a database instead of json.
+- Update bot to work with our own website.
 
 
-## Warning:
+## Todo
+- `role join add/remove` adds/removes a role from the list of roles given to members on guild join.
+- Unify and prettify bot messages.
+- Fix some embed issues.
+
+
+## Planned
+- `role all/humans/bots` add a specified role to all members/humans/bots.
+- `role all status [id]` shows the current progress of all or the specified role `role all`.
+- `sweep` sweep messages from a channel.
+- `prune` prune members from the guild.
+- add member selection to `pb`, `rank` and `incomplete`.
+
+
+## MOM! There's a bug in my code
+- A lot of them. If you find a bug, writing errors, or bad design notify me (Discord: TERRORWOLF#2829).
+
+
+## Warning
 - This is my first time using JavaScript, so the code in here is not optimal in any way or form.
-- When a user deletes a message that is still getting processed the bot will throw an error.
-- if 2 or more players achieved the same time on a map `!rank` will return inconsistant ranks for these players on this map.
-- Runs (and world records) that get submitted while the bot is down or can't recive the submit data will not be annouced at any time in the future.
+- When a user deletes a message that is still getting processed the bot will throw an error and potentially shut down.
+- Runs (and world records) that get submitted while the bot is down or can't recive the submit data will not be announced.

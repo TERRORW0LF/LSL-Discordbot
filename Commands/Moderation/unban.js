@@ -1,3 +1,5 @@
+'use strict';
+
 const strComp = require('string-similarity');
 const base = require('path').resolve('.');
 const { createEmbed, getUserReaction } = require(base+'/Util/misc');

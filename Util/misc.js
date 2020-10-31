@@ -1,3 +1,5 @@
+'use strict';
+
 const base = require('path').resolve('.');
 const { getGoogleAuth } = require('../google-auth');
 const serverCfg = require(base+'/Config/serverCfg.json');

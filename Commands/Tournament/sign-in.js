@@ -1,3 +1,5 @@
+'use strict';
+
 const axios = require('axios');
 
 const base = require('path').resolve('.');

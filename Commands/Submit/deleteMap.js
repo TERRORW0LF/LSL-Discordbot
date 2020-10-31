@@ -1,3 +1,5 @@
+'use strict';
+
 const { google } = require("googleapis");
 const assert = require('assert').strict;
 
