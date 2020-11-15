@@ -111,9 +111,12 @@ async function getUserDecision(user, botMsg, decision, timeout=60000) {
             botMsg.react('✅'),
             botMsg.react('❌')
         ]);
+        let userDecision;
         try {
             userDecision = await botMsg.awaitReactions(reactionFilter(['✅', '❌'], user.id), {max: 1, time: timeout, errors: ['time']});
         } catch (err) {
+            botMsg.reactions.removeAll();
+            botMsg.edit('', createEmbed('No decision made.', 'Timeout', botMsg.channel.guild.id));
             err.ignore = true;
             throw err;
         }
@@ -122,12 +125,9 @@ async function getUserDecision(user, botMsg, decision, timeout=60000) {
             botMsg.edit('', createEmbed(`Agreed to: *${decision}*`, 'Success', botMsg.guild.id));
             return true;
         }
-        botMsg.edit(createEmbed(`Rejected: *${decision}*`, 'Error', botMsg.guild.id));
+        botMsg.edit('', createEmbed(`Rejected: *${decision}*`, 'Error', botMsg.guild.id));
         return false;
     } catch (err) {
-        botMsg.edit(botMsg.content, {embed: null});
-        botMsg.reactions.removeAll();
-        botMsg.edit('', createEmbed('No decision made.', 'Timeout', botrMsg.guild.id));
         if (!err.ignore) {
             botMsg.edit('', createEmbed('An error occurred while making a decision.', 'Error', botMsg.guild.id));
             console.log('Error in getUserDecision: '+err.message);

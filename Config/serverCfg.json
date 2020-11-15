@@ -108,6 +108,10 @@
     "574522788967088128": {
         "prefix": "!",
         "embeds": {
+            "Standard": {
+                "color": 0,
+                "emoji": ""
+            },
             "Success": {
                 "color": 6654270,
                 "emoji": "✅ "
