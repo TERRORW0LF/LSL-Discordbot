@@ -31,7 +31,7 @@ async function run(msg, client, regexGroups) {
         if (answer === '✅ Command list:``````')
             answer = '❌ No commands found.';
 
-        msg.channel.send(answer);
+        botMosg.edit(answer);
     } catch (err) {
         botMsg.edit('❌ An error occurred while handling your command. Informing staff.');
         console.log('An error occured in help: '+err.message);
