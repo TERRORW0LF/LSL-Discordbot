@@ -38,7 +38,7 @@ async function run(msg, client, regexGroups) {
             const top5 = runs.filter(run => Number(run.time) <= (runs[4] ? Number(runs[4].time) : Number(runs[runs.length - 1].time)));
             for (let run of top5) {
                 outputStr += `\n${runs.filter(run2 => Number(run2.time) < Number(run.time)).length + 1}`;
-                outputStr += ` *${run.name} - ${run.time} - ${run.proof}*`;
+                outputStr += ` *${run.name} - ${run.time} - [link](${run.proof})*`;
             }
         }
         botMsg.edit(createEmbed(`**Top 5**${outputStr}`, 'Success', guildId));
