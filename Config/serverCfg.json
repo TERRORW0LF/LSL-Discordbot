@@ -3,27 +3,31 @@
         "prefix": "!",
         "embeds": {
             "Success": {
-                "color": "6654270",
+                "color": 6654270,
                 "emoji": "✅ "
             },
             "Information": {
-                "color": "3108252",
+                "color": 3108252,
                 "emoji": "ℹ️ "
             },
+            "Working": {
+                "color": 16777214,
+                "emoji": "💬 "
+            },
             "Waiting": {
-                "color": "6242560",
+                "color": 6242560,
                 "emoji": "⌛ "
             },
             "Warning": {
-                "color": "10383616",
+                "color": 10383616,
                 "emoji": "⚠️ "
             },
             "Critical": {
-                "color": "16747520",
+                "color": 16747520,
                 "emoji": "❗ "
             },
             "Error": {
-                "color": "11083568",
+                "color": 11083568,
                 "emoji": "❌ "
             }
         },
@@ -67,11 +71,11 @@
             }
         },
         "permissions": {
-            "basic": [],
-            "lookup": [],
-            "submit": [],
-            "tournament": [],
-            "moderation": []
+            "basic": false,
+            "lookup": false,
+            "submit": false,
+            "tournament": false,
+            "moderation": false
         },
         "seasons": [],
         "categories": [],
@@ -192,6 +196,7 @@
         },
         "permissions": {
             "basic": false,
+            "fun": false,
             "lookup": false,
             "submit": [
                 "580568742564724736",

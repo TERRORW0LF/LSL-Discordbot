@@ -8,6 +8,7 @@ const Discord = require('discord.js');
 
 const commands = require('./commands.json');
 const serverCfg = require('./Config/serverCfg.json');
+const { createEmbed } = require('./Util/misc')
 const { setGoogleAuth } = require('./google-auth');
 const { deleteTimeout } = require('./Util/timeouts');
 const newSubmit = require('./Util/newSubmit');
@@ -51,10 +52,10 @@ client.on('message', async msg => {
             else commandCfg = guildCfg.channels.commands.default;
             if (commandCfg.include.length)
                 if (!commandCfg.include.some(channel => msg.channel.id === channel))
-                    return msg.channel.send('please post commands in the designated channels.');
+                    return msg.channel.send(createEmbed(`Please post commands in the designated channels.`, `Error`, msg.guild.id));
             if (commandCfg.exclude.length)
                 if (commandCfg.exclude.some(channel => msg.channel.id === channel))
-                    return msg.channel.send('please post commands in the designated channels.');
+                    return msg.channel.send(createEmbed(`Please post commands in the designated channels.`, `Error`, msg.guild.id));
             const permission = guildCfg.permissions[command.group];
             if (permission) {
                 let hasPermission = false;
@@ -72,7 +73,7 @@ client.on('message', async msg => {
         }
     }
     if (!answered)
-        msg.channel.send("❌ No matching command found / missing permission.");
+        msg.channel.send(createEmbed(`No matching command found / missing permission.`, `Error`, msg.guild.id));
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {

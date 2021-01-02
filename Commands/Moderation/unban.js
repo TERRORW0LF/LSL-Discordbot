@@ -13,7 +13,7 @@ async function run(msg, client, regexGroups) {
               bannedUserOpts = [];
         let bannedUser,
             bannedUsersTag = [];
-        bannedUsers.each(value => { bannedUsersTag.push(value.user.tag); });
+        bannedUsers.each(value => { bannedUsersTag.push(value.users.tag); });
         let d;
         if (regexGroups[2].includes('#')) d = strComp.findBestMatch(regexGroups[2], bannedUsersTag);
         else d = strComp.findBestMatch(regexGroups[2], bannedUsersTag.map(value => value = value.split('#')[0]));
@@ -30,7 +30,7 @@ async function run(msg, client, regexGroups) {
         if (regexGroups[4]) msg.guild.members.unban(bannedUser, regexGroup[4]);
         else msg.guild.members.unban(bannedUser);
         
-        botMsg.edit(createEmbed(`Successfully unbanned ${bannedUser}.`, 'Success', msg.guild.id));
+        botMsg.edit(createEmbed(`Successfully unbanned **${bannedUser.username}**.`, 'Success', msg.guild.id));
     } catch (err) {
         botMsg.edit(createEmbed('An error occurred while handling your command.', 'Error', msg.guild.id));
         console.log('Error in unban: ' + err.message);
