@@ -10,8 +10,7 @@ module.exports = run;
 async function run(msg, client, regexGroups) {
     const botMsg = await msg.channel.send(createEmbed('Searching user data, please hold on.', 'Working', msg.guild.id));
     try {
-        //var muteRole = serverCfg[msg.guild.id].roles.moderation.mute;
-        var muteRole = "691345630995677224";
+        var muteRole = serverCfg[msg.guild.id].roles.moderation.mute;
         if (!muteRole) { // Created "mute" role if not already present.
             const guild = msg.guild;
             muteRole = await guild.roles.create({data:{name:"mute", color: 'DEFAULT'}, reason: "need muted role to be able to mute members."});
@@ -25,7 +24,7 @@ async function run(msg, client, regexGroups) {
         const muteMember = await msg.mentions.members.first();
         if (!muteMember) return botMsg.edit(createEmbed('No member mentioned.', 'Error', msg.guild.id));
         if (msg.mentions.members.size > 1) return botMsg.edit(createEmbed('Please mention only one member in your message.', 'Error', msg.guild.id));
-        //if (muteMember.roles.highest.comparePositionTo(msg.member.roles.highest) >= 0) return botMsg.edit(createEmbed('You can only mute members with a lower highest role than yours.', 'Error', msg.guild.id));
+        if (muteMember.roles.highest.comparePositionTo(msg.member.roles.highest) >= 0) return botMsg.edit(createEmbed('You can only mute members with a lower highest role than yours.', 'Error', msg.guild.id));
             
         const timeout = 604800000*Number(regexGroups[4] | 0)+86400000*Number(regexGroups[7] | 0)+3600000*Number(regexGroups[10] | 0)+60000*Number(regexGroups[13] | 0)+1000*Number(regexGroups[16] | 0);
         if (!muteMember.roles.cache.has(muteRole)) muteMember.roles.add(muteRole);
