@@ -111,11 +111,6 @@ client.on('guildMemberAdd', async member => {
         member.roles.add(role).catch(err => {});
 });
 
-client.on('guildMemberUpdate', async (oldMember, newMember) => {
-    if (!newMember.guild.id === '574522788967088128') return;
-    if (oldMember.nickname !== newMember.nickname) axions.post('https://luciosurfleague.com/routines/discord.php', {action: "userUpdate", user: newMember.user.tag, name: newMember.nickname, id: "574522788967088128"}, { headers: { "User-Agent": "LSL-Discordbot"}, contentType: "application/json"}).catch(err => {});
-});
-
 client.on('guildMemberRemove', member => {
     deleteTimeout("mute"+member.guild.id+member.id);
 });

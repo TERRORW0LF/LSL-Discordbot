@@ -43,14 +43,14 @@ async function run(msg, client, regexGroups) {
 
 function getSubmitUrl(msg, season, category, stage, time, proof) {
     let submiturl = '';
-    const user = encodeURIComponent(msg.author.tag),
+    const user = msg.author.tag,
           submitCfg = serverCfg[msg.guild.id].googleForms[season][category];
     submiturl+= submitCfg.url;
-    submiturl+=`&entry.${submitCfg.category}=${category}`;
-    submiturl+=`&entry.${submitCfg.stage}=${stage}`;
-    submiturl+=`&entry.${submitCfg.time}=${time}`;
-    submiturl+=`&entry.${submitCfg.proof}=${proof}`;
-    submiturl+=`&entry.${submitCfg.user}=${user}`;
-    encodeURI(submiturl);
+    submiturl+=`&entry.${encodeURIComponent(submitCfg.category)}=${encodeURIComponent(category)}`;
+    submiturl+=`&entry.${encodeURIComponent(submitCfg.stage)}=${encodeURIComponent(stage)}`;
+    submiturl+=`&entry.${encodeURIComponent(submitCfg.time)}=${encodeURIComponent(time)}`;
+    submiturl+=`&entry.${encodeURIComponent(submitCfg.proof)}=${encodeURIComponent(proof)}`;
+    submiturl+=`&entry.${encodeURIComponent(submitCfg.user)}=${encodeURIComponent(user)}`;
+    submiturl = encodeURI(submiturl);
     return submiturl;
 }
