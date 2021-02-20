@@ -51,6 +51,5 @@ function getSubmitUrl(msg, season, category, stage, time, proof) {
     submiturl+=`&entry.${encodeURIComponent(submitCfg.time)}=${encodeURIComponent(time)}`;
     submiturl+=`&entry.${encodeURIComponent(submitCfg.proof)}=${encodeURIComponent(proof)}`;
     submiturl+=`&entry.${encodeURIComponent(submitCfg.user)}=${encodeURIComponent(user)}`;
-    submiturl = encodeURI(submiturl);
     return submiturl;
 }
