@@ -18,7 +18,7 @@ async function run(msg, client, regexGroups) {
             botMsg.edit(createEmbed(`Successfully unmuted **${member.nickname | member.user.username}**.`, 'Success', msg.guild.id));
             return;
         }
-        botMsg.edit(createEmbed(`**${member.nickname | member.user.username}** is not muted.`, 'Error', msg.guild.id));
+        botMsg.edit(createEmbed(`**${member.nickname || member.user.username}** is not muted.`, 'Error', msg.guild.id));
     } catch(err) {
         botMsg.edit(createEmbed('An error occurred while handling your command.', 'Error', msg.guild.id));
         console.log('Error in unmute: ' + err.message);

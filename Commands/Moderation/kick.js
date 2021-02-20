@@ -17,7 +17,7 @@ async function run(msg, client, regexGroups) {
         if (regexGroups[3]) kickMember.kick(regexGroups[3]);
         else kickMember.kick();
         
-        botMsg.edit(createEmbed(`Successfully kicked **${kickMember.nickname | kickMember.user.username}**.`, 'Success', msg.guild.id));
+        botMsg.edit(createEmbed(`Successfully kicked **${kickMember.nickname || kickMember.user.username}**.`, 'Success', msg.guild.id));
     } catch (err) {
         botMsg.edit(createEmbed('An error occurred while handling your command.', 'Error', msg.guild.id));
         console.log('Error in kick: ' + err.message);

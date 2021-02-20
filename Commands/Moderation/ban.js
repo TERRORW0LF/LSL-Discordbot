@@ -17,7 +17,7 @@ async function run(msg, clinet, regexGroups) {
         if (regexGroups[3]) banMember.ban({reason: regexGroups[3]});
         else banMember.ban();
 
-        botMsg.edit(createEmbed(`Successfully banned **${banMember.nickname | banMember.user.username}**.`, 'Success', msg.guild.id));
+        botMsg.edit(createEmbed(`Successfully banned **${banMember.nickname || banMember.user.username}**.`, 'Success', msg.guild.id));
     } catch (err) {
         botMsg.edit(createEmbed('An error occurred while handling your command.', 'Error', msg.guild.id));
         console.log('Error in ban: ' + err.message);
