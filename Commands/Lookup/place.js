@@ -30,7 +30,7 @@ async function run(msg, client, regexGroups) {
         if (!stage) return botMsg.edit(createEmbed('No map selected.', 'Timeout', guildId)), videoMsg.delete();
             
         const runsPreProc = (await getAllSubmits(Cfg.googleSheets.submit[season][category].id, Cfg.googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((runA, runB) => Number(runA.time) - Number(runB.time));
-        if (!runsPreProc.length) return botMsg.edit('❌no submits found.');          
+        if (!runsPreProc.length) return botMsg.edit(createEmbed('No submits found.', 'Error', guildId));          
         const wrTime = Number(runsPreProc[0].time);
         let runs = [],
             placeRuns = [];

@@ -54,47 +54,46 @@ function getOptions(input, opts, min = 0.35, max = 0.7) {
     return similars;
 }
 
-async function getUserReaction(user, botMsg, opts, timeout=20000) {
+async function getUserReaction(user, botMsg, opts, header='❔ React to select the desired Option!', timeout=20000) {
     try {
         botMsg.reactions.removeAll();
-        botMsg.edit('.')
         let userChoice,
-            page = -1,
+            page = 1,
             maxPage = Math.floor((opts.length- 1) / 5),
             pageLength;
-        const reactOpts = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','▶'];
+        const reactOpts = ['◀','▶','1️⃣','2️⃣','3️⃣','4️⃣','5️⃣'];
+        await botMsg.react('◀');
+        await botMsg.react('▶');
         do {
-            page++;
-            pageLength = opts.slice(page*5, (page+1)*5).length;
+            userChoice && userChoice.first().emoji.name === '▶' ? page++ : page--;
             if (page > maxPage) page = 0;
-            let newNextPage = false;
-            botMsg.edit('❔ React to select the desired Option!' + opts.slice(page*5, (page+1)*5).map((o, i) => '```'+reactOpts[i]+' '+(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)+'```').join(''), {embed: null});
-            for (let i = 0; i <= 4; i++) {
-                if (pageLength > i && !botMsg.reactions.cache.has(reactOpts[i])) {
-                    botMsg.react(reactOpts[i]);
-                    newNextPage = true;
-                }
-                else if (pageLength <= i && botMsg.reactions.cache.has(reactOpts[i]))
-                    botMsg.reactions.cache.get(reactOpts[i]).remove();
-            }
-            if (newNextPage) {
-                if (botMsg.reactions.cache.has('▶')) botMsg.reactions.cache.get('▶').remove();
-                await botMsg.react('▶');
-            }
+            else if (page < 0) page = maxPage;
+            pageLength = opts.slice(page*5, (page+1)*5).length;
+            botMsg.edit('', {embed: {description: `${header}\n` + opts.slice(page*5, (page+1)*5).map((o, i) => `${reactOpts[i+2]} ${(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)}`).join('\n')}});
+            
             if (botMsg.reactions.cache.get('▶').users.cache.has(user.id))
                 await botMsg.reactions.cache.get('▶').users.remove(user.id);
+            if (botMsg.reactions.cache.get('◀').users.cache.has(user.id))
+                await botMsg.reactions.cache.get('◀').users.remove(user.id);
+            
+            for (let i = 2; i <= 6; i++) {
+                if (pageLength > i-2 && !botMsg.reactions.cache.has(reactOpts[i]))
+                    botMsg.react(reactOpts[i]);
+                else if (pageLength <= i-2 && botMsg.reactions.cache.has(reactOpts[i]))
+                    botMsg.reactions.cache.get(reactOpts[i]).remove();
+            }
 
             userChoice = await botMsg.awaitReactions(reactionFilter(reactOpts, user.id), {max: 1, time: timeout});
-        } while (userChoice.first() && userChoice.first().emoji.name === '▶');
+        } while (userChoice.first() && (userChoice.first().emoji.name === '▶' || userChoice.first().emoji.name === '◀'));
         botMsg.reactions.removeAll();
         if (!userChoice || !userChoice.first()) {
-            botMsg.edit('', createEmbed('No option selected.', 'Timeout', botMsg.guild.id));   
+            //botMsg.edit('', createEmbed('No option selected.', 'Timeout', botMsg.guild.id));   
             return;
         }
         const index = getNumFromEmoji(userChoice.first().emoji.name) - 1;
         const opt = opts[index];
-        botMsg.edit('', createEmbed(`Option *${opt}* selected.`, 'Success', botMsg.guild.id));
-        return opt;
+        //botMsg.edit('', createEmbed(`Option *${opt}* selected.`, 'Success', botMsg.guild.id));
+        return opt, index;
     } catch (err) {
         botMsg.edit('', createEmbed('An error occurred while selecting an option.', 'Error', botMsg.guild.id));
         botMsg.reactions.removeAll();

@@ -10,121 +10,121 @@
         {
             "group": "basic",
             "name": "remind me",
-            "regex": "^(remindme|remind me|set reminder|reminder) ((0[1-9]|1[012])/(0[1-9]|[12]\\d|3[01])/\\d{4}( ([01]\\d|2[0123]):[0-5]\\d:[0-5]\\d)?|((\\d+)(weeks?|ws?))?((\\d+)(days?|ds?))?((\\d+)(hours?|hs?))?((\\d+)(mins?|ms?))?((\\d+)(secs?|ss?))?) (.+)",
+            "regex": "^(remind\\s*me|set\\s*reminder|reminder) ((0[1-9]|1[012])/(0[1-9]|[12]\\d|3[01])/\\d{4}( ([01]\\d|2[0123]):[0-5]\\d:[0-5]\\d)?|((\\d+)(weeks?|ws?))?((\\d+)(days?|ds?))?((\\d+)(hours?|hs?))?((\\d+)(mins?|ms?))?((\\d+)(secs?|ss?))?) (.+)",
             "help": "remind me <date (mm/dd/yyyy [hh:mm:ss])|time ([w][d][h][m][s])> <reminder>",
             "path": "Commands/Basic/remindMe.js"
         },
         {
             "group": "basic",
             "name": "reminders",
-            "regex": "^(list reminders|show reminders|reminders)$",
+            "regex": "^(list\\s*reminders|show\\s*reminders|reminders)$",
             "help": "reminders",
             "path": "Commands/Basic/reminders.js"
         },
         {
             "group": "moderation",
             "name": "mute",
-            "regex": "^(mute) <@!?(\\d{17,19})>\\s*((\\d+)(weeks?|ws?))?((\\d+)(days?|ds?))?((\\d+)(hours?|hs?))?((\\d+)(mins?|ms?))?((\\d+)(secs?|ss?))?(.+)?",
-            "help": "mute <mention> <duration> [<reason>]",
+            "regex": "^(mute)\\s+<@!?(\\d{17,19})>\\s*((\\d+)(weeks?|ws?))?((\\d+)(days?|ds?))?((\\d+)(hours?|hs?))?((\\d+)(mins?|ms?))?((\\d+)(secs?|ss?))?\\s*(.+)?",
+            "help": "mute <mention> <duration ([w][d][h][m][s])> [<reason>]",
             "path": "Commands/Moderation/mute.js"
         },
         {
             "group": "moderation",
             "name": "unmute",
-            "regex": "^(unmute) <@!?(\\d{17,19})>\\s*(.+)?",
+            "regex": "^(unmute)\\s+<@!?(\\d{17,19})>\\s*(.+)?",
             "help": "unmute <mention> [<reason>]",
             "path": "Commands/Moderation/unmute.js"
         },
         {
             "group": "moderation",
             "name": "kick",
-            "regex": "^(kick) <@!?(\\d{17,19})>\\S*(.+)?",
+            "regex": "^(kick)\\s+<@!?(\\d{17,19})>\\S*(.+)?",
             "help": "kick <mention> [<reason>]",
             "path": "Commands/Moderation/kick.js"
         },
         {
             "group": "moderation",
             "name": "ban",
-            "regex": "^(ban) <@!?(\\d{17,19})>\\s*(.+)?",
+            "regex": "^(ban)\\s+<@!?(\\d{17,19})>\\s*(.+)?",
             "help": "ban <mention> [<reason>]",
             "path": "Commands/Moderation/ban.js"
         },
         {
             "group": "moderation",
             "name": "unban",
-            "regex": "^(unban) (.+#?\\d*)(\\s*reason (.+))?",
+            "regex": "^(unban)\\s+(.+#?\\d*)(\\s*reason (.+))?",
             "help": "unban <username> [<reason>]",
             "path": "Commands/Moderation/unban.js"
         },
         {
             "group": "moderation",
             "name": "reaction role new",
-            "regex": "^(reaction role new|reactionrole new|rr new)$",
+            "regex": "^(reaction\\s*role\\s*new|rr\\s*new)$",
             "help": "rr new",
             "path": "Commands/Moderation/reactionRoleNew.js"
         },
         {
             "group": "moderation",
             "name": "reaction role add",
-            "regex": "^(reaction role add|reactionrole add|rr add) (https://discordapp.com/channels/\\d+/\\d+/\\d+ )?(\\p{Emoji_Presentation}|\\p{Extended_Pictographic}|<:\\S+:\\d+>) <@&(\\d+)>(\\s*.+)?",
+            "regex": "^(reaction\\s*role\\s*add|rr\\s*add) (https://discordapp.com/channels/\\d+/\\d+/\\d+\\s+)?(\\p{Emoji_Presentation}|\\p{Extended_Pictographic}|<:\\S+:\\d+>)\\s+<@&(\\d+)>\\s*(.+)?",
             "help": "rr add [<message>] <emoji> <role> [<explanation>]",
             "path": "Commands/Moderation/reactionRoleAdd.js"
         },
         {
             "group": "fun",
             "name": "dad joke",
-            "regex": "^(dad joke|dadjoke|joke)$",
+            "regex": "^(dad\\s*joke|joke)$",
             "help": "dad joke",
             "path": "Commands/Fun/dadJoke.js"
         },
         {
             "group": "fun",
             "name": "coin flip",
-            "regex": "^(coin flip|coinflip|flip)$",
+            "regex": "^(coin\\s*flip|flip)$",
             "help": "coin flip",
             "path": "Commands/Fun/coinFlip.js"
         },
         {
             "group": "fun",
             "name": "dice roll",
-            "regex": "^(dice roll|diceroll|roll) (\\d+)?\\s?d(\\d+)$",
+            "regex": "^(dice\\s*roll|roll)\\s+(\\d+)?\\s?d(\\d+)$",
             "help": "roll <count> d<dice>",
             "path": "Commands/Fun/diceRoll.js"
         },
         {
             "group": "fun",
             "name": "tictactoe",
-            "regex": "^(tictactoe|tic tac toe|tic-tac-toe|ttt)\\s?<@!?\\d{17,19}>$",
-            "help": "tictactoe [<opponent>]",
+            "regex": "^(tic\\s*tac\\s*toe|tic-tac-toe|ttt)\\s*<@!?\\d{17,19}>$",
+            "help": "ttt [<opponent>]",
             "path": "Commands/Fun/ticTacToe.js"
         },
         {
             "group": "lookup",
             "name": "world record",
-            "regex": "^(wr|world-record|world record) (\\d+) (\\S+) (.+)",
+            "regex": "^(wr|world-record|world\\s*record)\\s+(\\d+)\\s+(\\S+)\\s+(.+)",
             "help": "wr <season> <mode> <map>",
             "path": "Commands/Lookup/worldRecord.js"
         },
         {
             "group": "lookup",
             "name": "personal best",
-            "regex": "^(pb|personal-best|personal best|rank|standing|position) (\\d+) (\\S+) (.+)",
-            "help": "pb|rank <season> <mode> <map>",
+            "regex": "^(pb|personal-best|personal\\s*best|rank)\\s+(\\d+)\\s+(\\S+)\\s+(.+)",
+            "help": "pb <season> <mode> <map>",
             "path": "Commands/Lookup/personalBest.js"
         },
         {
             "group": "lookup",
             "name": "place",
-            "regex": "^(place) (\\d+) (\\S+) (.+) (-?\\d+)$",
+            "regex": "^(place)\\s+(\\d+)\\s+(\\S+)\\s+(.+)\\s+(-?\\d+)$",
             "help": "place <season> <mode> <map> <place>",
             "path": "Commands/Lookup/place.js"
         },
         {
             "group": "lookup",
-            "name": "top 5",
-            "regex": "^(top 5|top5|t5) (\\d+) (\\S+) (.+)",
-            "help": "top 5 <season> <mode> <map>",
-            "path": "Commands/Lookup/top 5.js"
+            "name": "leaderboard",
+            "regex": "(lb|leader\\s*board|leader-board|top)\\s+(\\d+)\\s+(\\S+)\\s+(.+)",
+            "help": "lb <season> <mode> <map>",
+            "path": "Commands/Lookup/leaderBoard.js"
         },
         {
             "group": "lookup",
