@@ -122,7 +122,7 @@
         {
             "group": "lookup",
             "name": "leaderboard",
-            "regex": "(lb|leader\\s*board|leader-board|top)\\s+(\\d+)\\s+(\\S+)\\s+(.+)",
+            "regex": "(lbs?|leader\\s*boards?|leader-boards?|top)\\s+(\\d+)\\s+(\\S+)\\s+(.+)",
             "help": "lb <season> <mode> <map>",
             "path": "Commands/Lookup/leaderBoard.js"
         },
