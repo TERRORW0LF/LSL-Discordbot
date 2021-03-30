@@ -12,8 +12,8 @@ async function run(msg, client, regexGroups) {
     try {
         const member = msg.mentions.members.first();
         if (!member) return botMsg.edit(createEmbed('No member mentioned.', 'Error', msg.guild.id));
-        const answer = await deleteTimeout("mute"+msg.guild.id+member.id);
-        if (answer) {
+        if (member.roles.cache.has(serverCfg[msg.guild.id].roles.moderation.mute)) {
+            deleteTimeout("mute"+msg.guild.id+member.id);
             member.roles.remove(serverCfg[msg.guild.id].roles.moderation.mute);
             botMsg.edit(createEmbed(`Successfully unmuted **${member.nickname || member.user.username}**.`, 'Success', msg.guild.id));
             return;
