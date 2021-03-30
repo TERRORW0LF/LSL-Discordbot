@@ -15,7 +15,7 @@ async function run(msg, client, regexGroups) {
         const answer = await deleteTimeout("mute"+msg.guild.id+member.id);
         if (answer) {
             member.roles.remove(serverCfg[msg.guild.id].roles.moderation.mute);
-            botMsg.edit(createEmbed(`Successfully unmuted **${member.nickname | member.user.username}**.`, 'Success', msg.guild.id));
+            botMsg.edit(createEmbed(`Successfully unmuted **${member.nickname || member.user.username}**.`, 'Success', msg.guild.id));
             return;
         }
         botMsg.edit(createEmbed(`**${member.nickname || member.user.username}** is not muted.`, 'Error', msg.guild.id));

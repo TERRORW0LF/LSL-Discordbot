@@ -1,5 +1,6 @@
 'use strict';
 
+const Discord = require('discord.js');
 const base = require('path').resolve('.');
 const { createEmbed, getAllSubmits, getUserReaction, getOptions, getMapPoints, getPlacePoints } = require(base+'/Util/misc');
 const serverCfg = require(base+'/Config/serverCfg.json');
@@ -8,7 +9,7 @@ module.exports = run;
 
 async function run(msg, client, regexGroups) {
     const [ botMsg, videoMsg ] = await Promise.all([
-        msg.channel.send(createEmbed('Searching place data, please hold on.', 'Working', msg.guild.id)),
+        msg.channel.send(createEmbed('Searching leaderboard data.', 'Working', msg.guild.id)),
         msg.channel.send('.')
     ]);
     try {
@@ -19,23 +20,23 @@ async function run(msg, client, regexGroups) {
         if (!seasonOpts.length || !categoryOpts.length || !stageOpts.length) return botMsg.edit(createEmbed('Incorrect season, mode or map.', 'Error', guildId));
             
         const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg.author, botMsg, seasonOpts);
-        if (!season) return botMsg.edit(createEmbed('No season selected.', 'Timeout', guildId));
+        if (!season) return botMsg.edit(createEmbed('No season selected.', 'Timeout', guildId)), videoMsg.delete();
             
         const category = categoryOpts.length === 1 ? categoryOpts[0] : await getUserReaction(msg.author, botMsg, categoryOpts);
-        if (!category) return botMsg.edit(createEmbed('No category selected.', 'Timeout', guildId));
+        if (!category) return botMsg.edit(createEmbed('No category selected.', 'Timeout', guildId)), videoMsg.delete();
             
         const stage = stageOpts.length === 1 ? stageOpts[0] : await getUserReaction(msg.author, botMsg, stageOpts);
-        if (!stage) return botMsg.edit(createEmbed('No map selected.', 'Timeout', guildId));
+        if (!stage) return botMsg.edit(createEmbed('No map selected.', 'Timeout', guildId)), videoMsg.delete();
             
         const runsPreProc = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((a, b) => Number(a.time) - Number(b.time));
-        if (!runsPreProc.length) return botMsg.edit(createEmbed('No submits found.', 'Error', guildId));
+        if (!runsPreProc.length) return botMsg.edit(createEmbed('No submits found.', 'Error', guildId)), videoMsg.delete();
             
         let runs = [];
         for (let run of runsPreProc) {
             if (runs.some(value => value.name === run.name)) continue;
             else runs.push(run);
         }
-        if (!runs.length) return botMsg.edit(createEmbed(`No runs found`, 'Warning', guildId));
+        if (!runs.length) return botMsg.edit(createEmbed(`No runs found`, 'Warning', guildId)), videoMsg.delete();
         let prevTime = 0.00, place = 0, placeCount = 1, reactionOpts = [];
         for (let run of runs) {
             if (Number(run.time) > prevTime || runs.indexOf(run) === 1) {
@@ -47,8 +48,15 @@ async function run(msg, client, regexGroups) {
             reactionOpts.push(`${run.place} *${run.name} - ${run.time} - [link](${run.proof})*`);
         }
         let _, index = await getUserReaction(msg.author, botMsg, reactionOpts, '✅ **Leaderbaord**');
-        if (index === undefined) return videoMsg.delete();
-
+        if (index === undefined) {
+            videoMsg.delete();
+            let embedDescription = botMsg.embeds[0].description;
+            embedDescription = embedDescription.replace(/1️⃣\s*|2️⃣\s*|3️⃣\s*|4️⃣\s*|5️⃣\s*/g, '');
+            let embed = new Discord.MessageEmbed(botMsg.embeds[0]);
+            embed.setDescription(embedDescription);
+            botMsg.edit({embed});
+            return;
+        }
         const placeRun = runs[index];
         const wrTime = Number(runs[0].time), placeTime = Number(placeRun.time);
         let normalizedTime;
