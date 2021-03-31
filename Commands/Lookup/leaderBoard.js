@@ -14,6 +14,7 @@ async function run(msg, client, regexGroups) {
     ]);
     try {
         const guildId = msg.guild.id,
+              guildCfg = serverCfg[guildId] || serverCfg.default,
               seasonOpts = getOptions(regexGroups[2], serverCfg[guildId].seasons),
               categoryOpts = getOptions(regexGroups[3], serverCfg[guildId].categories),
               stageOpts = getOptions(regexGroups[4], serverCfg[guildId].stages);
@@ -54,6 +55,7 @@ async function run(msg, client, regexGroups) {
             embedDescription = embedDescription.replace(/1️⃣\s*|2️⃣\s*|3️⃣\s*|4️⃣\s*|5️⃣\s*/g, '');
             let embed = new Discord.MessageEmbed(botMsg.embeds[0]);
             embed.setDescription(embedDescription);
+            embed.setColor(guildCfg.embeds.Success.color);
             botMsg.edit({embed});
             return;
         }
