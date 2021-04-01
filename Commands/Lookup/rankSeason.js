@@ -13,7 +13,7 @@ async function run(msg, client, regexGroups) {
               seasonOpts = getOptions(regexGroups[2], serverCfg[guildId].seasons);
         if (!seasonOpts.length) return botMsg.edit(createEmbed('Incorrect season.', 'Error', guildId));
             
-        const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg.author, botMsg, seasonOpts);
+        const { option: season } = seasonOpts.length === 1 ? {option:seasonOpts[0]} : await getUserReaction(msg.author, botMsg, seasonOpts);
         if (!season) return botMsg.edit(createEmbed('No season selected.', 'Timeout', guildId));
             
         const user = msg.author.tag,

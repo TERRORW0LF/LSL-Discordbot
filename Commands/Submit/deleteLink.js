@@ -18,7 +18,7 @@ async function run(msg, client, regexGroups) {
               link = regexGroups[3];
         if (!seasonOpts.length) return botMsg.edit(createEmbed('Incorrect season.', 'Error', guildId));
             
-        const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg.author, botMsg, seasonOpts);
+        const { option: season } = seasonOpts.length === 1 ? {option:seasonOpts[0]} : await getUserReaction(msg.author, botMsg, seasonOpts);
         if (!season) return botMsg.edit(createEmbed('No season selected.', 'Timeout', guildId));
             
         let runs = [];
@@ -34,7 +34,7 @@ async function run(msg, client, regexGroups) {
         }
         if (!runs.length) return botMsg.edit(createEmbed('No run found.', 'Error', guildId));
             
-        const run = runs.length === 1 ? runs[0] : await getUserReaction(msg.author, botMsg, runs.reverse());
+        const { option: run } = runs.length === 1 ? {option:runs[0]} : await getUserReaction(msg.author, botMsg, runs.reverse());
         if (!run) return botMsg.edit(createEmbed('No run selected.', 'Timeout', guildId));
             
         const row = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][run.category].id, serverCfg[guildId].googleSheets.submit[season][run.category].range)).findIndex(value => { try {return !assert.deepStrictEqual(run, value);} catch(err) {return false}}),

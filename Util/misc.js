@@ -93,7 +93,7 @@ async function getUserReaction(user, botMsg, opts, header='❔ React to select t
         const index = getNumFromEmoji(userChoice.first().emoji.name) - 1;
         const opt = opts[index];
         //botMsg.edit('', createEmbed(`Option *${opt}* selected.`, 'Success', botMsg.guild.id));
-        return opt, index;
+        return { option: opt, index };
     } catch (err) {
         botMsg.edit('', createEmbed('An error occurred while selecting an option.', 'Error', botMsg.guild.id));
         botMsg.reactions.removeAll();

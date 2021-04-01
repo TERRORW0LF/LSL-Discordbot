@@ -14,10 +14,10 @@ async function run(msg, client, regexGroups) {
               categoryOpts = getOptions(regexGroups[3], serverCfg[guildId].categories);
         if (!seasonOpts.length || !categoryOpts.length) return botMsg.edit(createEmbed('Incorrect season or mode.', 'Error', guildId));
             
-        const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg.author, botMsg, seasonOpts);
+        const { option: season } = seasonOpts.length === 1 ? {option:seasonOpts[0]} : await getUserReaction(msg.author, botMsg, seasonOpts);
         if (!season) return botMsg.edit(createEmbed('No season selected.', 'Timeout', guildId));
             
-        const category = categoryOpts.length === 1 ? categoryOpts[0] : await getUserReaction(msg.author, botMsg, categoryOpts);
+        const { option: category } = categoryOpts.length === 1 ? {option:categoryOpts[0]} : await getUserReaction(msg.author, botMsg, categoryOpts);
         if (!category) return botMsg.edit(createEmbed('No category selected.', 'Timeout', guildId));
             
         const user = msg.author.tag,

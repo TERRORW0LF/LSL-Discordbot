@@ -19,13 +19,13 @@ async function run(msg, client, regexGroups) {
               stageOpts = getOptions(regexGroups[4], serverCfg[guildId].stages);
         if (!seasonOpts.length || !categoryOpts.length || !stageOpts.length) return botMsg.edit(createEmbed('Incorrect season, mode or map.', 'Error', guildId)), videoMsg.delete();
             
-        const season = seasonOpts.length === 1 ? seasonOpts[0] : await getUserReaction(msg.author, botMsg, seasonOpts);
+        const { option: season } = seasonOpts.length === 1 ? {option:seasonOpts[0]} : await getUserReaction(msg.author, botMsg, seasonOpts);
         if (!season) return botMsg.edit(createEmbed('No season selected.', 'Timeout', guildId)), videoMsg.delete();
             
-        const category = categoryOpts.length === 1 ? categoryOpts[0] : await getUserReaction(msg.author, botMsg, categoryOpts);
+        const { option: category } = categoryOpts.length === 1 ? {option:categoryOpts[0]} : await getUserReaction(msg.author, botMsg, categoryOpts);
         if (!category) return botMsg.edit(createEmbed('No category selected.', 'Timeout', guildId)), videoMsg.delete();
             
-        const stage = stageOpts.length === 1 ? stageOpts[0] : await getUserReaction(msg.author, botMsg, stageOpts);
+        const { option: stage } = stageOpts.length === 1 ? {option:stageOpts[0]} : await getUserReaction(msg.author, botMsg, stageOpts);
         if (!stage) return botMsg.edit(createEmbed('No map selected.', 'Timeout', guildId)), videoMsg.delete();
             
         const wr = (await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range)).filter(run => run.category === category && run.stage === stage).sort((a, b) => Number(a.time) - Number(b.time))[0];

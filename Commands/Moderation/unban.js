@@ -11,8 +11,7 @@ async function run(msg, client, regexGroups) {
     try {
         const bannedUsers = await msg.guild.fetchBans(),
               bannedUserOpts = [];
-        let bannedUser,
-            bannedUsersTag = [];
+        let bannedUsersTag = [];
         bannedUsers.each(value => { bannedUsersTag.push(value.users.tag); });
         let d;
         if (regexGroups[2].includes('#')) d = strComp.findBestMatch(regexGroups[2], bannedUsersTag);
@@ -23,7 +22,7 @@ async function run(msg, client, regexGroups) {
         }
         if (!bannedUserOpts.length) return botMsg.edit(createEmbed('No banned user found for '+regexGroups[2], 'Error', msg.guild.id));
             
-        bannedUser = bannedUserOpts.length === 1 ? bannedUserOpts[0] : await getUserReaction(msg.author, botMsg, bannedUserOpts);
+        const { option: bannedUser } = bannedUserOpts.length === 1 ? {option:bannedUserOpts[0]} : await getUserReaction(msg.author, botMsg, bannedUserOpts);
         if (!bannedUser) return botMsg.edit(createEmbed('No user selected.', 'Timeout', msg.guild.id));
             
         bannedUser = bannedUsers.find(value => value.user.tag === bannedUser).user;
