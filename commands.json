@@ -129,56 +129,56 @@
         {
             "group": "lookup",
             "name": "rank season",
-            "regex": "^(rank|standing|position) (\\d+)$",
+            "regex": "^(rank|standing|position)\\s+(\\d+)$",
             "help": "rank <season>",
             "path": "Commands/Lookup/rankSeason.js"
         },
         {
             "group": "lookup",
             "name": "rank mode",
-            "regex": "^(rank|standing|position) (\\d+) (\\S+)$",
+            "regex": "^(rank|standing|position)\\s+(\\d+)\\s+(\\S+)$",
             "help": "rank <season> <mode>",
             "path": "Commands/Lookup/rankMode.js"
         },
         {
             "group": "lookup",
             "name": "incomplete",
-            "regex": "^(incomplete|complete) (\\d+) (\\S+)$",
+            "regex": "^(incomplete|complete)\\s+(\\d+)\\s+(\\S+)$",
             "help": "incomplete <season> <mode>",
             "path": "Commands/Lookup/incomplete.js"
         },
         {
             "group": "submit",
             "name": "submit",
-            "regex": "(submit|sub) (\\d+) (\\S+) (.+) (\\d+\\.\\d{2}) (https://\\S+)$",
+            "regex": "(submit|sub)\\s+(\\d+)\\s+(\\S+)\\s+(.+)\\s+(\\d+\\.\\d{2})\\s+(https://\\S+)$",
             "help": "submit <season> <mode> <map> <time> <proof>",
             "path": "Commands/Submit/submit.js"
         },
         {
             "group": "submit",
             "name": "delete link",
-            "regex": "^(delete|del) (\\d+) (https://\\S+)$",
+            "regex": "^(delete|del)\\s+(\\d+)\\s+(https://\\S+)$",
             "help": "delete <season> <link>",
             "path": "Commands/Submit/deleteLink.js"
         },
         {
             "group": "submit",
             "name": "delete map",
-            "regex": "^(delete|del) (\\d+) (\\S+) (.+)",
+            "regex": "^(delete|del)\\s+(\\d+)\\s+(\\S+)\\s+(.+)",
             "help": "delete <season> <mode> <map>",
             "path": "Commands/Submit/deleteMap.js"
         },
         {
             "group": "tournament",
             "name": "sign-in",
-            "regex": "^(tournament|tourney) (sign-in|sign in| signin) (^[^0-9][^#\\s]{2,11}#[0-9]{4,6}) (na\\s*east|na\\s*e|na\\s*west|na\\s*w|eu|sa|asia|oce) (@.+) (\\d+)$",
+            "regex": "^(tournament|tourney)\\s+(sign-in|sign\\s*in)\\s+(^[^0-9][^#\\s]{2,11}#[0-9]{4,6})\\s+(na\\s*east|na\\s*e|na\\s*west|na\\s*w|eu|sa|asia|oce)\\s+(@.+)\\s+(\\d+)$",
             "help": "tournament sign-in <Blizzard battle-tag> <region> <highest role> <hours played>",
             "path": "Commands/Tournament/sign-in.js"
         },
         {
             "group": "tournament",
             "name": "create",
-            "regex": "^(tournament|tourney) (create) ('.+') ((0[1-9]|1[012])/(0[1-9]|[12]\\d|3[01])/\\d{4} ([01]\\d|2[0123]):[0-5]\\d:[0-5]\\d) (min: (\\d+)){0,1} (max: (\\d+)){0,1}$",
+            "regex": "^(tournament|tourney)\\s+(create)\\s+('.+')\\s+((0[1-9]|1[012])/(0[1-9]|[12]\\d|3[01])/\\d{4}\\s+([01]\\d|2[0123]):[0-5]\\d:[0-5]\\d)\\s+(min:\\s*(\\d+))?\\s+(max:\\s*(\\d+))?$",
             "help": "tournament create <name> <date (mm/dd/yyyy hh:mm:ss)> [<min: d>] [<max: d>]",
             "path": "Commands/Tournament/create.js"
         }
