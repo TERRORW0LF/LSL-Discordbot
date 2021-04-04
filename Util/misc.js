@@ -88,7 +88,7 @@ async function getUserReaction(user, botMsg, opts, header='❔ React to select t
         botMsg.reactions.removeAll();
         if (!userChoice || !userChoice.first()) {
             //botMsg.edit('', createEmbed('No option selected.', 'Timeout', botMsg.guild.id));   
-            return;
+            return { index: undefined, option: undefined };
         }
         const index = getNumFromEmoji(userChoice.first().emoji.name) - 1;
         const opt = opts[index];

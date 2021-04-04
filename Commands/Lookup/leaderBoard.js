@@ -48,7 +48,7 @@ async function run(msg, client, regexGroups) {
             prevTime = Number(run.time);
             reactionOpts.push(`${run.place} *${run.name} - ${run.time} - [link](${run.proof})*`);
         }
-        let { index } = await getUserReaction(msg.author, botMsg, reactionOpts, '✅ **Leaderbaord**');
+        const { index } = await getUserReaction(msg.author, botMsg, reactionOpts, '✅ **Leaderbaord**');
         if (index === undefined) {
             videoMsg.delete();
             let embedDescription = botMsg.embeds[0].description;
