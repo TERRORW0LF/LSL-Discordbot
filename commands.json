@@ -94,7 +94,7 @@
         {
             "group": "fun",
             "name": "tictactoe",
-            "regex": "^(tic\\s*tac\\s*toe|tic-tac-toe|ttt)\\s*<@!?\\d{17,19}>$",
+            "regex": "^(tic\\s*tac\\s*toe|tic-tac-toe|ttt)\\s*(<@!?\\d{17,19}>)?$",
             "help": "ttt [<opponent>]",
             "path": "Commands/Fun/ticTacToe.js"
         },
