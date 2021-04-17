@@ -72,6 +72,13 @@
         },
         {
             "group": "fun",
+            "name": "drops",
+            "regex": "^(drops?)$",
+            "help": "drops",
+            "path": "Commands/Fun/drops.js"
+        },
+        {
+            "group": "fun",
             "name": "dad joke",
             "regex": "^(dad\\s*joke|joke)$",
             "help": "dad joke",
