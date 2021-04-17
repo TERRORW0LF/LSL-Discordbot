@@ -11,7 +11,7 @@ module.exports = run;
 
 async function run(msg, client, regexGroups) {
     try {
-        msg.channel.send(dropList[Math.floor(Math.random * dropList.length)]);
+        msg.channel.send(dropList[Math.floor(Math.random() * dropList.length)]);
     } catch (err) {
         msg.channel.send(createEmbed('An error occurred while handling your command. Informing staff.', 'Error', msg.guild.id));
         console.log('An error occured in drops: '+err.message);
