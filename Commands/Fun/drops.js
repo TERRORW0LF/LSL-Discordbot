@@ -7,6 +7,7 @@ const dropList = [
     'https://tenor.com/view/nuke-explode-explosion-nuke-it-from-orbit-gif-16721075'
 ];
 
+module.exports = run;
 
 async function run(msg, client, regexGroups) {
     try {
