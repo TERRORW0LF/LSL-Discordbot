@@ -2,6 +2,10 @@
     "default": {
         "prefix": "!",
         "embeds": {
+            "Standard": {
+                "color": 0,
+                "emoji": ""
+            },
             "Success": {
                 "color": 6654270,
                 "emoji": "✅ "

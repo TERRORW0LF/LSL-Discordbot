@@ -4,6 +4,7 @@ const Discord = require('discord.js');
 
 const base = require('path').resolve('.');
 const serverCfg = require(base+'/Config/serverCfg.json');
+const { createEmbed } = require(base+'/Util/misc');
 
 module.exports = run;
 
@@ -16,21 +17,19 @@ async function run(reaction, user) {
         if (!starboardCfg.enabled) return;
         if (reaction.emoji.name !== starboardCfg.emoji) return;
         if (message.author.id === user.id) {
-            message.channel.send(`${user}, you cannot star your own messages.`);
+            const name = message.member.nickname || message.author.username;
+            message.channel.send(cerateEmbed(`${name}, you cannot star your own messages.`, 'Warning', message.guild.id));
             return;
         }
         const reactionCount = reaction.users.cache.has(message.author.id) ? reaction.count-1 : reaction.count;
         if (reactionCount < starboardCfg.count) return;
-        if (!starboardCfg.channel) {
-            message.channel.send(`❌ ${user} This server does not have a starboard channel set up.`);
-            return;
-        }
+        if (!starboardCfg.channel) return;
         const boardChannel = message.guild.channels.cache.get(starboardCfg.channel),
               boardMessage = (await boardChannel.messages.fetch({ limit: 100 })).find(msg => msg.embeds[0].footer.text.startsWith('⭐') && msg.embeds[0].footer.text.endsWith(message.id));
         if (boardMessage) {
             let embed = new Discord.MessageEmbed(boardMessage.embeds[0]);
             embed.setFooter(`⭐ ${reactionCount} | ${message.id}`);
-            boardMessage.edit({embed});
+            boardMessage.edit({ embed });
         } else {
             let attachment;
             if (message.attachments.size) {
@@ -51,7 +50,7 @@ async function run(reaction, user) {
             boardChannel.send({ embed });
         }
     } catch(err) {
-        message.channel.send('❌ An error occurred while handling starboard. Informing staff.');
+        message.channel.send(createEmbed(`An error occurred while handling starboard. Informing staff.`, 'Error', message.guild.id));
         console.log('An error occured in addedStar: '+err.message);
         console.log(err.stack);
     }

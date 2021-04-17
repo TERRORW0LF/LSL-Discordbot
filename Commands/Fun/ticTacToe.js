@@ -12,7 +12,8 @@ async function run(msg, client, regexGroups) {
           playMsg = await msg.channel.send('.');
     try {
         let player1 = msg.member,
-            player2 = null;
+            player2 = null,
+            botPlayer = false;
         if (msg.mentions.members.size > 1) return botMsg.edit(createEmbed('You can only challenge one member.', 'Error', msg.guild.id)), playMsg.delete();
         if (msg.mentions.members.first()) {
             try {
@@ -30,9 +31,10 @@ async function run(msg, client, regexGroups) {
                 return botMsg.edit(createEmbed('Opponent did not answer. Match aborted.', 'Error', msg.guild.id)), playMsg.delete();
             }
             player2 = msg.mentions.users.first();
+        } else {
+            player2 = msg.guild.me;
+            botPlayer = true;
         }
-
-        // Set up bot to act as opponent
 
         // Set up playfield
         let opts = ['↖️', '⬆️', '↗️', '⬅️', '⏺️', '➡️', '↙️', '⬇️', '↘️'],
@@ -49,6 +51,15 @@ async function run(msg, client, regexGroups) {
 
         // Play the game
         const collector = playMsg.createReactionCollector((reaction, user) => {return (user.id === currPlayer.id && playEmojis.includes(reaction.emoji.name))}, {max: 9, idle: 30000});
+        
+        // Make move if bot is going first
+        if (currPlayer.id === msg.guild.me.id) {
+            const { index } = minimax(playField, false);
+            const move = index[Math.floor(Math.random()*index.length)];
+            playMsg.reactions.cache.get(opts[move]).remove();
+            playMsg.react(opts[move]);
+        }
+
         collector.on('collect', reaction => {
             playField[opts.indexOf(reaction.emoji.name)] = (currPlayer === player1 ? 1 : 2);
             playMsg.reactions.cache.get(reaction.emoji.name).remove();
@@ -56,9 +67,17 @@ async function run(msg, client, regexGroups) {
             playEmojis.splice(index, 1);
             playMsg.edit(createPlayfield(playField));
             if (checkWin(playField)) return collector.stop('winner');
+            if (!playEmojis.length) return;
             currPlayer = currPlayer === player1 ? player2 : player1;
             botMsg.edit(createEmbed(`It's ${currPlayer}'s turn.`, 'Standard', msg.guild.id));
+            if (currPlayer.id === msg.guild.me.id) {
+                const { index } = minimax(playField, false);
+                const move = index[Math.floor(Math.random()*index.length)];
+                playMsg.reactions.cache.get(opts[move]).remove();
+                playMsg.react(opts[move]);
+            }
         });
+        
         collector.on('end', (_, reason) => {
             playMsg.reactions.removeAll();
             if (reason === 'winner') return botMsg.edit(createEmbed(`🏆 ${currPlayer} won the game!`, 'Standard', msg.guild.id));
@@ -110,6 +129,41 @@ function getFieldEmoji(number) {
     }
 }
 
-function minmax(board) {
-    return;
+function minimax(playField, isMaximizing) {
+    let bestScore = isMaximizing ? -Infinity : Infinity,
+        index = [];
+    // Loop through playfield
+    for (let i=0; i<playField.length; i++) {
+        if (!!playField[i]) continue;
+        // Set next playfield value
+        playField[i] = isMaximizing ? 1 : 2;
+        // Check if player won and return score and index
+        if (checkWin(playField)) {
+            playField[i] = 0;
+            index.push(i);
+            return { score: isMaximizing ? 1 : -1, index };
+        }
+        // Check if game is drawn and return score and index
+        if (!playField.includes(0)) {
+            playField[i] = 0;
+            index.push(i);
+            return { score: 0, index };
+        }
+        // Run minimax for the next possible set of moves
+        const { score } = minimax(playField, !isMaximizing);
+        if (isMaximizing) {
+            if (score > bestScore) {
+                bestScore = score;
+                index = [];
+            }
+        } else {
+            if (score < bestScore) {
+                bestScore = score;
+                index = [];
+            }
+        }
+        if (score === bestScore) index.push(i);
+        playField[i] = 0;
+    }
+    return {score: bestScore, index };
 }
