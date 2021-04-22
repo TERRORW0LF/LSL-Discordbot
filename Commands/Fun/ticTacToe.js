@@ -17,10 +17,13 @@ async function run(msg, client, regexGroups) {
         if (msg.mentions.members.size > 1) return botMsg.edit(createEmbed('You can only challenge one member.', 'Error', msg.guild.id)), playMsg.delete();
         if (msg.mentions.members.first()) {
             try {
-                if (!await getUserDecision(msg.mentions.users.first(), botMsg, `${msg.author} challanged you to tictactoe, do you accept?`)) {
+                if (!await getUserDecision({users:[msg.mentions.users.first().id]}, botMsg, `${msg.author} challanged you to tictactoe, do you accept?`)) {
                     try {
-                        if (!await getUserDecision(msg.author, botMsg, 'Opponent declined match, do you want to play against me instead?')) {
+                        if (!await getUserDecision({users:[msg.author.id]}, botMsg, 'Opponent declined match, do you want to play against me instead?')) {
                             return botMsg.edit(createEmbed('Challanger declined bot duel. Match aborted.', 'Error', msg.guild.id)), playMsg.delete();
+                        } else {
+                            player2 = msg.guild.me;
+                            botPlayer = true;
                         }
                     } catch (err) {
                         return botMsg.edit(createEmbed(`Challanger did not answer bot duel request. Match aborted.`, 'Error', msg.guild.id)), playMsg.delete();

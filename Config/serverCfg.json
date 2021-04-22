@@ -132,6 +132,10 @@
                 "color": 16777214,
                 "emoji": "💬 "
             },
+            "Select": {
+                "color": 13424349,
+                "emoji": "❔ "
+            },
             "Timeout": {
                 "color": 6242560,
                 "emoji": "⌛ "

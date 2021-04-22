@@ -13,8 +13,23 @@ function getNumFromEmoji(emoji) {
     }
 }
 
-function reactionFilter(opts, id) {
+async function reactionFilter(emojis, allowed={users, roles}) {
     return (reaction, user) => {
-        return user.id === id && opts.includes(reaction.emoji.name);
+        if (!emojis.includes(reaction.emoji.name)) return false;
+        if (!allowed.users && allowed.roles) return true;
+        if (!allowed.users) return false;
+        if (allowed.users.includes(user.id)) return true;
+        if (!allowed.roles) return false;
+        if (!reaction.message.guild) return false;
+        const member = await reaction.message.guild.members.fetch(user.id);
+        if (!member) return false;
+        let hasRole = false;
+        for (role of roles) {
+            if (member.roles.cache.has(role)) {
+                hasRole = true;
+                break;
+            }
+        }
+        return hasRole;
     }
 }

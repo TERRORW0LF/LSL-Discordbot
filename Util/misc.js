@@ -54,7 +54,7 @@ function getOptions(input, opts, min = 0.35, max = 0.7) {
     return similars;
 }
 
-async function getUserReaction(user, botMsg, opts, header='❔ React to select the desired Option!', timeout=20000) {
+async function getUserReaction(user, botMsg, opts, header='**React to select the desired Option!**', timeout=20000) {
     try {
         botMsg.reactions.removeAll();
         let userChoice,
@@ -69,7 +69,7 @@ async function getUserReaction(user, botMsg, opts, header='❔ React to select t
             if (page > maxPage) page = 0;
             else if (page < 0) page = maxPage;
             pageLength = opts.slice(page*5, (page+1)*5).length;
-            botMsg.edit('', {embed: {description: `${header}\n` + opts.slice(page*5, (page+1)*5).map((o, i) => `${reactOpts[i+2]} ${(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)}`).join('\n')}});
+            botMsg.edit('', createEmbed(`${header}\n` + opts.slice(page*5, (page+1)*5).map((o, i) => `${reactOpts[i+2]} ${(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)}`).join('\n'), 'Select', botMsg.guild.id));
             
             if (botMsg.reactions.cache.get('▶').users.cache.has(user.id))
                 await botMsg.reactions.cache.get('▶').users.remove(user.id);
@@ -83,7 +83,7 @@ async function getUserReaction(user, botMsg, opts, header='❔ React to select t
                     botMsg.reactions.cache.get(reactOpts[i]).remove();
             }
 
-            userChoice = await botMsg.awaitReactions(reactionFilter(reactOpts, user.id), {max: 1, time: timeout});
+            userChoice = await botMsg.awaitReactions(reactionFilter(reactOpts, {users:[user.id]}), {max: 1, time: timeout});
         } while (userChoice.first() && (userChoice.first().emoji.name === '▶' || userChoice.first().emoji.name === '◀'));
         botMsg.reactions.removeAll();
         if (!userChoice || !userChoice.first()) {
@@ -102,17 +102,17 @@ async function getUserReaction(user, botMsg, opts, header='❔ React to select t
     }
 }
 
-async function getUserDecision(user, botMsg, decision, timeout=60000) {
+async function getUserDecision(allowed={users, roles}, botMsg, decision, header='❔ **React to make a decision!**', timeout=60000) {
     try {
         botMsg.reactions.removeAll();
-        botMsg.edit('❔ React to made a decision!', {embed: {description: decision, color: 3010349}});
+        botMsg.edit('', createEmbed(`${header}\n` + decision, 'Select', botMsg.guild.id));
         await Promise.all([
             botMsg.react('✅'),
             botMsg.react('❌')
         ]);
         let userDecision;
         try {
-            userDecision = await botMsg.awaitReactions(reactionFilter(['✅', '❌'], user.id), {max: 1, time: timeout, errors: ['time']});
+            userDecision = await botMsg.awaitReactions(reactionFilter(['✅', '❌'], allowed), {max: 1, time: timeout, errors: ['time']});
         } catch (err) {
             botMsg.reactions.removeAll();
             botMsg.edit('', createEmbed('No decision made.', 'Timeout', botMsg.channel.guild.id));
