@@ -2,7 +2,7 @@
 
 const base = require('path').resolve('.');
 const { createEmbed } = require(base+'/Util/misc');
-const { getUserDecision } = require(base+'/Util/misc');
+const { getDecision } = require(base+'/Util/misc');
 
 
 module.exports = run;
@@ -17,9 +17,9 @@ async function run(msg, client, regexGroups) {
         if (msg.mentions.members.size > 1) return botMsg.edit(createEmbed('You can only challenge one member.', 'Error', msg.guild.id)), playMsg.delete();
         if (msg.mentions.members.first()) {
             try {
-                if (!await getUserDecision({users:[msg.mentions.users.first().id]}, botMsg, `${msg.author} challanged you to tictactoe, do you accept?`)) {
+                if (!await getDecision({users:[msg.mentions.users.first().id]}, botMsg, `${msg.author} challanged you to tictactoe, do you accept?`)) {
                     try {
-                        if (!await getUserDecision({users:[msg.author.id]}, botMsg, 'Opponent declined match, do you want to play against me instead?')) {
+                        if (!await getDecision({users:[msg.author.id]}, botMsg, 'Opponent declined match, do you want to play against me instead?')) {
                             return botMsg.edit(createEmbed('Challanger declined bot duel. Match aborted.', 'Error', msg.guild.id)), playMsg.delete();
                         } else {
                             player2 = msg.guild.me;

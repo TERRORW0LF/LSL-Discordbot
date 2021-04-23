@@ -176,6 +176,13 @@
             "path": "Commands/Submit/deleteMap.js"
         },
         {
+            "group": "submit",
+            "name": "update username",
+            "regex": "^(update|upd|change)\\s*(username|user|name)\\s+([^@#:(```)]{2,32}#[0-9]{4})$",
+            "help": "change name <old name>",
+            "path": "Commands/Submit/updateUsername.js"
+        },
+        {
             "group": "tournament",
             "name": "sign-in",
             "regex": "^(tournament|tourney)\\s+(sign-in|sign\\s*in)\\s+(^[^0-9][^#\\s]{2,11}#[0-9]{4,6})\\s+(na\\s*east|na\\s*e|na\\s*west|na\\s*w|eu|sa|asia|oce)\\s+(@.+)\\s+(\\d+)$",

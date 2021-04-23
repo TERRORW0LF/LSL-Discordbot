@@ -8,7 +8,7 @@ const strComp = require('string-similarity');
 
 const { getNumFromEmoji,  reactionFilter } = require('./reactionEmj');
 
-module.exports = { createEmbed, getAllSubmits, getPoints, getMapPoints, getPlacePoints, getUserReaction,  getUserDecision, getOptions };
+module.exports = { createEmbed, getAllSubmits, getPoints, getMapPoints, getPlacePoints, getUserReaction,  getDecision, getOptions };
 
 function createEmbed(text, func, guild) {
     const embedCfg = serverCfg[guild] ? serverCfg[guild].embeds : serverCfg.default.embeds,
@@ -102,7 +102,7 @@ async function getUserReaction(user, botMsg, opts, header='**React to select the
     }
 }
 
-async function getUserDecision(allowed={users, roles}, botMsg, decision, header='❔ **React to make a decision!**', timeout=60000) {
+async function getDecision(allowed={users, roles}, botMsg, decision, header='**React to make a decision!**', timeout=60000) {
     try {
         botMsg.reactions.removeAll();
         botMsg.edit('', createEmbed(`${header}\n` + decision, 'Select', botMsg.guild.id));

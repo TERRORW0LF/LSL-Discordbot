@@ -18,6 +18,10 @@
                 "color": 16777214,
                 "emoji": "💬 "
             },
+            "Select": {
+                "color": 13424349,
+                "emoji": "❔ "
+            },
             "Waiting": {
                 "color": 6242560,
                 "emoji": "⌛ "
@@ -54,6 +58,7 @@
         },
         "channels": {
             "error": null,
+            "moderation": null,
             "mute": [],
             "commands": {
                 "default": {
@@ -79,7 +84,7 @@
             "lookup": false,
             "submit": false,
             "tournament": false,
-            "moderation": false
+            "moderation": []
         },
         "seasons": [],
         "categories": [],
@@ -110,6 +115,134 @@
 
         },
         "googleSheets": {
+            
+        }
+    },
+    "678275066064142347": {
+        "prefix": "!",
+        "embeds": {
+            "Standard": {
+                "color": 0,
+                "emoji": ""
+            },
+            "Success": {
+                "color": 6654270,
+                "emoji": "✅ "
+            },
+            "Information": {
+                "color": 3108252,
+                "emoji": "ℹ️ "
+            },
+            "Working": {
+                "color": 16777214,
+                "emoji": "💬 "
+            },
+            "Select": {
+                "color": 13424349,
+                "emoji": "❔ "
+            },
+            "Waiting": {
+                "color": 6242560,
+                "emoji": "⌛ "
+            },
+            "Warning": {
+                "color": 10383616,
+                "emoji": "⚠️ "
+            },
+            "Critical": {
+                "color": 16747520,
+                "emoji": "❗ "
+            },
+            "Error": {
+                "color": 11083568,
+                "emoji": "❌ "
+            }
+        },
+        "features": {
+            "starboard": {
+                "enabled": false,
+                "count": 5,
+                "channel": null,
+                "emoji": "⭐"
+            },
+            "streaming": {
+                "enabled": false,
+                "excludedRoles": [],
+                "requiredRoles": [],
+                "role": null
+            },
+            "reactionRole": {
+                
+            }
+        },
+        "channels": {
+            "error": "678275161853788210",
+            "moderation": "678275161853788210",
+            "mute": [],
+            "commands": {
+                "default": {
+                    "include": [],
+                    "exclude": []
+                }
+            },
+            "wr": {
+                "enabled": false,
+                "channel": null
+            },
+            "pb": {
+                "enabled": false,
+                "channel": null
+            },
+            "submit": {
+                "enabled": false,
+                "channel": null
+            }
+        },
+        "permissions": {
+            "basic": false,
+            "lookup": false,
+            "submit": false,
+            "tournament": false,
+            "moderation": ["688689304897323055"]
+        },
+        "seasons": [],
+        "categories": [],
+        "stages": [],
+        "roleOptions": {
+            "role": "highestTotal",
+            "firstPlace": false,
+            "firstPlaceRole": "total"
+        },
+        "tieOptions": {
+            "stageTie": true,
+            "stageFirstPlaceTie": true,
+            "modeTie": true,
+            "seasonTie": true
+        },
+        "roles": {
+            "moderation": {
+                "mute": null
+            },
+            "firstPlace": {
+
+            }
+        },
+        "tournaments": {
+
+        },
+        "googleForms": {
+
+        },
+        "googleSheets": {
+            "submit": {
+                "test": {
+                    "Gravspeed": {
+                        "id": "1FVWxhVCEFe1MXuclEwQe-fBxdxeqB3ZQtUmfJ8aPxWg",
+                        "range": "Record Log!A2:F",
+                        "gid": "1091303763"
+                    }
+                }
+            }
             
         }
     },
@@ -173,6 +306,7 @@
         },
         "channels": {
             "error": "641654895086141440",
+            "moderation": "685142547999490109",
             "mute": [
                 "639323235736879124",
                 "577179688645165092"
