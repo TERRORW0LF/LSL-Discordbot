@@ -48,11 +48,11 @@ async function run(msg, client, regexGroups) {
             prevTime = Number(run.time);
             reactionOpts.push(`${run.place} *${run.name} - ${run.time} - [link](${run.proof})*`);
         }
-        const { index } = await getUserReaction(msg.author, botMsg, reactionOpts, '✅ **Leaderboard**');
+        const { index } = await getUserReaction(msg.author, botMsg, reactionOpts, '**Leaderboard**');
         if (index === undefined) {
             videoMsg.delete();
             let embedDescription = botMsg.embeds[0].description;
-            embedDescription = embedDescription.replace(/1️⃣\s*|2️⃣\s*|3️⃣\s*|4️⃣\s*|5️⃣\s*|❔\s*/g, '');
+            embedDescription = embedDescription.replace(/1️⃣\s*|2️⃣\s*|3️⃣\s*|4️⃣\s*|5️⃣\s*/g, '').replace(/❔/g, '✅');
             let embed = new Discord.MessageEmbed(botMsg.embeds[0]);
             embed.setDescription(embedDescription);
             embed.setColor(guildCfg.embeds.Success.color);
