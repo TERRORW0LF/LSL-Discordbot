@@ -48,11 +48,11 @@ async function run(msg, client, regexGroups) {
             prevTime = Number(run.time);
             reactionOpts.push(`${run.place} *${run.name} - ${run.time} - [link](${run.proof})*`);
         }
-        const { index } = await getUserReaction(msg.author, botMsg, reactionOpts, '✅ **Leaderbaord**');
+        const { index } = await getUserReaction(msg.author, botMsg, reactionOpts, '✅ **Leaderboard**');
         if (index === undefined) {
             videoMsg.delete();
             let embedDescription = botMsg.embeds[0].description;
-            embedDescription = embedDescription.replace(/1️⃣\s*|2️⃣\s*|3️⃣\s*|4️⃣\s*|5️⃣\s*/g, '');
+            embedDescription = embedDescription.replace(/1️⃣\s*|2️⃣\s*|3️⃣\s*|4️⃣\s*|5️⃣\s*|❔\s*/g, '');
             let embed = new Discord.MessageEmbed(botMsg.embeds[0]);
             embed.setDescription(embedDescription);
             embed.setColor(guildCfg.embeds.Success.color);
@@ -70,7 +70,7 @@ async function run(msg, client, regexGroups) {
     } catch (err) {
         videoMsg.delete();
         botMsg.edit('', createEmbed('An error occurred while handling your command.', 'Error', msg.guild.id));
-        console.log('Error in leaderbaord: ' + err.message);
+        console.log('Error in leaderboard: ' + err.message);
         console.log(err.stack);
     }
 }
