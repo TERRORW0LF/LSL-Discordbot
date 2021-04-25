@@ -23,7 +23,7 @@ async function run(msg, client, regexGroups) {
         let allowed;
         botMsg.edit(createEmbed('Requesting permission for your name change. This might take a while.', 'Working', msg.guild.id));
         try {
-            allowed = await getDecision({roles:guildCfg.permissions.moderation}, confirmationMsg, `**${msg.member.nickname || msg.author.username}** wants to update his name from **${OldName}** to **${msg.author.tag}**.`, '**Accept name change?**', 86400000);
+            allowed = await getDecision({roles:guildCfg.permissions.moderation}, confirmationMsg, `**${msg.member.nickname || msg.author.username}** wants to update their name from **${OldName}** to **${msg.author.tag}**.`, '**Accept name change?**', 86400000);
         } catch (err) {
             botMsg.edit(createEmbed(`Your name change has not been confirmed.`, 'Error', msg.guild.id));
             console.log(err);
