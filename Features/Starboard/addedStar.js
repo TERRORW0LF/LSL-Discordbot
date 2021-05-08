@@ -19,7 +19,7 @@ async function run(reaction, user) {
         if (message.author.id === user.id) {
             message.member.fetch();
             const name = message.member.nickname || user.username;
-            message.channel.send(createEmbed(`${name}, you cannot star your own messages.`, 'Warning', message.guild.id));
+            message.channel.send(createEmbed(`**${name}**, you cannot star your own messages.`, 'Warning', message.guild.id));
             return;
         }
         const reactionCount = reaction.users.cache.has(message.author.id) ? reaction.count-1 : reaction.count;
