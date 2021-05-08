@@ -9,7 +9,7 @@ const { createEmbed } = require(base+'/Util/misc');
 module.exports = run;
 
 async function run(reaction, user) {
-    const message = reaction.message;
+    const message = await reaction.message;
     try {
         if (!message.guild) return;
         if (!serverCfg[message.guild.id]) return;
@@ -17,8 +17,9 @@ async function run(reaction, user) {
         if (!starboardCfg.enabled) return;
         if (reaction.emoji.name !== starboardCfg.emoji) return;
         if (message.author.id === user.id) {
-            const name = message.member.nickname || message.author.username;
-            message.channel.send(cerateEmbed(`${name}, you cannot star your own messages.`, 'Warning', message.guild.id));
+            message.member.fetch();
+            const name = message.member.nickname || user.username;
+            message.channel.send(createEmbed(`${name}, you cannot star your own messages.`, 'Warning', message.guild.id));
             return;
         }
         const reactionCount = reaction.users.cache.has(message.author.id) ? reaction.count-1 : reaction.count;
