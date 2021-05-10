@@ -14,6 +14,7 @@ async function run(msg, client, regexGroups) {
     const botMsg = await msg.channel.send(createEmbed('Processing deletion, please hold on.', 'Working', msg.guild.id));
     try {
         const guildId = msg.guild.id,
+              guildCfg = serverCfg[guildId],
               seasonOpts = getOptions(regexGroups[2], serverCfg[guildId].seasons),
               categoryOpts = getOptions(regexGroups[3], serverCfg[guildId].categories),
               stageOpts = getOptions(regexGroups[4], serverCfg[guildId].stages);
@@ -42,7 +43,7 @@ async function run(msg, client, regexGroups) {
             hasPermission = permissionCfg.include.some(role => msg.member.roles.cache.has(role));
         if (msg.member.hasPermission('ADMINISTRATOR'))
             hasPermission = true;
-            
+
         if (hasPermission)
             runs = submits.filter(run => run.category === category && run.stage === stage);
         else

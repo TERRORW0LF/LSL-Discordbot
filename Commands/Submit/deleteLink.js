@@ -14,6 +14,7 @@ async function run(msg, client, regexGroups) {
     const botMsg = await msg.channel.send(createEmbed('Processing deletion, please hold on.', 'Working', msg.guild.id));
     try {
         const guildId = msg.guild.id,
+              guildCfg = serverCfg[guildId],
               seasonOpts = getOptions(regexGroups[2], serverCfg[guildId].seasons),
               link = regexGroups[3];
         if (!seasonOpts.length) return botMsg.edit(createEmbed('Incorrect season.', 'Error', guildId));
