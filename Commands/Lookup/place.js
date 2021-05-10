@@ -41,10 +41,10 @@ async function run(msg, client, regexGroups) {
         if (place < 0) place = runs.length+place;
         if (!runs[place]) place = runs.length-1;
         let rank;
-        if (Cfg.tieOptions.allowTie) {
+        if (Cfg?.tieOptions?.allowTie ?? serverCfg.default.tieOptions.allowTie) {
             placeRuns.push(...runs.filter(run => run.time === runs[place].time));
             rank = runs.filter(run => Number(run.time) < Number(runs[place].time)).length+1;
-            if (!Cfg.tieOptions.allowFirstPlaceTie) {
+            if (!Cfg.tieOptions.allowFirstPlaceTie ?? serverCfg.default.tieOptions.allowFirstPlaceTie) {
                 if (!place) {
                     placeRuns.length = 0;
                     placeRuns.push(runs[place]);
@@ -59,7 +59,7 @@ async function run(msg, client, regexGroups) {
         } else {
             placeRuns.push(runs[place]);
             rank = place+1;
-            if (Cfg.tieOptions.allowFirstPlaceTie && runs[place].time === runs[0].time) {
+            if ((Cfg.tieOptions.allowFirstPlaceTie ?? serverCfg.default.tieOptions.allowFirstPlaceTie) && runs[place].time === runs[0].time) {
                 placeRuns.length = 0;
                 placeRuns.push(...runs.filter(run => run.time === runs[place].time));
                 rank = 1;

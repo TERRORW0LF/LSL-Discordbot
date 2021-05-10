@@ -40,14 +40,14 @@ async function run(msg, client, regexGroups) {
             if (runs.some(value => value[0] === run.name)) continue;
             else runs.push([run.name, run.time]);
         }
-        if (serverCfg[guildId].tieOptions.allowTie) {
+        if (serverCfg?.[guildId]?.tieOptions?.allowTie ?? serverCfg.default.tieOptions.allowTie) {
             index = runs.filter(run => Number(run[1]) < Number(pb.time)).length;
-            if (!serverCfg[guildId].tieOptions.stageFirstPlaceTie) {
+            if (!serverCfg[guildId].tieOptions.allowFirstPlaceTie ?? serverCfg.default.tieOptions.allowFirstPlaceTie) {
                 if (runs[0][1] === pb.time) index = runs[0][0] === pb.name ? 0 : 1;
             }
         } else {
-            index = runs.indexOf([pb.name, pb.time]);
-            if (serverCfg[guildId].tieOptions.allowFirstPlaceTie) {
+            index = runs.findIndex(run => run[0] === pb.name);
+            if (serverCfg?.[guildId]?.tieOptions?.allowFirstPlaceTie ?? serverCfg.default.tieOptions.allowFirstPlaceTie) {
                 if (runs[0][1] === pb.time) index = 0;
             }
         }
