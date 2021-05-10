@@ -33,7 +33,7 @@ async function run(msg, client, regexGroups) {
             if (permissionCfg.exclude)
                 hasPermission = !permissionCfg.exclude.some(role => msg.member.roles.cache.has(role));
             if (permissionCfg.include)
-                hasPermission = permissionCfg.exclude.some(role => msg.member.roles.cache.has(role));
+                hasPermission = permissionCfg.include.some(role => msg.member.roles.cache.has(role));
             if (msg.member.hasPermission('ADMINISTRATOR'))
                 hasPermission = true;
             if (hasPermission) {
