@@ -24,10 +24,22 @@ async function run(msg, client, regexGroups) {
         let runs = [];
         for (let category of serverCfg[guildId].categories) {
             const submits = await getAllSubmits(serverCfg[guildId].googleSheets.submit[season][category].id, serverCfg[guildId].googleSheets.submit[season][category].range);
-            if (!serverCfg[guildId].permissions.moderation || serverCfg[guildId].permissions.moderation.some(value => msg.member.roles.cache.has(value))) {
+            let permissionCfg;
+            permissionCfg = guildCfg?.permissions?.commands?.moderation?.["delete link"] ?? serverCfg.default.permissions?.commands?.moderation?.["delete link"];
+            if (!permissionCfg) permissionCfg = guildCfg?.permissions?.commands?.moderation?.default ?? serverCfg.default.permissions?.commands?.moderation?.default;
+            if (!permissionCfg) permissionCfg = guildCfg?.permissions?.commands?.default ?? serverCfg.default.permissions.commands.default;
+            let hasPermission = false;
+            if (permissionCfg.exclude)
+                hasPermission = !permissionCfg.exclude.some(role => msg.member.roles.cache.has(role));
+            if (permissionCfg.include)
+                hasPermission = permissionCfg.exclude.some(role => msg.member.roles.cache.has(role));
+            if (msg.member.hasPermission('ADMINISTRATOR'))
+                hasPermission = true;
+            if (hasPermission) {
                 const submitFilter = submits.filter(run => run.proof === link && run.category === category);
                 if (submitFilter.length) submitFilter.forEach(value => runs.push(value));
-            } else {
+            }
+            else {
                 const submitFilter = submits.filter(run => run.proof === link && run.category === category && run.name === msg.author.tag);
                 if (submitFilter.length) submitFilter.forEach(value => runs.push(value));
             }

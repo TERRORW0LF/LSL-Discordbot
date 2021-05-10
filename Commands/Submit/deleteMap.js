@@ -31,10 +31,23 @@ async function run(msg, client, regexGroups) {
         let runs;
         const sheet = serverCfg[guildId].googleSheets.submit[season][category].id,
               submits = await getAllSubmits(sheet, serverCfg[guildId].googleSheets.submit[season][category].range);
-        if (!serverCfg[guildId].permissions.moderation || serverCfg[guildId].permissions.moderation.some(value => msg.member.roles.cache.has(value)))
+        let permissionCfg;
+        permissionCfg = guildCfg?.permissions?.commands?.moderation?.["delete link"] ?? serverCfg.default.permissions?.commands?.moderation?.["delete link"];
+        if (!permissionCfg) permissionCfg = guildCfg?.permissions?.commands?.moderation?.default ?? serverCfg.default.permissions?.commands?.moderation?.default;
+        if (!permissionCfg) permissionCfg = guildCfg?.permissions?.commands?.default ?? serverCfg.default.permissions.commands.default;
+        let hasPermission = false;
+        if (permissionCfg.exclude)
+            hasPermission = !permissionCfg.exclude.some(role => msg.member.roles.cache.has(role));
+        if (permissionCfg.include)
+            hasPermission = permissionCfg.include.some(role => msg.member.roles.cache.has(role));
+        if (msg.member.hasPermission('ADMINISTRATOR'))
+            hasPermission = true;
+            
+        if (hasPermission)
             runs = submits.filter(run => run.category === category && run.stage === stage);
-        else 
+        else
             runs = submits.filter(run => run.category === category && run.stage === stage && run.name === msg.author.tag);
+
         if (!runs.length) return botMsg.edit(createEmbed('No run found.', 'Error', guildId));
             
         const { option: run } = runs.length === 1 ? {option:runs[0]} : await getUserReaction(msg.author, botMsg, runs.reverse());
