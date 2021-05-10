@@ -55,7 +55,7 @@ async function run(msg, client, regexGroups) {
             embedDescription = embedDescription.replace(/1️⃣\s*|2️⃣\s*|3️⃣\s*|4️⃣\s*|5️⃣\s*/g, '').replace(/❔/g, '✅');
             let embed = new Discord.MessageEmbed(botMsg.embeds[0]);
             embed.setDescription(embedDescription);
-            embed.setColor(guildCfg.embeds.Success.color);
+            embed.setColor(guildCfg?.embeds?.Success?.color ?? serverCfg.default.embeds.Success.color);
             botMsg.edit({embed});
             return;
         }
