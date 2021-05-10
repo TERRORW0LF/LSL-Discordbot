@@ -7,16 +7,19 @@ module.exports = run;
 
 async function run(oldPresence, newPresence) {
     try {
-        if (!serverCfg[newPresence.guild.id]) return;
-        const streamingCfg = serverCfg[newPresence.guild.id].features.streaming;
+        const streamingCfg = serverCfg?.[newPresence.guild.id]?.features?.streaming?.enabled;
+        if (!streamingCfg) return;
+        const streamingRole = serverCfg[newPresence.guild.id].features.streaming.role;
+        if (!streamingRole) return;
+        await newPresence.member.fetch();
         if (!newPresence.member.manageable) return;
-        if (streamingCfg.excludedRoles.length) {
-            for (role of streamingCfg.excludedRoles)
+        if (streamingCfg.exclude) {
+            for (let role of streamingCfg.exclude)
                 if (newPresence.member.roles.cache.has(role)) return;
         }
-        if (streamingCfg.requiredRoles.length) {
+        if (streamingCfg.includes) {
             let hasRole = false;
-            for (let role of streamingCfg.requiredRoles) {
+            for (let role of streamingCfg.includes) {
                 if (newPresence.member.roles.cache.has(role)) {
                     hasRole = true;
                     break;
@@ -24,7 +27,6 @@ async function run(oldPresence, newPresence) {
             }
             if (!hasRole) return;
         }
-        const streamingRole = serverCfg[newPresence.guild.id].features.streaming.role;
         if ((!oldPresence || oldPresence.activities.some(activity => activity.type === 'STREAMING')) && !newPresence.activities.some(activity => activity.type === 'STREAMING')) {
             newPresence.member.roles.remove(streamingRole).catch(err => {
                 if (serverCfg[newPresence.guild.id].channels.error)

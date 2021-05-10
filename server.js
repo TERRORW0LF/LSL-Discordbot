@@ -40,40 +40,52 @@ client.on('message', async msg => {
     const prefix = guildCfg.prefix;
     if (!msg.content.startsWith(prefix) || msg.author.bot) 
         return;
-    let answered = false;
+
+    const msgContent = msg.content.replace(prefix, '').trim();
     for (let command of commands.commandList) {
         let pattern = new RegExp(command.regex, "iu");
-        if (pattern.test(msg.content.replace(prefix, '').trim())) {
+        if (!pattern.test(msgContent)) continue;
+
+        await msg.member.fetch();
+        if (!msg.member.hasPermission('ADMINISTRATOR')) {
+            //Check if channel is allowed
             let commandCfg;
-            if (guildCfg.channels.commands[command.group] && guildCfg.channels.commands[command.group][command.name])
-                commandCfg = guildCfg.channels.commands[command.group][command.name];
-            else if (guildCfg.channels.commands[command.group])
-                commandCfg =  guildCfg.channels.commands[command.group].default;
-            else commandCfg = guildCfg.channels.commands.default;
-            if (commandCfg.include.length)
+            commandCfg = guildCfg?.channels?.commands?.[command.group]?.[command.name] ?? serverCfg.default.channels.commands?.[command.group]?.[command.name];
+            if (!commandCfg) commandCfg = guildCfg?.channels?.commands?.[command.group] ?? serverCfg.default.channels.commands?.[command.group];
+            if (!commandCfg) commandCfg = guildCfg?.channels?.commands?.default ?? serverCfg.default.channels.commands.default;
+            if (commandCfg.include)
                 if (!commandCfg.include.some(channel => msg.channel.id === channel))
                     return msg.channel.send(createEmbed(`Please post commands in the designated channels.`, `Error`, msg.guild.id));
-            if (commandCfg.exclude.length)
+            if (commandCfg.exclude)
                 if (commandCfg.exclude.some(channel => msg.channel.id === channel))
                     return msg.channel.send(createEmbed(`Please post commands in the designated channels.`, `Error`, msg.guild.id));
-            const permission = guildCfg.permissions[command.group];
-            if (permission) {
+            
+            //Check if User/Member has permission to execute the command
+            let permissionCfg;
+            permissionCfg = guildCfg?.channels?.permissions?.[command.group]?.[command.name] ?? serverCfg.default.channels.permissions?.[command.group]?.[command.name];
+            if (!permissionCfg) permissionCfg = guildCfg?.channels?.permissions?.[command.group] ?? serverCfg.default.channels.permissions?.[command.group];
+            if (!permissionCfg) permissionCfg = guildCfg?.channels?.permissions?.default ?? serverCfg.default.channels.permissions.default;
+            if (permissionCfg.include) {
                 let hasPermission = false;
-                for (let role of permission) {
+                for (let role of permissionCfg.include) {
                     if (msg.member.roles.cache.has(role))
                         hasPermission = true;
                 }
                 if (!hasPermission)
-                    break;
+                    return msg.channel.send(createEmbed(`missing permission.`, 'Error', msg.guild.id));
             }
-            const run = require(`./${command.path}`);
-            run(msg, client, pattern.exec(msg.content.replace(prefix, '').trim()));
-            answered = true;
-            break;
+            if (permissionCfg.exclude) 
+                for (let role of permissionCfg.exclude) 
+                    if (msg.member.roles.cache.has(role)) 
+                        return msg.channel.send(createEmbed(`missing permission.`, 'Error', msg.guild.id));
         }
+
+        // Execute command
+        const run = require(`./${command.path}`);
+        run(msg, client, pattern.exec(msgContent));
+        return;
     }
-    if (!answered)
-        msg.channel.send(createEmbed(`No matching command found / missing permission.`, `Error`, msg.guild.id));
+    msg.channel.send(createEmbed(`No matching command found.`, `Error`, msg.guild.id));
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {

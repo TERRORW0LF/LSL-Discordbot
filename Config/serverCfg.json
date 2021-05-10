@@ -2,7 +2,7 @@
     "default": {
         "prefix": "!",
         "embeds": {
-            "Standard": {
+            "Default": {
                 "color": 0,
                 "emoji": ""
             },
@@ -48,8 +48,7 @@
             },
             "streaming": {
                 "enabled": false,
-                "excludedRoles": [],
-                "requiredRoles": [],
+                "exclude": [],
                 "role": null
             },
             "reactionRole": {
@@ -62,7 +61,6 @@
             "mute": [],
             "commands": {
                 "default": {
-                    "include": [],
                     "exclude": []
                 }
             },
@@ -80,25 +78,26 @@
             }
         },
         "permissions": {
-            "basic": false,
-            "lookup": false,
-            "submit": false,
-            "tournament": false,
-            "moderation": []
+            "commands": {
+                "default": {
+                    "exclude": []
+                },
+                "moderation": {
+                    "include": []
+                }
+            }
         },
         "seasons": [],
         "categories": [],
         "stages": [],
         "roleOptions": {
-            "role": "highestTotal",
+            "role": "none",
             "firstPlace": false,
-            "firstPlaceRole": "total"
+            "firstPlaceRole": "none"
         },
         "tieOptions": {
-            "stageTie": true,
-            "stageFirstPlaceTie": true,
-            "modeTie": true,
-            "seasonTie": true
+            "allowTie": true,
+            "allowFirstPlaceTie": true
         },
         "roles": {
             "moderation": {
@@ -120,56 +119,16 @@
     },
     "678275066064142347": {
         "prefix": "!",
-        "embeds": {
-            "Standard": {
-                "color": 0,
-                "emoji": ""
-            },
-            "Success": {
-                "color": 6654270,
-                "emoji": "✅ "
-            },
-            "Information": {
-                "color": 3108252,
-                "emoji": "ℹ️ "
-            },
-            "Working": {
-                "color": 16777214,
-                "emoji": "💬 "
-            },
-            "Select": {
-                "color": 13424349,
-                "emoji": "❔ "
-            },
-            "Waiting": {
-                "color": 6242560,
-                "emoji": "⌛ "
-            },
-            "Warning": {
-                "color": 10383616,
-                "emoji": "⚠️ "
-            },
-            "Critical": {
-                "color": 16747520,
-                "emoji": "❗ "
-            },
-            "Error": {
-                "color": 11083568,
-                "emoji": "❌ "
-            }
-        },
         "features": {
             "starboard": {
-                "enabled": false,
-                "count": 5,
-                "channel": null,
+                "enabled": true,
+                "count": 1,
+                "channel": "678275161853788210",
                 "emoji": "⭐"
             },
             "streaming": {
-                "enabled": false,
-                "excludedRoles": [],
-                "requiredRoles": [],
-                "role": null
+                "enabled": true,
+                "role": "691345630995677224"
             },
             "reactionRole": {
                 
@@ -178,61 +137,37 @@
         "channels": {
             "error": "678275161853788210",
             "moderation": "678275161853788210",
-            "mute": [],
             "commands": {
                 "default": {
-                    "include": [],
-                    "exclude": []
+                    "include": ["678275066550812687"]
+                },
+                "moderation": {
+                    "default": {
+                        "exclude": []
+                    }
                 }
-            },
-            "wr": {
-                "enabled": false,
-                "channel": null
-            },
-            "pb": {
-                "enabled": false,
-                "channel": null
-            },
-            "submit": {
-                "enabled": false,
-                "channel": null
             }
         },
         "permissions": {
-            "basic": false,
-            "lookup": false,
-            "submit": false,
-            "tournament": false,
-            "moderation": ["688689304897323055"]
+            "commands": {
+                "default": {
+                    "exclude": []
+                },
+                "moderation": {
+                    "default": {
+                        "include": ["688689304897323055"]
+                    }
+                }
+            }
+        },
+        "roles": {
+            "moderation": {
+                "mute": "841405168397582386"
+            }
         },
         "seasons": [],
         "categories": [],
         "stages": [],
-        "roleOptions": {
-            "role": "highestTotal",
-            "firstPlace": false,
-            "firstPlaceRole": "total"
-        },
-        "tieOptions": {
-            "stageTie": true,
-            "stageFirstPlaceTie": true,
-            "modeTie": true,
-            "seasonTie": true
-        },
-        "roles": {
-            "moderation": {
-                "mute": null
-            },
-            "firstPlace": {
-
-            }
-        },
-        "tournaments": {
-
-        },
-        "googleForms": {
-
-        },
         "googleSheets": {
             "submit": {
                 "test": {
@@ -248,44 +183,6 @@
     },
     "574522788967088128": {
         "prefix": "!",
-        "embeds": {
-            "Standard": {
-                "color": 0,
-                "emoji": ""
-            },
-            "Success": {
-                "color": 6654270,
-                "emoji": "✅ "
-            },
-            "Information": {
-                "color": 3108252,
-                "emoji": "ℹ️ "
-            },
-            "Working": {
-                "color": 16777214,
-                "emoji": "💬 "
-            },
-            "Select": {
-                "color": 13424349,
-                "emoji": "❔ "
-            },
-            "Timeout": {
-                "color": 6242560,
-                "emoji": "⌛ "
-            },
-            "Warning": {
-                "color": 10383616,
-                "emoji": "⚠️ "
-            },
-            "Critical": {
-                "color": 16747520,
-                "emoji": "❗ "
-            },
-            "Error": {
-                "color": 11083568,
-                "emoji": "❌ "
-            }
-        },
         "features": {
             "starboard": {
                 "enabled": true,
@@ -295,8 +192,7 @@
             },
             "streaming": {
                 "enabled": true,
-                "excludedRoles": [],
-                "requiredRoles": ["580568742564724736", "580568703788122119"],
+                "include": ["580568742564724736", "580568703788122119"],
                 "role": "765963264429391962"
             },
             "reactionRole": {
@@ -318,7 +214,6 @@
                 },
                 "moderation": {
                     "default": {
-                        "include": [],
                         "exclude": []
                     }
                 }
@@ -327,31 +222,29 @@
                 "enabled": true,
                 "channel": "644457453093781504"
             },
-            "pb": {
-                "enabled": false,
-                "channel": 0
-            },
             "submit": {
                 "enabled": true,
                 "channel": "685602798016004118"
             }
         },
         "permissions": {
-            "basic": false,
-            "fun": false,
-            "lookup": false,
-            "submit": [
-                "580568742564724736",
-                "580568703788122119"
-            ],
-            "tournament": [
-                "580568742564724736",
-                "580568703788122119"
-            ],
-            "moderation": [
-                "574732901208424449",
-                "574523898784251908"
-            ]
+            "commands": {
+                "submit": {
+                    "default": {
+                        "include": ["580568742564724736", "580568703788122119"]
+                    }
+                },
+                "tournament": {
+                    "default": {
+                        "include": ["580568742564724736", "580568703788122119"]
+                    }
+                },
+                "moderation": {
+                    "default": {
+                        "include": ["574732901208424449", "574523898784251908"]
+                    }
+                }
+            }
         },
         "seasons": ["1","2","3","4"],
         "categories": ["Standard", "Gravspeed"],
@@ -365,10 +258,7 @@
             "firstPlaceRole": "all"
         },
         "tieOptions": {
-            "stageTie": true,
-            "stageFirstPlaceTie": false,
-            "modeTie": true,
-            "seasonTie": true
+            "allowFirstPlaceTie": false
         },
         "roles": {
             "moderation": {

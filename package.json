@@ -20,5 +20,8 @@
     "package.json": "^2.0.1",
     "qs": "^6.9.4",
     "string-similarity": "^4.0.2"
+  },
+  "engines": {
+    "node": ">=14.16.1"
   }
 }

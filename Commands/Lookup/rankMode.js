@@ -28,7 +28,7 @@ async function run(msg, client, regexGroups) {
         pairs.sort((a, b) => Number(b.points) - Number(a.points));
         let rank;
         if (pair) {
-            if (serverCfg[guildId].tieOptions.modeTie) {
+            if (serverCfg[guildId].tieOptions.allowTie) {
                 rank = pairs.filter(currPair => Number(currPair.points) > Number(pair.points)).length + 1;
             } else rank = pairs.indexOf(pair) + 1;
         } else rank = 'undefined';

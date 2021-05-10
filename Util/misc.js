@@ -11,9 +11,10 @@ const { getNumFromEmoji,  reactionFilter } = require('./reactionEmj');
 module.exports = { createEmbed, getAllSubmits, getPoints, getMapPoints, getPlacePoints, getUserReaction,  getDecision, getOptions };
 
 function createEmbed(text, func, guild) {
-    const embedCfg = serverCfg[guild] ? serverCfg[guild].embeds : serverCfg.default.embeds,
-          color = embedCfg[func].color || 0,
-          emoji = embedCfg[func].emoji || '';
+    const embedCfg = serverCfg?.[guild]?.embeds?.[func] ?? serverCfg.default.embeds?.[func];
+    if (!embedCfg) embedCfg = serverCfg.default.embeds.Default;
+    const color = embedCfg.color || 0,
+          emoji = embedCfg.emoji || '';
     return {embed: {description: emoji+text, color: color}};
 }
 

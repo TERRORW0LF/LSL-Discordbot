@@ -45,7 +45,7 @@ async function run(msg, client, regexGroups) {
             playField = [0, 0, 0, 0, 0, 0, 0, 0, 0],
             currPlayer = Math.random() < 0.5 ? player1 : player2;
         botMsg.reactions.removeAll();
-        botMsg.edit(createEmbed(`It's ${currPlayer}'s turn.`, 'Standard', msg.guild.id));
+        botMsg.edit(createEmbed(`It's ${currPlayer}'s turn.`, 'Default', msg.guild.id));
         playMsg.edit(createPlayfield(playField));
         let promiseArray = []
         for (let opt of opts)
@@ -72,7 +72,7 @@ async function run(msg, client, regexGroups) {
             if (checkWin(playField)) return collector.stop('winner');
             if (!playEmojis.length) return;
             currPlayer = currPlayer === player1 ? player2 : player1;
-            botMsg.edit(createEmbed(`It's ${currPlayer}'s turn.`, 'Standard', msg.guild.id));
+            botMsg.edit(createEmbed(`It's ${currPlayer}'s turn.`, 'Default', msg.guild.id));
             if (currPlayer.id === msg.guild.me.id) {
                 const { index } = minimax(playField, false);
                 const move = index[Math.floor(Math.random()*index.length)];
@@ -83,9 +83,9 @@ async function run(msg, client, regexGroups) {
         
         collector.on('end', (_, reason) => {
             playMsg.reactions.removeAll();
-            if (reason === 'winner') return botMsg.edit(createEmbed(`🏆 ${currPlayer} won the game!`, 'Standard', msg.guild.id));
-            if (reason === 'idle') return botMsg.edit(createEmbed(`🏆 ${currPlayer} didn't make a move in time, ${currPlayer === player1 ? player2 : player1} won the game!`, 'Standard', msg.guild.id));
-            return botMsg.edit(createEmbed(`The match ended in a draw, no winner can be determined.`, 'Standard', msg.guild.id));
+            if (reason === 'winner') return botMsg.edit(createEmbed(`🏆 ${currPlayer} won the game!`, 'Default', msg.guild.id));
+            if (reason === 'idle') return botMsg.edit(createEmbed(`🏆 ${currPlayer} didn't make a move in time, ${currPlayer === player1 ? player2 : player1} won the game!`, 'Default', msg.guild.id));
+            return botMsg.edit(createEmbed(`The match ended in a draw, no winner can be determined.`, 'Default', msg.guild.id));
         });
     } catch (err) {
         playMsg.delete();

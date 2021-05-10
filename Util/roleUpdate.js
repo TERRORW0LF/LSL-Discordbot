@@ -3,14 +3,14 @@
 const { getGoogleAuth } = require('../google-auth'); 
 const { google } = require('googleapis');
 const serverCfg = require('../Config/serverCfg.json');
-const getUser = require('./getUser');
-const { getPoints } = require('./misc');
 
 module.exports = roleUpdate;
 
 async function roleUpdate(guild, season) {
     try {
         const guildCfg = serverCfg[guild.id];
+        if (!guildCfg) return;
+        if (!guildCfg?.roleOptions?.role) return;
         if (guildCfg.roleOptions.role === "none") return;
         const allUsers = await guild.members.fetch(),
               sheets = google.sheets('v4'),
