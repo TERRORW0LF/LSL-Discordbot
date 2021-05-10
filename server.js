@@ -62,9 +62,9 @@ client.on('message', async msg => {
             
             //Check if User/Member has permission to execute the command
             let permissionCfg;
-            permissionCfg = guildCfg?.channels?.permissions?.[command.group]?.[command.name] ?? serverCfg.default.channels.permissions?.[command.group]?.[command.name];
-            if (!permissionCfg) permissionCfg = guildCfg?.channels?.permissions?.[command.group] ?? serverCfg.default.channels.permissions?.[command.group];
-            if (!permissionCfg) permissionCfg = guildCfg?.channels?.permissions?.default ?? serverCfg.default.channels.permissions.default;
+            permissionCfg = guildCfg?.permissions?.[command.group]?.[command.name] ?? serverCfg.default.permissions?.[command.group]?.[command.name];
+            if (!permissionCfg) permissionCfg = guildCfg?.permissions?.[command.group] ?? serverCfg.default.permissions?.[command.group];
+            if (!permissionCfg) permissionCfg = guildCfg?.permissions?.default ?? serverCfg.default.permissions.default;
             if (permissionCfg.include) {
                 let hasPermission = false;
                 for (let role of permissionCfg.include) {
