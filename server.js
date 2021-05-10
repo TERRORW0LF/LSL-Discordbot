@@ -6,6 +6,8 @@ const express = require('express');
 const app = express();
 const Discord = require('discord.js');
 
+require('dotenv').config();
+
 const commands = require('./commands.json');
 const serverCfg = require('./Config/serverCfg.json');
 const { createEmbed } = require('./Util/misc')
@@ -51,20 +53,20 @@ client.on('message', async msg => {
             //Check if channel is allowed
             let commandCfg;
             commandCfg = guildCfg?.channels?.commands?.[command.group]?.[command.name] ?? serverCfg.default.channels.commands?.[command.group]?.[command.name];
-            if (!commandCfg) commandCfg = guildCfg?.channels?.commands?.[command.group] ?? serverCfg.default.channels.commands?.[command.group];
+            if (!commandCfg) commandCfg = guildCfg?.channels?.commands?.[command.group]?.default ?? serverCfg.default.channels.commands?.[command.group]?.default;
             if (!commandCfg) commandCfg = guildCfg?.channels?.commands?.default ?? serverCfg.default.channels.commands.default;
-            if (commandCfg.include)
+            if (commandCfg?.include)
                 if (!commandCfg.include.some(channel => msg.channel.id === channel))
                     return msg.channel.send(createEmbed(`Please post commands in the designated channels.`, `Error`, msg.guild.id));
-            if (commandCfg.exclude)
+            if (commandCfg?.exclude)
                 if (commandCfg.exclude.some(channel => msg.channel.id === channel))
                     return msg.channel.send(createEmbed(`Please post commands in the designated channels.`, `Error`, msg.guild.id));
             
             //Check if User/Member has permission to execute the command
             let permissionCfg;
-            permissionCfg = guildCfg?.permissions?.[command.group]?.[command.name] ?? serverCfg.default.permissions?.[command.group]?.[command.name];
-            if (!permissionCfg) permissionCfg = guildCfg?.permissions?.[command.group] ?? serverCfg.default.permissions?.[command.group];
-            if (!permissionCfg) permissionCfg = guildCfg?.permissions?.default ?? serverCfg.default.permissions.default;
+            permissionCfg = guildCfg?.permissions?.commands?.[command.group]?.[command.name] ?? serverCfg.default.permissions?.commands?.[command.group]?.[command.name];
+            if (!permissionCfg) permissionCfg = guildCfg?.permissions?.commands?.[command.group]?.default ?? serverCfg.default.permissions?.commands?.[command.group]?.default;
+            if (!permissionCfg) permissionCfg = guildCfg?.permissions?.commands?.default ?? serverCfg.default.permissions.commands.default;
             if (permissionCfg.include) {
                 let hasPermission = false;
                 for (let role of permissionCfg.include) {
@@ -74,7 +76,7 @@ client.on('message', async msg => {
                 if (!hasPermission)
                     return msg.channel.send(createEmbed(`missing permission.`, 'Error', msg.guild.id));
             }
-            if (permissionCfg.exclude) 
+            if (permissionCfg?.exclude) 
                 for (let role of permissionCfg.exclude) 
                     if (msg.member.roles.cache.has(role)) 
                         return msg.channel.send(createEmbed(`missing permission.`, 'Error', msg.guild.id));
