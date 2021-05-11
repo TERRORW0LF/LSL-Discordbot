@@ -12,10 +12,11 @@ async function run(msg, client, regexGroups) {
         if (!regexGroups[2]) regexGroups[2] = "1";
         let numbers = '';
         for (let i=0; i<regexGroups[2]; i++) {
-            numbers += `, ${Math.floor(Math.random()*parseInt(regexGroups[3]))+1}`
+            numbers += `${Math.floor(Math.random()*parseInt(regexGroups[3]))+1}, `
             if (numbers.length + regexGroups[2].length + regexGroups[3].length + 70 > 2000)
                 return msg.channel.send(createEmbed(`Failed to roll. Message is longer than 2000 characters.`, 'Error', msg.guild.id));
         }
+        numbers = numbers.slice(0, -2);
         msg.channel.send(createEmbed(`**${msg.member.displayName}** Rolled ${regexGroups[2]} ${regexGroups[3]} sided dice and got: **${numbers}**`, 'Success', msg.guild.id));
     } catch (err) {
         msg.channel.send(createEmbed('An error occurred while handling your command. Informing staff.', 'Error', msg.guild.id));
