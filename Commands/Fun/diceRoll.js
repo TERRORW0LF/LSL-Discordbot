@@ -8,9 +8,10 @@ module.exports = run;
 async function run(msg, client, regexGroups) {
     try {
         if (regexGroups[2] === '0') return msg.channel.send(createEmbed('Cannot roll 0 dice.', 'Error', msg.guild.id));
+        if (regexGroups[3] === '0') return msg.channel.send(createEmbed('Cannot roll a 0 sided dice.', 'Error', msg.guild.id));
         if (!regexGroups[2]) regexGroups[2] = "1";
-        let numbers = `${Math.round(Math.random()*parseInt(regexGroups[3]))}`;
-        for (let i=1; i<regexGroups[2]; i++) {
+        let numbers = '';
+        for (let i=0; i<regexGroups[2]; i++) {
             numbers += `, ${Math.floor(Math.random()*parseInt(regexGroups[3]))+1}`
             if (numbers.length + regexGroups[2].length + regexGroups[3].length + 70 > 2000)
                 return msg.channel.send(createEmbed(`Failed to roll. Message is longer than 2000 characters.`, 'Error', msg.guild.id));
