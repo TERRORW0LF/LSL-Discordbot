@@ -16,10 +16,11 @@ async function run(msg, client, regexGroups) {
             botPlayer = false;
         if (msg.mentions.members.size > 1) return botMsg.edit(createEmbed('You can only challenge one member.', 'Error', msg.guild.id)), playMsg.delete();
         if (msg.mentions.members.first() && msg.mentions.members.first().id !== client.id) {
+            player2 = msg.mentions.users.first();
             try {
                 if (!await getDecision({users:[msg.mentions.members.first().id]}, botMsg, `${msg.author} challanged you to tictactoe, do you accept?`)) {
                     try {
-                        if (!await getDecision({users:[msg.author.id]}, botMsg, 'Opponent declined match, do you want to play against me instead?')) {
+                        if (!await getDecision({users:[msg.author.id]}, botMsg, 'Opponent declined match. Do you want to play against me instead?')) {
                             return botMsg.edit(createEmbed('Challanger declined bot duel. Match aborted.', 'Error', msg.guild.id)), playMsg.delete();
                         } else {
                             player2 = msg.guild.me;
@@ -30,10 +31,17 @@ async function run(msg, client, regexGroups) {
                     }
                 }
             } catch (err) {
-                console.log(err);
-                return botMsg.edit(createEmbed('Opponent did not answer. Match aborted.', 'Error', msg.guild.id)), playMsg.delete();
+                try {
+                    if (!await getDecision({users:[msg.author.id]}, botMsg, 'Opponent did not answer. Do you want to play against me instead?')) {
+                        return botMsg.edit(createEmbed('Challanger declined bot duel. Match aborted.', 'Error', msg.guild.id)), playMsg.delete();
+                    } else {
+                        player2 = msg.guild.me;
+                        botPlayer = true;
+                    }
+                } catch (err) {
+                    return botMsg.edit(createEmbed(`Challanger did not answer bot duel request. Match aborted.`, 'Error', msg.guild.id)), playMsg.delete();
+                }
             }
-            player2 = msg.mentions.users.first();
         } else {
             player2 = msg.guild.me;
             botPlayer = true;
