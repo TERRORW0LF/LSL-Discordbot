@@ -16,14 +16,18 @@ async function run(msg, client, regexGroups) {
         const guildCfg = serverCfg[msg.guild.id] || serverCfg.default;
         let confirmationMsg;
         if (guildCfg.channels.moderation)
-            confirmationMsg = await (await msg.guild.channels.cache.get(guildCfg.channels.moderation)).send('.');
+            confirmationMsg = await msg.guild.channels.cache.get(guildCfg.channels.moderation).send('.');
         else
             confirmationMsg = await msg.channel.send('.');
 
         let allowed;
         botMsg.edit(createEmbed('Requesting permission for your name change. This might take a while.', 'Working', msg.guild.id));
         try {
-            allowed = await getDecision({roles:guildCfg.permissions.moderation}, confirmationMsg, `**${msg.member.nickname || msg.author.username}** wants to update their name from **${OldName}** to **${msg.author.tag}**.`, '**Accept name change?**', 86400000);
+            let permissionCfg;
+            permissionCfg = guildCfg?.permissions?.commands?.moderation?.["update username"] ?? serverCfg.default.permissions?.commands?.moderation?.["update username"];
+            if (!permissionCfg) permissionCfg = guildCfg?.permissions?.commands?.moderation?.default ?? serverCfg.default.permissions?.commands?.moderation?.default;
+            if (!permissionCfg) permissionCfg = guildCfg?.permissions?.commands?.default ?? serverCfg.default.permissions.commands.default;
+            allowed = await getDecision({roles:permissionCfg.include}, confirmationMsg, `**${msg.member.displayName}** wants to update their name from **${OldName}** to **${msg.author.tag}**.`, '**Accept name change?**', 86400000);
         } catch (err) {
             botMsg.edit(createEmbed(`Your name change has not been confirmed.`, 'Error', msg.guild.id));
             console.log(err);
