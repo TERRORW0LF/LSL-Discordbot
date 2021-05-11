@@ -18,7 +18,7 @@ async function run(msg, client, regexGroups) {
         msg.channel.send(createEmbed(`**${msg.member.displayName}** Rolled ${regexGroups[2]} ${regexGroups[3]} sided dice and got: **${numbers}**`, 'Success', msg.guild.id));
     } catch (err) {
         msg.channel.send(createEmbed('An error occurred while handling your command. Informing staff.', 'Error', msg.guild.id));
-        console.log('An error occured in dadJoke: '+err.message);
+        console.log('An error occured in diceRoll: '+err.message);
         console.log(err.stack);
     }
 }
