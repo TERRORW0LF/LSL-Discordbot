@@ -15,9 +15,9 @@ async function run(msg, client, regexGroups) {
             player2 = null,
             botPlayer = false;
         if (msg.mentions.members.size > 1) return botMsg.edit(createEmbed('You can only challenge one member.', 'Error', msg.guild.id)), playMsg.delete();
-        if (msg.mentions.members.first()) {
+        if (msg.mentions.members.first() && msg.mentions.members.first().id !== client.id) {
             try {
-                if (!await getDecision({users:[msg.mentions.users.first().id]}, botMsg, `${msg.author} challanged you to tictactoe, do you accept?`)) {
+                if (!await getDecision({users:[msg.mentions.members.first().id]}, botMsg, `${msg.author} challanged you to tictactoe, do you accept?`)) {
                     try {
                         if (!await getDecision({users:[msg.author.id]}, botMsg, 'Opponent declined match, do you want to play against me instead?')) {
                             return botMsg.edit(createEmbed('Challanger declined bot duel. Match aborted.', 'Error', msg.guild.id)), playMsg.delete();
