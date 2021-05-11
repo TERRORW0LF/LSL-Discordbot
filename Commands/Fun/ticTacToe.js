@@ -15,7 +15,7 @@ async function run(msg, client, regexGroups) {
             player2 = null,
             botPlayer = false;
         if (msg.mentions.members.size > 1) return botMsg.edit(createEmbed('You can only challenge one member.', 'Error', msg.guild.id)), playMsg.delete();
-        if (msg.mentions.members.first() && msg.mentions.members.first().id !== client.id) {
+        if (msg.mentions.members.first() && msg.mentions.members.first().id !== client.user.id) {
             player2 = msg.mentions.users.first();
             try {
                 if (!await getDecision({users:[msg.mentions.members.first().id]}, botMsg, `${msg.author} challanged you to tictactoe, do you accept?`)) {
