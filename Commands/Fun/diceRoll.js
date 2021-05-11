@@ -11,7 +11,7 @@ async function run(msg, client, regexGroups) {
         if (!regexGroups[2]) regexGroups[2] = "1";
         let numbers = `${Math.round(Math.random()*parseInt(regexGroups[3]))}`;
         for (let i=1; i<regexGroups[2]; i++) {
-            numbers += `, ${Math.round(Math.random()*parseInt(regexGroups[3]))}`
+            numbers += `, ${Math.floor(Math.random()*parseInt(regexGroups[3]))+1}`
             if (numbers.length + regexGroups[2].length + regexGroups[3].length + 70 > 2000)
                 return msg.channel.send(createEmbed(`Failed to roll. Message is longer than 2000 characters.`, 'Error', msg.guild.id));
         }
