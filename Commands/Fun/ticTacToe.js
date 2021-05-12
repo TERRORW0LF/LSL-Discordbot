@@ -81,7 +81,7 @@ async function run(msg, client, regexGroups) {
             if (!playEmojis.length) return;
             currPlayer = currPlayer === player1 ? player2 : player1;
             botMsg.edit(createEmbed(`It's ${currPlayer}'s turn.`, 'Default', msg.guild.id));
-            if (currPlayer.id === msg.guild.me.id) {
+            if (currPlayer.id === client.user.id) {
                 const { index } = minimax(playField, false);
                 const move = index[Math.floor(Math.random()*index.length)];
                 playMsg.reactions.cache.get(opts[move]).remove();
@@ -151,13 +151,13 @@ function minimax(playField, isMaximizing) {
         // Check if player won and return score and index
         if (checkWin(playField)) {
             playField[i] = 0;
-            index.push(i);
+            index = [i];
             return { score: isMaximizing ? 1 : -1, index };
         }
         // Check if game is drawn and return score and index
         if (!playField.includes(0)) {
             playField[i] = 0;
-            index.push(i);
+            index = [i];
             return { score: 0, index };
         }
         // Run minimax for the next possible set of moves
