@@ -7,9 +7,9 @@ module.exports = run;
 
 async function run(oldPresence, newPresence) {
     try {
-        const streamingCfg = serverCfg?.[newPresence.guild.id]?.features?.streaming?.enabled;
-        if (!streamingCfg) return;
-        const streamingRole = serverCfg[newPresence.guild.id].features.streaming.role;
+        const streamingCfg = serverCfg?.[newPresence.guild.id]?.features?.streaming;
+        if (!streamingCfg?.enabled) return;
+        const streamingRole = streamingCfg.role;
         if (!streamingRole) return;
         await newPresence.member.fetch();
         if (!newPresence.member.manageable) return;
