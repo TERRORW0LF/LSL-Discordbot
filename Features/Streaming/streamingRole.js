@@ -17,9 +17,9 @@ async function run(oldPresence, newPresence) {
             for (let role of streamingCfg.exclude)
                 if (newPresence.member.roles.cache.has(role)) return;
         }
-        if (streamingCfg.includes) {
+        if (streamingCfg.include) {
             let hasRole = false;
-            for (let role of streamingCfg.includes) {
+            for (let role of streamingCfg.include) {
                 if (newPresence.member.roles.cache.has(role)) {
                     hasRole = true;
                     break;
