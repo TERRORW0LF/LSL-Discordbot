@@ -11,7 +11,7 @@ const { getNumFromEmoji,  reactionFilter } = require('./reactionEmj');
 module.exports = { createEmbed, getAllSubmits, getPoints, getMapPoints, getPlacePoints, getUserReaction,  getDecision, getOptions };
 
 function createEmbed(text, func, guild) {
-    const embedCfg = serverCfg?.[guild]?.embeds?.[func] ?? serverCfg.default.embeds?.[func];
+    let embedCfg = serverCfg?.[guild]?.embeds?.[func] ?? serverCfg.default.embeds?.[func];
     if (!embedCfg) embedCfg = serverCfg.default.embeds.Default;
     const color = embedCfg.color || 0,
           emoji = embedCfg.emoji || '';
@@ -62,7 +62,8 @@ async function getUserReaction(user, botMsg, opts, header='**React to select the
             page = 1,
             maxPage = Math.floor((opts.length- 1) / 5),
             pageLength;
-        const reactOpts = ['◀','▶','1️⃣','2️⃣','3️⃣','4️⃣','5️⃣'];
+        const fullOpts = ['◀','▶','1️⃣','2️⃣','3️⃣','4️⃣','5️⃣'];
+        let reactOpts = [];
         await botMsg.react('◀');
         await botMsg.react('▶');
         do {
@@ -70,6 +71,7 @@ async function getUserReaction(user, botMsg, opts, header='**React to select the
             if (page > maxPage) page = 0;
             else if (page < 0) page = maxPage;
             pageLength = opts.slice(page*5, (page+1)*5).length;
+            reactOpts = ['◀','▶'].push(...fullOpts.slice(2, 2+pageLength));
             botMsg.edit('', createEmbed(`${header}\n` + opts.slice(page*5, (page+1)*5).map((o, i) => `${reactOpts[i+2]} ${(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)}`).join('\n'), 'Select', botMsg.guild.id));
             
             if (botMsg.reactions.cache.get('▶').users.cache.has(user.id))
@@ -77,7 +79,7 @@ async function getUserReaction(user, botMsg, opts, header='**React to select the
             if (botMsg.reactions.cache.get('◀').users.cache.has(user.id))
                 await botMsg.reactions.cache.get('◀').users.remove(user.id);
             
-            for (let i = 2; i <= 6; i++) {
+            for (let i = 2; i < reactOpts.length; i++) {
                 if (pageLength > i-2 && !botMsg.reactions.cache.has(reactOpts[i]))
                     botMsg.react(reactOpts[i]);
                 else if (pageLength <= i-2 && botMsg.reactions.cache.has(reactOpts[i]))
@@ -91,7 +93,7 @@ async function getUserReaction(user, botMsg, opts, header='**React to select the
             //botMsg.edit('', createEmbed('No option selected.', 'Timeout', botMsg.guild.id));   
             return { index: undefined, option: undefined };
         }
-        const index = getNumFromEmoji(userChoice.first().emoji.name) - 1;
+        const index = getNumFromEmoji(userChoice.first().emoji.name) - 1 + page*5;
         const opt = opts[index];
         //botMsg.edit('', createEmbed(`Option *${opt}* selected.`, 'Success', botMsg.guild.id));
         return { option: opt, index };
