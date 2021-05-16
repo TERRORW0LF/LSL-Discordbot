@@ -71,7 +71,8 @@ async function getUserReaction(user, botMsg, opts, header='**React to select the
             if (page > maxPage) page = 0;
             else if (page < 0) page = maxPage;
             pageLength = opts.slice(page*5, (page+1)*5).length;
-            reactOpts = ['◀','▶'].push(...fullOpts.slice(2, 2+pageLength));
+            reactOpts = ['◀','▶'];
+            reactOpts.push(...fullOpts.slice(2, 2+pageLength));
             botMsg.edit('', createEmbed(`${header}\n` + opts.slice(page*5, (page+1)*5).map((o, i) => `${reactOpts[i+2]} ${(typeof o === 'object' ? [...Object.values(o)].join(' ') : o)}`).join('\n'), 'Select', botMsg.guild.id));
             
             if (botMsg.reactions.cache.get('▶').users.cache.has(user.id))
