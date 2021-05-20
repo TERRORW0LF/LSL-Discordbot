@@ -28,7 +28,7 @@ process.on('uncaughtException', err => {
 
 
 // Start Discord bot
-const client = new Discord.Client({partials: ['GUILD_MEMBER', 'USER', 'MESSAGE', 'REACTION']});
+const client = new Discord.Client({ partials: ['GUILD_MEMBER', 'USER', 'MESSAGE', 'REACTION'], restTimeOffset: 100 });
 client.login(process.env.discordTOKEN);
 
 // Discord events
