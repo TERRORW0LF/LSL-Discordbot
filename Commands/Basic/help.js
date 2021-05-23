@@ -27,7 +27,7 @@ async function run(msg, client, regexGroups) {
             if (commandGroups.has(command.group))
                 commandGroups.get(command.group).push(`${command.name}: ${command.help}`);
             else
-                commandGroups.set(command.group, [command.help]);
+                commandGroups.set(command.group, [`${commmand.name}: ${command.help}`]);
         }
         commandGroups.forEach((value, key) => answer += `\n**${key}**\n`+'```\n'+value.join('\n')+'```');
         if (answer === '**Command list:**') {
