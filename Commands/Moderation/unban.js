@@ -12,7 +12,7 @@ async function run(msg, client, regexGroups) {
         const bannedUsers = await msg.guild.fetchBans(),
               bannedUserOpts = [];
         let bannedUsersTag = [];
-        bannedUsers.each(value => { bannedUsersTag.push(value.users.tag); });
+        bannedUsers.each(banInfo => { bannedUsersTag.push(banInfo.user.tag); });
         let d;
         if (regexGroups[2].includes('#')) d = strComp.findBestMatch(regexGroups[2], bannedUsersTag);
         else d = strComp.findBestMatch(regexGroups[2], bannedUsersTag.map(value => value = value.split('#')[0]));
