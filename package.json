@@ -1,9 +1,11 @@
 {
-    "dependencies": {
-        "discord.js": "^13.0.1",
-        "googleapis": "^84.0.0"
-    },
-    "devDependencies": {
-        "dotenv": "^10.0.0"
-    }
+  "dependencies": {
+    "discord.js": "^13.0.1",
+    "googleapis": "^84.0.0",
+    "express": "^4.17.1",
+    "string-similarity": "^4.0.2"
+  },
+  "engines": {
+    "node": "^16.6.1"
+  }
 }
