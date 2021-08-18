@@ -2,10 +2,12 @@
   "license": "MIT",
   "description": "LSL Community bot, not made for public use.",
   "dependencies": {
-    "discord.js": "^13.1.0",
     "@discordjs/builders": "^0.5.0",
-    "googleapis": "^84.0.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "discord-api-types": "^0.22.0",
+    "discord.js": "^13.1.0",
     "express": "^4.17.1",
+    "googleapis": "^84.0.0",
     "string-similarity": "^4.0.2"
   },
   "engines": {
