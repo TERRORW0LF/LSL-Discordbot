@@ -1,20 +1,13 @@
 'use strict'
 
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { run as submit } from '../files/submit/submit';
-
-export const command = {
-    data: shitfest,
-    execute: async function (interaction) {
-        return submit(interaction);
-    }
-}
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { run: submit } = require('../files/submit/submit');
 
 let shitfest = new SlashCommandBuilder()
-    .setName('Submit')
+    .setName('submit')
     .setDescription('Submit a run to the leaderboards.')
     .addIntegerOption(option => 
-        option.setName('Season')
+        option.setName('season')
         .setDescription('The season of the run.')
         .addChoice('Season 1', 1)
         .addChoice('Season 2', 2)
@@ -22,23 +15,30 @@ let shitfest = new SlashCommandBuilder()
         .addChoice('Season 4', 4)
         .setRequired(true))
     .addStringOption(option =>
-        option.setName('Category')
+        option.setName('category')
         .setDescription('The category of the run.')
         .addChoice('Gravspeed', 'gravspeed')
         .addChoice('Standard', 'standard')
         .setRequired(true))
     .addStringOption(option =>
-        option.setName('Map')
+        option.setName('map')
         .setDescription('The map of the run.')
         .setRequired(true))
 shitfest.options.push({
-    name: 'Time',
+    name: 'time',
     description: 'The time of the run.',
     type: 'NUMBER',
     required: true
 });
 shitfest
     .addStringOption(option =>
-        option.setName('Proof')
+        option.setName('proof')
         .setDescription('A link to video proof of the run.')
         .setRequired(true));
+
+module.exports = {
+    data: shitfest,
+    async execute (interaction) {
+        return submit(interaction);
+    }
+}

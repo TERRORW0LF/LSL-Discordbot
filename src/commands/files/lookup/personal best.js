@@ -1,5 +1,7 @@
 'use strict'
 
-export async function run (interaction) {
-    
+module.exports =  {
+    async run (interaction) {
+
+    }
 }
