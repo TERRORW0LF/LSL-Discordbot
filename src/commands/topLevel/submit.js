@@ -1,7 +1,7 @@
 'use strict'
 
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { run: submit } = require('../files/submit/submit');
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { run as submit } from '../files/submit/submit';
 
 let shitfest = new SlashCommandBuilder()
     .setName('submit')
@@ -36,7 +36,7 @@ shitfest
         .setDescription('A link to video proof of the run.')
         .setRequired(true));
 
-module.exports = {
+export const command = {
     data: shitfest,
     async execute (interaction) {
         return submit(interaction);

@@ -1,6 +1,7 @@
 {
   "license": "MIT",
   "description": "LSL Community bot, not made for public use.",
+  "type": "module",
   "dependencies": {
     "@discordjs/builders": "^0.5.0",
     "@discordjs/rest": "^0.1.0-canary.0",

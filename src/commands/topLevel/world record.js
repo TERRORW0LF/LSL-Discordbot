@@ -1,9 +1,9 @@
 'use strict'
 
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { run: wr } = require('../files/lookup/world record');
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { run as wr } from '../files/lookup/world record';
 
-module.exports = {
+export const command = {
     data: new SlashCommandBuilder()
         .setName('world_record')
         .setDescription('Show a world record')

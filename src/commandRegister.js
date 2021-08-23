@@ -1,15 +1,15 @@
 'use strict'
 
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types');
-const fs = require('fs');
-const { discordToken, clientId } = require('./config/config.js');
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord-api-types/v9';
+import fs from 'fs';
+import { discordToken, clientId } from './config/config.js';
 
 let commands = [];
-const commandFiles = fs.readdirSync('./commands/top level').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync('./src/commands/topLevel').filter(file => file.endsWith('.js'));
 
 for (const file in commandFiles) {
-    const command = require(`./commands/top level/${file}`);
+    const command = import(`./commands/topLevel/${file}`);
     commands.push(command.data.toJson());
 }
 
