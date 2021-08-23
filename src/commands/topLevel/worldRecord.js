@@ -1,7 +1,7 @@
 'use strict'
 
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { run as wr } from '../files/lookup/world record';
+import { run as wr } from '../files/lookup/worldRecord.js';
 
 export const command = {
     data: new SlashCommandBuilder()

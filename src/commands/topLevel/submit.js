@@ -1,7 +1,7 @@
 'use strict'
 
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { run as submit } from '../files/submit/submit';
+import { run as submit } from '../files/submit/submit.js';
 
 let shitfest = new SlashCommandBuilder()
     .setName('submit')

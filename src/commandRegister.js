@@ -9,8 +9,9 @@ let commands = [];
 const commandFiles = fs.readdirSync('./src/commands/topLevel').filter(file => file.endsWith('.js'));
 
 for (const file in commandFiles) {
-    const command = import(`./commands/topLevel/${file}`);
-    commands.push(command.data.toJson());
+    import(`./commands/topLevel/${file}`).then(({ command }) => {
+        commands.push(command.data.toJSON());
+    });
 }
 
 const rest = new REST({ version: 9 }).setToken(discordToken);
