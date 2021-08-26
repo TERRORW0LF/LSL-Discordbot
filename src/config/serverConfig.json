@@ -1,0 +1,50 @@
+{
+    "default": {
+
+    },
+    "678275066064142347": {
+
+    },
+    "574522788967088128": {
+        "features": {
+            "starboard": {
+                "enabled": true,
+                "count": 5,
+                "channel": ""
+            },
+            "streaming": {
+                "enabled": false,
+                "role": ""
+            },
+            "roles": {
+                "ids": []
+            }
+        },
+        "seasons": [1, 2, 3, 4],
+        "categories": ["Gravspeed", "Standard"],
+        "maps": [],
+        "sheets": {
+            "runs": "Record Log!A2:F",
+            "points": {
+                "total": "Points Sheet!G3:H",
+                "Standard": "Points Sheet!A3:B",
+                "Gravspeed": "Points Sheet!D3:E"
+            },
+            "1": "",
+            "2": "",
+            "3": "",
+            "4": ""
+        },
+        "forms": {
+            "name": "",
+            "category": "",
+            "map": "",
+            "time": "",
+            "proof": "",
+            "1": "",
+            "2": "",
+            "3": "",
+            "4": ""
+        }
+    }
+}
