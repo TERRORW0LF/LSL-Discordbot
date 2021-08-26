@@ -1,27 +1,31 @@
 'use strict'
 
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { run as wr } from '../files/lookup/worldRecord.js';
+import { run as place } from '../files/lookup/place.js';
 
 export const command = {
     data: new SlashCommandBuilder()
-        .setName('world_record')
-        .setDescription('Show a world record.')
+        .setName('place')
+        .setDescription('Show the run of a place.')
+        .addIntegerOption(option =>
+            option.setName('place')
+            .setDescription('The place of the run.')
+            .setRequired(true))
         .addIntegerOption(option =>
             option.setName('season')
-            .setDescription('The season of the run.')
+            .setDescription('The season of the place.')
             .addChoices([['Season 1', 1], ['Season 2', 2], ['Season 3', 3], ['Season 4', 4]])
             .setRequired(true))
         .addStringOption(option =>
             option.setName('category')
-            .setDescription('The category of the run.')
+            .setDescription('The category of the place.')
             .addChoices([['Standard', 'Standard'], ['Gravspeed', 'Gravspeed']])
             .setRequired(true))
         .addStringOption(option =>
             option.setName('map')
-            .setDescription('The map of the run.')
+            .setDescription('The map of the place.')
             .setRequired(true)),
     async execute (interaction) {
-        return wr(interaction);
+        return pb(interaction);
     }
 }
