@@ -16,13 +16,14 @@
                 "enabled": false,
                 "role": ""
             },
-            "roles": {
-                "ids": []
-            }
+            "autoRoles": []
         },
         "seasons": [1, 2, 3, 4],
-        "categories": ["Gravspeed", "Standard"],
-        "maps": [],
+        "categories": ["Standard", "Gravspeed"],
+        "maps": ["Hanamura", "Horizon Lunar Colony", "Paris", "Temple of Anubis", "Volskaya Industries", "Dorado", "Havana", "Junkertown","Rialto",
+            "Route 66", "Gibraltar", "Blizzard World", "Eichenwalde", "Hollywood", "King's Row","Numbani", "Busan Sanctuary", "Busan MEKA Base",
+            "Busan Downtown", "Ilios Well", "Ilios Ruins", "Ilios Lighthouse", "Lijiang Night Market", "Lijiang Garden", "Lijiang Control Center",
+            "Nepal Village", "Nepal Sanctum", "Nepal Shrine", "Oasis City Center", "Oasis University", "Oasis Gardens"],
         "sheets": {
             "runs": "Record Log!A2:F",
             "points": {
@@ -33,32 +34,32 @@
             "1": {
                 "1.00": "",
                 "1.41": "",
-                "1.50": ""
+                "1.50": "1cFZbWBmA95nOs9JEtFMrUtK73sGdnAndzuzDi2NorPs"
             },
             "2": {
-                "1.00": "",
+                "1.00": "1E5z9PjnUgtJwgSvtHAuaPKNVEtfpUsqAPAa9mbAoAKE",
                 "1.41": "",
                 "1.50": ""
             },
             "3": {
                 "1.41": "",
-                "1.50": ""
+                "1.50": "11jcNfRsduClM_-xz9IYMkA8_2UpcwGFnZroisKFs4Nk"
             },
             "4": {
                 "1.41": "",
-                "1.50": ""
+                "1.50": "13FOXjlSfdeQiz0TqO7thu_tDJj6vTZisPRzWbgO_tMw"
             }
         },
         "forms": {
-            "name": "",
-            "category": "",
-            "map": "",
-            "time": "",
-            "proof": "",
-            "1": "",
-            "2": "",
-            "3": "",
-            "4": ""
+            "user": "58689989",
+            "category": "933601746",
+            "map": "428387040",
+            "time": "927634646",
+            "proof": "774918022",
+            "1": "https://docs.google.com/forms/d/e/1FAIpQLSflZqu62M6iRfGMnb82KFeJG4qAQsIjhestw3GDQ5047GaQSQ/formResponse?&submit=SUBMIT",
+            "2": "https://docs.google.com/forms/d/e/1FAIpQLSdU79OL_S_CUfyUGlXoMTl3HO-eD0y3xD0O0UIt-PGmNWGDhA/formResponse?&submit=SUBMIT",
+            "3": "https://docs.google.com/forms/d/e/1FAIpQLSdcrdArKObFu0YMJ7QdhXwEfMqQ8ffn-HdA19RMcOdDZyb7LQ/formResponse?&submit=SUBMIT",
+            "4": "https://docs.google.com/forms/d/e/1FAIpQLSdBGvUIhCwd_WjyPrfqy3csl8_ZW--jDGZdmBFisU2xlYevkg/formResponse?&submit=SUBMIT"
         }
     }
 }
