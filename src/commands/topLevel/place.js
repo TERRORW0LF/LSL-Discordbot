@@ -24,7 +24,12 @@ export const command = {
         .addStringOption(option =>
             option.setName('map')
             .setDescription('The map of the place.')
-            .setRequired(true)),
+            .setRequired(true))
+        .addNumberOption(option =>
+            option.setName('patch')
+            .setDescription('The patch of the place.')
+            .addChoices([['Pre 1.41', 1.00], ['1.41-1.50', 1.41], ['Post 1.50', 1.50]])
+            .setRequired(false)),
     async execute (interaction) {
         return pb(interaction);
     }

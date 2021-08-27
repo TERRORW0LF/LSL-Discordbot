@@ -18,7 +18,13 @@ export const command = {
                 .setRequired(true))
             .addUserOption(option =>
                 option.setName('user')
-                .setDescription('The user whose rank to show.')))
+                .setDescription('The user whose rank to show.')
+                .setRequired(false))
+            .addNumberOption(option =>
+                option.setName('patch')
+                .setDescription('The patch of the leaderboard.')
+                .addChoices([['Pre 1.41', 1.00], ['1.41-1.50', 1.41], ['Post 1.50', 1.50]])
+                .setRequired(false)))
         .addSubcommand(sub =>
             sub.setName('category')
             .setDescription('Show a rank in a category')
@@ -35,6 +41,11 @@ export const command = {
             .addUserOption(option =>
                 option.setName('user')
                 .setDescription('The user whose rank to show.')
+                .setRequired(false))
+            .addNumberOption(option =>
+                option.setName('patch')
+                .setDescription('The patch of the leaderboard.')
+                .addChoices([['Pre 1.41', 1.00], ['1.41-1.50', 1.41], ['Post 1.50', 1.50]])
                 .setRequired(false))),
     async execute (interaction) {
         switch (interaction.getSubcommand(true)) {
