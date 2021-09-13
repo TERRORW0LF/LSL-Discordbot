@@ -2,7 +2,6 @@
 
 import { Embed } from '@discordjs/builders';
 import { getOptions, userSelect } from '../../../util/userInput.js';
-import { getErrorEmbed, getSuccessEmbed } from '../../../util/embeds.js';
 import { guildsConfig } from '../../../config/guildConfig.json';
 
 export async function run (interaction) {
@@ -12,7 +11,7 @@ export async function run (interaction) {
           time = interaction.options.getNumberOption('time', true),
           proof = interaction.options.getStringOption('proof', true),
           name = interaction.user.tag,
-          guildConfig = guildConfig[interaction.guildId];
+          guildConfig = guildsConfig[interaction.guildId];
     
     const mapOptions = getOptions(map, guildConfig.maps);
     if (!mapOptions) {
