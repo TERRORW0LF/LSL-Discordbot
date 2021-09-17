@@ -1,10 +1,9 @@
-'use strict'
-
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { run as rankSeason } from '../files/lookup/rankSeason';
 import { run as rankCategory } from '../files/lookup/rankCategory';
+import { CommandInteraction } from 'discord.js';
 
-export const command = {
+export default {
     data: new SlashCommandBuilder()
         .setName('rank')
         .setDescription('Show a rank.')
@@ -36,7 +35,7 @@ export const command = {
             .addStringOption(option =>
                 option.setName('category')
                 .setDescription('The category of the ranking.')
-                .addChoices(['Standard', 'Standard'], [['Gravspeed', 'Gravspeed']])
+                .addChoices([['Standard', 'Standard'], ['Gravspeed', 'Gravspeed']])
                 .setRequired(true))
             .addUserOption(option =>
                 option.setName('user')
@@ -47,8 +46,8 @@ export const command = {
                 .setDescription('The patch of the leaderboard.')
                 .addChoices([['Pre 1.41', 1.00], ['1.41-1.50', 1.41], ['Post 1.50', 1.50]])
                 .setRequired(false))),
-    async execute (interaction) {
-        switch (interaction.getSubcommand(true)) {
+    async execute (interaction: CommandInteraction) {
+        switch (interaction.options.getSubcommand(true)) {
             case 'season':
                 return rankSeason(interaction);
             case 'category':

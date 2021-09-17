@@ -1,20 +1,19 @@
-'use strict'
-
 import { REST } from '@discordjs/rest';
-import { Routes } from 'discord-api-types/v9';
+import { RESTPutAPIApplicationCommandsJSONBody, Routes } from 'discord-api-types/v9';
 import fs from 'fs';
-import { discordToken, clientId } from './config/config.js';
+import { ApplicationCommandExecuter } from '../typings/index.js';
+import { discordToken, clientId } from './config/config';
 
-let commands = [];
+let commands: RESTPutAPIApplicationCommandsJSONBody = [];
 const commandFiles = fs.readdirSync('./src/commands/topLevel').filter(file => file.endsWith('.js'));
 
 for (const file in commandFiles) {
-    import(`./commands/topLevel/${file}`).then(({ command }) => {
+    import(`./commands/topLevel/${file}`).then((command: ApplicationCommandExecuter) => {
         commands.push(command.data.toJSON());
     });
 }
 
-const rest = new REST({ version: 9 }).setToken(discordToken);
+const rest = new REST({ version: '9' }).setToken(discordToken);
 
 (async () => {
     try {

@@ -1,9 +1,8 @@
-'use strict'
-
 import { SlashCommandBuilder } from '@discordjs/builders';
+import { CommandInteraction } from 'discord.js';
 import { run as place } from '../files/lookup/place.js';
 
-export const command = {
+export default {
     data: new SlashCommandBuilder()
         .setName('place')
         .setDescription('Show the run of a place.')
@@ -30,7 +29,7 @@ export const command = {
             .setDescription('The patch of the place.')
             .addChoices([['Pre 1.41', 1.00], ['1.41-1.50', 1.41], ['Post 1.50', 1.50]])
             .setRequired(false)),
-    async execute (interaction) {
-        return pb(interaction);
+    async execute (interaction: CommandInteraction) {
+        return place(interaction);
     }
 }

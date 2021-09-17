@@ -1,10 +1,9 @@
-'use strict'
-
-import { discordToken, port } from './config/config.js';
-import https from 'https';
+import axios from 'axios';
 import express from 'express';
-import { Client, Intents, Collection } from 'discord.js';
-import fs from 'fs';
+import { Client, Intents } from 'discord.js';
+import { discordToken, port } from './config/config';
+import commandCollection from './commands/commandCollection';
+import guildsConfig from './config/guildConfig.json';
 
 process.on('unhandledRejection', () => {});
 process.on('uncaughtException', () => {});
@@ -27,37 +26,33 @@ app.post('/delete', (req, res) => {
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
     setInterval(() => {
-        https.get('https://lsl-discordbot-v12.herokuapp.com/ping');
-        https.get('https://discord-lsl.herokuapp.com/ping');
+        axios.get('https://lsl-discordbot-v12.herokuapp.com/ping').catch(err => { return });
+        axios.get('https://discord-lsl.herokuapp.com/ping').catch(err => { return });
     }, 600000);
 });
 
 // Discord Client
 const client = new Client({ restTimeOffset: 100, partials: ['USER', 'GUILD_MEMBER', 'MESSAGE', 'REACTION'], intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
 
-client.commands = new Collection();
-
-const commandFiles = fs.readdirSync('./commands/top level').filter(file => file.endsWith('.js'));
-for (let file of commandFiles) {
-    import command from `./commands/top level/${file}`;
-    client.commands.set(command.data.name, command);
-}
-
-client.once('ready', () => { 
+client.once('ready', (client) => { 
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
 client.on('interactionCreate', async interaction => {
     if (interaction.isCommand()) {
         try {
-            const command = client.commands.get(interaction.commandName);
+            if (!interaction.inGuild()) {
+                interaction.reply({ embeds: [{ description: 'This bot does not support DM commands.', color: guildsConfig.default.embeds.error }] });
+                return;
+            }
+            const command = commandCollection.get(interaction.commandName);
             if (!command) return;
             await command.execute(interaction);
         } catch (err) {
-            if (interaction.deferred)
-                interaction.editReply({content: '', embeds: [{description: 'Something went wrong!'}]});
+            if (interaction.deferred || interaction.replied)
+                interaction.editReply({ content: '', embeds: [{description: 'Something went wrong!', color: guildsConfig.default.embeds.error }] });
             else
-                interaction.reply({content: '', embeds: [{description: 'Something went wrong!'}]});
+                interaction.reply({ embeds: [{description: 'Something went wrong!', color: guildsConfig.default.embeds.error }] });
         }
     }
 });

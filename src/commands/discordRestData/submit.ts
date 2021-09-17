@@ -1,9 +1,8 @@
-'use strict'
-
 import { SlashCommandBuilder } from '@discordjs/builders';
+import { CommandInteraction } from 'discord.js';
 import { run as submit } from '../files/submit/submit.js';
 
-export const command = {
+export default {
     data: new SlashCommandBuilder()
         .setName('submit')
         .setDescription('Submit a run to the leaderboards.')
@@ -24,12 +23,12 @@ export const command = {
         .addNumberOption(option => 
             option.setName('time')
             .setDescription('The time of the run.')
-            .setRequired('true'))
+            .setRequired(true))
         .addStringOption(option =>
             option.setName('proof')
             .setDescription('A link to video proof of the run.')
             .setRequired(true)),
-    async execute (interaction) {
+    async execute (interaction: CommandInteraction) {
         return submit(interaction);
     }
 }

@@ -1,9 +1,8 @@
-'use strict'
-
 import { SlashCommandBuilder } from '@discordjs/builders';
+import { CommandInteraction } from 'discord.js';
 import { run as pb } from '../files/lookup/personalBest.js';
 
-export const command = {
+export default {
     data: new SlashCommandBuilder()
         .setName('personal_best')
         .setDescription('Show a personal best.')
@@ -30,7 +29,7 @@ export const command = {
             .setDescription('The patch of the run.')
             .addChoices([['Pre 1.41', 1.00], ['1.41-1.50', 1.41], ['Post 1.50', 1.50]])
             .setRequired(false)),
-    async execute (interaction) {
+    async execute (interaction: CommandInteraction) {
         return pb(interaction);
     }
 }

@@ -1,10 +1,9 @@
-'use strict'
-
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { run as deleteProof } from '../files/submit/deleteProof.js';
-import { run as deleteMap } from '../files/submit/deleteMap.js';
+import { run as deleteProof } from '../files/submit/deleteProof';
+import { run as deleteMap } from '../files/submit/deleteMap';
+import { CommandInteraction } from 'discord.js';
 
-export const command = {
+export default {
     data: new SlashCommandBuilder()
         .setName('delete')
         .setDescription('Delete a run.')
@@ -30,14 +29,14 @@ export const command = {
             .addStringOption(option =>
                 option.setName('category')
                 .setDescription('The category of the run.')
-                .addChoices(['Standard', 'Standard'], [['Gravspeed', 'Gravspeed']])
+                .addChoices([['Standard', 'Standard'], ['Gravspeed', 'Gravspeed']])
                 .setRequired(true))
             .addStringOption(option =>
                 option.setName('map')
                 .setDescription('The map of the run.')
                 .setRequired(true))),
-    async execute (interaction) {
-        switch (interaction.getSubcommand(true)) {
+    async execute (interaction: CommandInteraction) {
+        switch (interaction.options.getSubcommand(true)) {
             case 'proof':
                 return deleteProof(interaction);
             case 'map':
