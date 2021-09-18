@@ -18,7 +18,7 @@ export async function run (interaction: CommandInteraction) {
         const embed = new Embed()
             .setDescription(`No map found for input: **${map}**.`)
             .setColor(guildConfig.embeds.error);
-        interaction.reply({ embeds: [embed] });
+        interaction.editReply({ embeds: [embed] });
         return;
     }
     if (mapOptions.length !== 1) {
@@ -26,7 +26,7 @@ export async function run (interaction: CommandInteraction) {
             .setDescription(`Select the desired map from the options below.`)
             .setColor(guildConfig.embeds.waiting);
         const selectData = mapOptions.map(value => { return { label: value } })
-        await interaction.reply({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
         try {
             map = (await userSelect(interaction, { placeholder: 'Select the desired map.', data: selectData }))[0];
         } catch(e) {
@@ -50,17 +50,11 @@ export async function run (interaction: CommandInteraction) {
         const embed = new Embed()
             .setDescription(`Failed to correctly submit run.`)
             .setColor(guildConfig.embeds.error);
-        if (interaction.deferred || interaction.replied)
-            interaction.editReply({ embeds: [embed] });
-        else 
-            interaction.reply({ embeds: [embed] });
+        interaction.editReply({ embeds: [embed] });
         return;
     }
     const embed = new Embed()
         .setDescription('Successfully submitted run.')
         .setColor(guildConfig.embeds.success);
-    if (interaction.deferred ||interaction.replied)
-        interaction.editReply({ embeds: [embed] });
-    else
-        interaction.reply({ embeds: [embed] });
+    interaction.editReply({ embeds: [embed] });
 }

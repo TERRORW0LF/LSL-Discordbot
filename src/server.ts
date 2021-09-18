@@ -41,8 +41,9 @@ client.once('ready', (client) => {
 client.on('interactionCreate', async interaction => {
     if (interaction.isCommand()) {
         try {
+            interaction.deferReply();
             if (!interaction.inGuild()) {
-                interaction.reply({ embeds: [{ description: 'This bot does not support DM commands.', color: guildsConfig.default.embeds.error }] });
+                interaction.editReply({ embeds: [{ description: 'This bot does not support DM commands.', color: guildsConfig.default.embeds.error }] });
                 return;
             }
             const command = commandCollection.get(interaction.commandName);
