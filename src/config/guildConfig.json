@@ -53,23 +53,22 @@
                 "Standard": "Points Sheet!A3:B",
                 "Gravspeed": "Points Sheet!D3:E"
             },
-            "1": {
-                "1.00": "",
-                "1.41": "",
-                "1.50": "1cFZbWBmA95nOs9JEtFMrUtK73sGdnAndzuzDi2NorPs"
+            "1.00": {
+                "1": "1ZWHbz7dM0PIic-jMaDlzP7bIE9hXEGCb97N9_05RExA",
+                "2": "1W6Z2q453MqOl09133lvV97EyL5y2oa1sldZN8R2W2_s"
             },
-            "2": {
-                "1.00": "1E5z9PjnUgtJwgSvtHAuaPKNVEtfpUsqAPAa9mbAoAKE",
-                "1.41": "",
-                "1.50": ""
+            "1.41": {
+                "1": "1vWtqNrRQsuZFsp8-Y-CGBIppjSzSbR4bkN151lCzaQA",
+                "2": "1EMNogqAx53IKpyaFh9p136FtMTOuV4bM8cJzi7pcwiM",
+                "3": "15aNH2PcnyM_V3g_DsNfRGbHzWLWQgAqNY_xyG0vyqCo",
+                "4": "1-Ahc6PiIG0ufZ2lIM1vh7QPMyXo5x2_plMkwTRgLSKc"
             },
-            "3": {
-                "1.41": "",
-                "1.50": "11jcNfRsduClM_-xz9IYMkA8_2UpcwGFnZroisKFs4Nk"
-            },
-            "4": {
-                "1.41": "",
-                "1.50": "13FOXjlSfdeQiz0TqO7thu_tDJj6vTZisPRzWbgO_tMw"
+            "1.50": {
+                "1": "1cFZbWBmA95nOs9JEtFMrUtK73sGdnAndzuzDi2NorPs",
+                "2": "1E5z9PjnUgtJwgSvtHAuaPKNVEtfpUsqAPAa9mbAoAKE",
+                "3": "11jcNfRsduClM_-xz9IYMkA8_2UpcwGFnZroisKFs4Nk",
+                "4": "13FOXjlSfdeQiz0TqO7thu_tDJj6vTZisPRzWbgO_tMw",
+                "5": "1e6fpZYJeilUq-ZR7YStOe4rObBs-NqruWe7TE4sHYXA"
             }
         },
         "forms": {
@@ -81,7 +80,8 @@
             "1": "https://docs.google.com/forms/d/e/1FAIpQLSflZqu62M6iRfGMnb82KFeJG4qAQsIjhestw3GDQ5047GaQSQ/formResponse?&submit=SUBMIT",
             "2": "https://docs.google.com/forms/d/e/1FAIpQLSdU79OL_S_CUfyUGlXoMTl3HO-eD0y3xD0O0UIt-PGmNWGDhA/formResponse?&submit=SUBMIT",
             "3": "https://docs.google.com/forms/d/e/1FAIpQLSdcrdArKObFu0YMJ7QdhXwEfMqQ8ffn-HdA19RMcOdDZyb7LQ/formResponse?&submit=SUBMIT",
-            "4": "https://docs.google.com/forms/d/e/1FAIpQLSdBGvUIhCwd_WjyPrfqy3csl8_ZW--jDGZdmBFisU2xlYevkg/formResponse?&submit=SUBMIT"
+            "4": "https://docs.google.com/forms/d/e/1FAIpQLSdBGvUIhCwd_WjyPrfqy3csl8_ZW--jDGZdmBFisU2xlYevkg/formResponse?&submit=SUBMIT",
+            "5": "https://docs.google.com/forms/d/e/1FAIpQLSepF8u98qSB7d0sTwI1HayPB5GXSrUWcPlUP0MvzyMMsyYKng/formResponse?&submit=SUBMIT"
         }
     }
 }

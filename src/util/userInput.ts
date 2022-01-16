@@ -1,8 +1,13 @@
 import { Embed } from '@discordjs/builders';
-import { Message, MessageButton, MessageActionRow, MessageSelectMenu, CommandInteraction, MessageComponentInteraction, SelectMenuInteraction } from 'discord.js';
+import { ButtonStyle } from 'discord-api-types';
+import { Message, MessageButton, MessageActionRow, MessageSelectMenu, CommandInteraction, MessageComponentInteraction, SelectMenuInteraction, EmojiIdentifierResolvable } from 'discord.js';
 import { findBestMatch } from 'string-similarity';
-import { getOptionsCompareValues, UserSelectOptions, UserSelectOptionsOption } from '../../typings';
 import guildsConfig from '../config/guildConfig.json';
+
+export interface getOptionsCompareValues {
+    min?: number;
+    max?: number;
+}
 
 /**
  * Get similar options from an input.
@@ -27,6 +32,19 @@ function getOptions (input: string, options: string[], { min = 0.3, max = 0.8 }:
     return filteredOptions;
 }
 
+export interface UserSelectOptions {
+    placeholder?: string;
+    minValues?: number;
+    maxValues?: number;
+    data: UserSelectOptionsOption[];
+}
+
+export interface UserSelectOptionsOption {
+    label: string;
+    description?: string;
+    emoji?: EmojiIdentifierResolvable;
+}
+
 /**
  * Get user selection(s) of a list of options.
  * @param message The message to add the select to.
@@ -37,7 +55,8 @@ async function userSelect (message: Message | CommandInteraction, options: UserS
     let currPage = 0,
         maxPage = Math.floor(options.data.length / 25),
         pages: UserSelectOptionsOption[][] = [],
-        inputComponents: MessageActionRow[] = [];
+        inputComponents: MessageActionRow[] = [],
+        componentMessage: Message;
 
     // create option bundles of lenth 25
     for (let i=0; i++ ; i <= maxPage)
@@ -47,12 +66,12 @@ async function userSelect (message: Message | CommandInteraction, options: UserS
     let prevButton = new MessageButton()
             .setCustomId('previous')
             .setEmoji('⬅️')
-            .setStyle('PRIMARY')
+            .setStyle('SECONDARY')
             .setDisabled(true);
     let nextButton = new MessageButton()
             .setCustomId('next')
             .setEmoji('➡️')
-            .setStyle('PRIMARY');
+            .setStyle('SECONDARY');
     let selectMenu = new MessageSelectMenu()
         .setCustomId('options')
         .setPlaceholder(options.placeholder ?? 'Select your desired option(s)')
@@ -64,7 +83,6 @@ async function userSelect (message: Message | CommandInteraction, options: UserS
     inputComponents.push(new MessageActionRow().setComponents(selectMenu));
 
     // add components to interaction / message
-    let componentMessage: Message;
     if (message instanceof CommandInteraction) {
         if (message.deferred || message.replied) {
             componentMessage = (await message.fetchReply()) as Message;
@@ -81,10 +99,13 @@ async function userSelect (message: Message | CommandInteraction, options: UserS
         await componentMessage.edit({ components: inputComponents });
     }
     // get user seleted option(s)
-    let userId = (message instanceof CommandInteraction ? message.user.id : message.author.id);
+    const userId = (message instanceof CommandInteraction ? message.user.id : message.author.id);
     const filter = (interaction: MessageComponentInteraction) => (interaction.customId === 'previous' || interaction.customId === 'next' || interaction.customId === 'options') && interaction.user.id === userId;
     while (true) {
-        let interaction = await componentMessage.awaitMessageComponent({ filter, time: 30_000 });
+        const interaction = await componentMessage.awaitMessageComponent({ filter, time: 30_000 }).catch(err => {
+            componentMessage.edit({ components: [] });
+            throw err;
+        });
         switch (interaction.customId) {
             case ('previous'):
                 currPage--;
@@ -107,4 +128,43 @@ async function userSelect (message: Message | CommandInteraction, options: UserS
     }
 }
 
-export { getOptions, userSelect };
+/**
+ * Gets a desired amount of options from UserSelectOptions.
+ * @param optionsName The name of the options e.g. category.
+ * @param interaction The interaction this option select belongs to.
+ * @param selectOptions Options for the user select process.
+ * @returns Option or array of options depending on selectOptions.
+ */
+async function getDesiredOptionLength(optionsName: string, interaction: CommandInteraction, selectOptions: UserSelectOptions): Promise<string[]> {
+    selectOptions.minValues = selectOptions.minValues ?? 1;
+    selectOptions.maxValues = selectOptions.maxValues ?? 1;
+    const guildConfig = (guildsConfig as any)[interaction.guildId ?? 'default'];
+
+    if (selectOptions.data.length < selectOptions.minValues) {
+        const embed = new Embed()
+            .setDescription(`No ${optionsName} found for your input.`)
+            .setColor(guildConfig.embeds.error);
+        interaction.editReply({ embeds: [embed] });
+        throw 'Not enough options provided.';
+    }
+    if (selectOptions.data.length <= selectOptions.maxValues) {
+        return selectOptions.data.map((_, index) => `${index}`);
+    }
+    const embed = new Embed()
+        .setDescription(`Select the desired ${optionsName} from the options below.`)
+        .setColor(guildConfig.embeds.waiting);
+    await interaction.editReply({ embeds: [embed] });
+    try {
+        const values = await userSelect(interaction, selectOptions);
+        return values;
+
+    } catch(e) {
+        const embed = new Embed()
+            .setDescription('No map selected.')
+            .setColor(guildConfig.embeds.error);
+        interaction.editReply({ embeds: [embed] });
+        throw `unable to narrow down options.`;
+    }
+}
+
+export { getOptions, userSelect, getDesiredOptionLength };

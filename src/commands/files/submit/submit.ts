@@ -1,7 +1,7 @@
 import { CommandInteraction } from 'discord.js';
 import { Embed } from '@discordjs/builders';
 import axios from 'axios';
-import { getOptions, userSelect } from '../../../util/userInput.js';
+import { getDesiredOptionLength, getOptions } from '../../../util/userInput.js';
 import guildsConfig from '../../../config/guildConfig.json';
 
 export async function run (interaction: CommandInteraction) {
@@ -13,29 +13,14 @@ export async function run (interaction: CommandInteraction) {
           guildConfig = (guildsConfig as any)[interaction.guildId ?? 'default'];
     let map = interaction.options.getString('map', true);
     
-    const mapOptions = getOptions(map, guildConfig.maps);
-    if (!mapOptions.length) {
-        const embed = new Embed()
-            .setDescription(`No map found for input: **${map}**.`)
-            .setColor(guildConfig.embeds.error);
-        interaction.editReply({ embeds: [embed] });
+    const mapOptions = getOptions(map, guildConfig.maps),
+          selectData = mapOptions.map(value => { return { label: value } });
+    
+    try {    
+        const mapIndexes = await getDesiredOptionLength('map', interaction, { placeholder: 'Select the desired map', data: selectData });
+        map = mapOptions[parseInt(mapIndexes[0])];
+    } catch (err) {
         return;
-    }
-    if (mapOptions.length !== 1) {
-        const embed = new Embed()
-            .setDescription(`Select the desired map from the options below.`)
-            .setColor(guildConfig.embeds.waiting);
-        const selectData = mapOptions.map(value => { return { label: value } })
-        await interaction.editReply({ embeds: [embed] });
-        try {
-            map = (await userSelect(interaction, { placeholder: 'Select the desired map.', data: selectData }))[0];
-        } catch(e) {
-            const embed = new Embed()
-                .setDescription('No map selected.')
-                .setColor(guildConfig.embeds.error);
-            interaction.editReply({ embeds: [embed] });
-            return;
-        }
     }
 
     const submitConfig = guildConfig.forms;

@@ -4,19 +4,19 @@
   "type": "module",
   "types": "./typings/index.d.ts",
   "dependencies": {
-    "@discordjs/builders": "^0.6.0",
-    "@discordjs/rest": "^0.1.0-canary.0",
-    "discord-api-types": "^0.22.0",
-    "discord.js": "github:ImRodry/discord.js#types-apiembed-again",
+    "@discordjs/builders": "^0.11.0",
+    "@discordjs/rest": "^0.2.0-canary.0",
+    "discord-api-types": "^0.26.1",
+    "discord.js": "^13.6.0",
     "axios": "^0.21.4",
     "express": "^4.17.1",
-    "googleapis": "^84.0.0",
-    "string-similarity": "^4.0.2"
+    "googleapis": "^92.0.0",
+    "string-similarity": "^4.0.4"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/string-similarity": "^4.0.0",
-    "typescript": "^4.4.3"
+    "typescript": "^4.5.4"
   },
   "engines": {
     "node": "^16.6.1",

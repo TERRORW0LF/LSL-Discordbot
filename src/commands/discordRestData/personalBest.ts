@@ -1,15 +1,16 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction } from 'discord.js';
+import { ApplicationCommandExecuter } from '../commandCollection.js';
 import { run as pb } from '../files/lookup/personalBest.js';
 
-export default {
+const command: ApplicationCommandExecuter = {
     data: new SlashCommandBuilder()
         .setName('personal_best')
         .setDescription('Show a personal best.')
         .addIntegerOption(option =>
             option.setName('season')
             .setDescription('The season of the run.')
-            .addChoices([['Season 1', 1], ['Season 2', 2], ['Season 3', 3], ['Season 4', 4]])
+            .addChoices([['Season 1', 1], ['Season 2', 2], ['Season 3', 3], ['Season 4', 4], ['Season 5', 5]])
             .setRequired(true))
         .addStringOption(option =>
             option.setName('category')
@@ -26,10 +27,12 @@ export default {
             .setRequired(false))
         .addNumberOption(option =>
             option.setName('patch')
-            .setDescription('The patch of the run.')
+            .setDescription('The patch the run was submitted under.')
             .addChoices([['Pre 1.41', 1.00], ['1.41-1.50', 1.41], ['Post 1.50', 1.50]])
-            .setRequired(false)),
+            .setRequired(false)).toJSON(),
     async execute (interaction: CommandInteraction) {
         return pb(interaction);
     }
 }
+
+export default command;

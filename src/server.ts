@@ -41,7 +41,7 @@ client.once('ready', (client) => {
 client.on('interactionCreate', async interaction => {
     if (interaction.isCommand()) {
         try {
-            interaction.deferReply();
+            await interaction.deferReply();
             if (!interaction.inGuild()) {
                 interaction.editReply({ embeds: [{ description: 'This bot does not support DM commands.', color: guildsConfig.default.embeds.error }] });
                 return;
@@ -50,10 +50,7 @@ client.on('interactionCreate', async interaction => {
             if (!command) return;
             await command.execute(interaction);
         } catch (err) {
-            if (interaction.deferred || interaction.replied)
-                interaction.editReply({ content: '', embeds: [{description: 'Something went wrong!', color: guildsConfig.default.embeds.error }] });
-            else
-                interaction.reply({ embeds: [{description: 'Something went wrong!', color: guildsConfig.default.embeds.error }] });
+            interaction.editReply({ content: '', embeds: [{description: 'Something went wrong!', color: guildsConfig.default.embeds.error }] });
         }
     }
 });

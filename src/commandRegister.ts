@@ -1,7 +1,7 @@
+import fs from 'node:fs';
 import { REST } from '@discordjs/rest';
 import { RESTPutAPIApplicationCommandsJSONBody, Routes } from 'discord-api-types/v9';
-import fs from 'fs';
-import { ApplicationCommandExecuter } from '../typings/index.js';
+import { ApplicationCommandExecuter } from '../src/commands/commandCollection';
 import { discordToken, clientId } from './config/config';
 
 let commands: RESTPutAPIApplicationCommandsJSONBody = [];
@@ -9,7 +9,7 @@ const commandFiles = fs.readdirSync('./src/commands/topLevel').filter(file => fi
 
 for (const file in commandFiles) {
     import(`./commands/topLevel/${file}`).then((command: ApplicationCommandExecuter) => {
-        commands.push(command.data.toJSON());
+        commands.push(command.data);
     });
 }
 

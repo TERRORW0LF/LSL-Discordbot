@@ -2,8 +2,9 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { run as rankSeason } from '../files/lookup/rankSeason';
 import { run as rankCategory } from '../files/lookup/rankCategory';
 import { CommandInteraction } from 'discord.js';
+import { ApplicationCommandExecuter } from '../commandCollection';
 
-export default {
+const command: ApplicationCommandExecuter = {
     data: new SlashCommandBuilder()
         .setName('rank')
         .setDescription('Show a rank.')
@@ -13,7 +14,7 @@ export default {
             .addIntegerOption(option =>
                 option.setName('season')
                 .setDescription('The season of the ranking.')
-                .addChoices([['Season 1', 1], ['Season 2', 2], ['Season 3', 3], ['Season 4', 4]])
+                .addChoices([['Season 1', 1], ['Season 2', 2], ['Season 3', 3], ['Season 4', 4], ['Season 5', 5]])
                 .setRequired(true))
             .addUserOption(option =>
                 option.setName('user')
@@ -21,7 +22,7 @@ export default {
                 .setRequired(false))
             .addNumberOption(option =>
                 option.setName('patch')
-                .setDescription('The patch of the leaderboard.')
+                .setDescription('The patch of the ranking.')
                 .addChoices([['Pre 1.41', 1.00], ['1.41-1.50', 1.41], ['Post 1.50', 1.50]])
                 .setRequired(false)))
         .addSubcommand(sub =>
@@ -30,7 +31,7 @@ export default {
             .addIntegerOption(option =>
                 option.setName('season')
                 .setDescription('The season of the ranking.')
-                .addChoices([['Season 1', 1], ['Season 2', 2], ['Season 3', 3], ['Season 4', 4]])
+                .addChoices([['Season 1', 1], ['Season 2', 2], ['Season 3', 3], ['Season 4', 4], ['Season 5', 5]])
                 .setRequired(true))
             .addStringOption(option =>
                 option.setName('category')
@@ -43,9 +44,9 @@ export default {
                 .setRequired(false))
             .addNumberOption(option =>
                 option.setName('patch')
-                .setDescription('The patch of the leaderboard.')
+                .setDescription('The patch of the ranking.')
                 .addChoices([['Pre 1.41', 1.00], ['1.41-1.50', 1.41], ['Post 1.50', 1.50]])
-                .setRequired(false))),
+                .setRequired(false))).toJSON(),
     async execute (interaction: CommandInteraction) {
         switch (interaction.options.getSubcommand(true)) {
             case 'season':
@@ -57,3 +58,5 @@ export default {
         }
     }
 }
+
+export default command;
