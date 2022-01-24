@@ -1,5 +1,4 @@
 import { Embed } from '@discordjs/builders';
-import { ButtonStyle } from 'discord-api-types';
 import { Message, MessageButton, MessageActionRow, MessageSelectMenu, CommandInteraction, MessageComponentInteraction, SelectMenuInteraction, EmojiIdentifierResolvable } from 'discord.js';
 import { findBestMatch } from 'string-similarity';
 import guildsConfig from '../config/guildConfig.json';
@@ -32,6 +31,7 @@ function getOptions (input: string, options: string[], { min = 0.3, max = 0.8 }:
     return filteredOptions;
 }
 
+
 export interface UserSelectOptions {
     placeholder?: string;
     minValues?: number;
@@ -51,54 +51,63 @@ export interface UserSelectOptionsOption {
  * @param options Options for the select menu.
  * @returns An array of selected values.
  */
-async function userSelect (message: Message | CommandInteraction, options: UserSelectOptions): Promise<string[]> {
+async function userSelect (message: Message | CommandInteraction, options: UserSelectOptions): Promise<number[]> {
+    options.minValues ??= 1;
+    options.maxValues ??= 1;
+    const guildConfig = ((guildsConfig as any)[message.guildId ?? 'default'] ?? guildsConfig.default);
+    const PAGE_LENGTH = 25;
     let currPage = 0,
         maxPage = Math.floor(options.data.length / 25),
-        pages: UserSelectOptionsOption[][] = [],
-        inputComponents: MessageActionRow[] = [],
+        pages: (UserSelectOptionsOption & { value: string})[][] = [],
         componentMessage: Message;
 
-    // create option bundles of lenth 25
+    // create option bundles of lenth PAGE_LENGTH
     for (let i=0; i++ ; i <= maxPage)
-        pages.push(options.data.slice(i*25, (i+1)*25));
+        pages.push(options.data.slice(i*PAGE_LENGTH, (i+1)*PAGE_LENGTH)
+                               .map((option, index) => { return { label: option.label, 
+                                                                  value: `${currPage * PAGE_LENGTH + index}`, 
+                                                                  description: option.description, 
+                                                                  emoji: option.emoji } }));
 
     // create message components
     let prevButton = new MessageButton()
-            .setCustomId('previous')
-            .setEmoji('⬅️')
-            .setStyle('SECONDARY')
-            .setDisabled(true);
+        .setCustomId('previous')
+        .setEmoji('⬅️')
+        .setStyle('SECONDARY')
+        .setDisabled(true);
     let nextButton = new MessageButton()
-            .setCustomId('next')
-            .setEmoji('➡️')
-            .setStyle('SECONDARY');
+        .setCustomId('next')
+        .setEmoji('➡️')
+        .setStyle('SECONDARY');
+    let doneButton = new MessageButton()
+        .setCustomId('done')
+        .setEmoji('✅')
+        .setStyle('SUCCESS');
     let selectMenu = new MessageSelectMenu()
         .setCustomId('options')
         .setPlaceholder(options.placeholder ?? 'Select your desired option(s)')
-        .setOptions(pages[currPage].map((option, index) => { return { label: option.label, value: `${currPage * 25 + index}`, description: option.description, emoji: option.emoji } }))
-        .setMinValues(options.minValues ?? 1)
-        .setMaxValues(options.maxValues ?? 1);
-    if (options.data.length > 25)
-        inputComponents.push(new MessageActionRow().setComponents(prevButton, nextButton));
-    inputComponents.push(new MessageActionRow().setComponents(selectMenu));
+        .setOptions(pages[currPage])
+        .setMinValues(options.minValues)
+        .setMaxValues(options.maxValues);
+    const buttonRow = new MessageActionRow().setComponents(prevButton, nextButton, doneButton);
 
     // add components to interaction / message
-    if (message instanceof CommandInteraction) {
-        if (message.deferred || message.replied) {
+    const selectEmbed = new Embed()
+        .setDescription(`Select ${options.minValues} to ${options.maxValues} items.`)
+        .setColor(guildConfig.embedColors.info);
+    const errorEmbed = new Embed()
+        .setDescription('Not enough or too many items selected.\nSelection has been reset.')
+        .setColor(guildConfig.embedColors.error);
+    if (message instanceof CommandInteraction)
+        if (message.deferred || message.replied)
             componentMessage = (await message.fetchReply()) as Message;
-            message.editReply({ components: inputComponents });
-        }
-        else {
-            const embed = new Embed()
-                .setDescription('Slection needed to move forward.')
-                .setColor((guildsConfig as any)[message.guildId ?? 'default'].embedColors.info);
-            componentMessage = (await message.reply({ embeds: [embed], components: inputComponents, fetchReply: true })) as Message;
-        }
-    } else {
+        else
+            componentMessage = (await message.deferReply({ fetchReply: true })) as Message;
+    else
         componentMessage = message;
-        await componentMessage.edit({ components: inputComponents });
-    }
+    await componentMessage.edit({ content: '', embeds: [selectEmbed], components: pages.length > 1 ? [buttonRow, new MessageActionRow().setComponents(selectMenu)] : [new MessageActionRow().setComponents(selectMenu)] });
     // get user seleted option(s)
+    let values: number[] = [];
     const userId = (message instanceof CommandInteraction ? message.user.id : message.author.id);
     const filter = (interaction: MessageComponentInteraction) => (interaction.customId === 'previous' || interaction.customId === 'next' || interaction.customId === 'options') && interaction.user.id === userId;
     while (true) {
@@ -111,22 +120,42 @@ async function userSelect (message: Message | CommandInteraction, options: UserS
                 currPage--;
                 if (currPage === 0) prevButton.setDisabled(true);
                 nextButton.setDisabled(false);
-                selectMenu.setOptions(pages[currPage].map((option, index) => { return { label: option.label, value: `${currPage * 25 + index}`, description: option.description, emoji: option.emoji }}));
-                componentMessage.edit({ components: [new MessageActionRow().setComponents(nextButton, prevButton), new MessageActionRow().setComponents(selectMenu)] });
+                selectMenu.setOptions(pages[currPage]);
+                componentMessage.edit({ components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
                 break;
             case ('next'):
                 currPage++;
                 if (currPage === maxPage) nextButton.setDisabled(true);
                 nextButton.setDisabled(false);
-                selectMenu.setOptions(pages[currPage].map((option, index) => { return { label: option.label, value: `${currPage * 25 + index}`, description: option.description, emoji: option.emoji }}));
-                componentMessage.edit({ components: [new MessageActionRow().setComponents(nextButton, prevButton), new MessageActionRow().setComponents(selectMenu)] });
+                selectMenu.setOptions(pages[currPage]);
+                componentMessage.edit({ components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
                 break;
+            case ('done'):
+                if (values.length >= options.minValues && values.length <= options.maxValues) {
+                    values = [];
+                    selectMenu.setOptions(pages[0]);
+                    componentMessage.edit({ embeds: [errorEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
+                }
+                return values;
             case ('options'):
-                componentMessage.edit({ components: [] });
-                return (interaction as SelectMenuInteraction).values;
+                if (pages.length > 1)
+                    for (const value of (interaction as SelectMenuInteraction).values)
+                        if (!values.includes(parseInt(value)))
+                            values.push(parseInt(value));
+                if (values.length == options.maxValues) {
+                    componentMessage.edit({ components: [] });
+                    return (interaction as SelectMenuInteraction).values.map(str => parseInt(str));
+                }
+                if (values.length > options.maxValues) {
+                    values = [];
+                    selectMenu.setOptions(pages[0]);
+                    componentMessage.edit({ embeds: [errorEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
+                }
+                break;
         }
     }
 }
+
 
 /**
  * Gets a desired amount of options from UserSelectOptions.
@@ -135,7 +164,7 @@ async function userSelect (message: Message | CommandInteraction, options: UserS
  * @param selectOptions Options for the user select process.
  * @returns Option or array of options depending on selectOptions.
  */
-async function getDesiredOptionLength(optionsName: string, interaction: CommandInteraction, selectOptions: UserSelectOptions): Promise<string[]> {
+async function getDesiredOptionLength(optionsName: string, interaction: CommandInteraction, selectOptions: UserSelectOptions): Promise<number[]> {
     selectOptions.minValues = selectOptions.minValues ?? 1;
     selectOptions.maxValues = selectOptions.maxValues ?? 1;
     const guildConfig = (guildsConfig as any)[interaction.guildId ?? 'default'];
@@ -148,7 +177,7 @@ async function getDesiredOptionLength(optionsName: string, interaction: CommandI
         throw 'Not enough options provided.';
     }
     if (selectOptions.data.length <= selectOptions.maxValues) {
-        return selectOptions.data.map((_, index) => `${index}`);
+        return selectOptions.data.map((_, index) => index);
     }
     const embed = new Embed()
         .setDescription(`Select the desired ${optionsName} from the options below.`)
@@ -166,5 +195,6 @@ async function getDesiredOptionLength(optionsName: string, interaction: CommandI
         throw `unable to narrow down options.`;
     }
 }
+
 
 export { getOptions, userSelect, getDesiredOptionLength };

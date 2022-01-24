@@ -11,7 +11,7 @@ export async function getGoogleAuth(): Promise<JWT> {
     token = new JWT(
         googleEmail,
         undefined,
-        googleKey.replace(/\\n/gm, '\n'),
+        googleKey,
     ['https://www.googleapis.com/auth/spreadsheets']
     );
     await token.authorize();
@@ -19,23 +19,19 @@ export async function getGoogleAuth(): Promise<JWT> {
 }
 
 export interface SheetRun {
-    date: string,
+    date: Date,
     username: string,
-    time: string,
+    time: number,
     proof: string,
-    game?: string,
-    patch?: string,
-    season?: string,
-    category?: string,
-    map?: string
+    patch: string,
+    season: string,
+    category: string,
+    map: string
 }
 
-export interface runOptions {
-    game?: string,
-    patch?: string,
-    season?: string,
-    category?: string,
-    map?: string
+export interface sheetOptions {
+    patch: string,
+    season: string
 }
 
 /**
@@ -43,11 +39,11 @@ export interface runOptions {
  * @param guildId Id of guild which the submits belong to.
  * @param options Identifiers for the submits.
  */
-async function getAllSubmits(guildId: string, options: runOptions): Promise<SheetRun[]> {
+async function getAllSubmits(guildId: string, options: sheetOptions): Promise<SheetRun[]> {
     const client = google.sheets('v4'),
           token = await getGoogleAuth(),
-          guildConfig = (guildsConfig as any)[guildId ?? 'default'],
-          sheetId: string | undefined = Object.values(options).reduce((prev, curr) => prev?.[curr], guildConfig.sheets);
+          guildConfig = (guildsConfig as any)[guildId],
+          sheetId: string | undefined = Object.values(options).reduce((prev, curr) => prev?.[curr], guildConfig?.sheets);
     if (!sheetId) throw 'No sheet belonging to options found.';
 
     const rawRuns = (await client.spreadsheets.values.get({
