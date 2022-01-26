@@ -190,7 +190,7 @@ async function userSelect (message: Message | CommandInteraction, options: UserS
  * @param selectOptions Options for the user select process.
  * @returns An array of user picked options in the range of minValue and maxValue of selectOptions.
  */
-async function getDesiredOptionLength(optionsName: string, interaction: CommandInteraction, selectOptions: UserSelectOptions): Promise<number[]> {
+async function getDesiredOptionLength(optionsName: string, interaction: CommandInteraction, selectOptions: UserSelectOptions): Promise<number[] | null> {
     selectOptions.minValues = selectOptions.minValues ?? 1;
     selectOptions.maxValues = selectOptions.maxValues ?? 1;
     const guildConfig = (guildsConfig as any)[interaction.guildId ?? 'default'];
@@ -205,12 +205,16 @@ async function getDesiredOptionLength(optionsName: string, interaction: CommandI
     if (selectOptions.data.length <= selectOptions.maxValues) {
         return selectOptions.data.map((_, index) => index);
     }
-    const embed = new Embed()
-        .setDescription(`Select the desired ${optionsName} from the options below.`)
-        .setColor(guildConfig.embeds.waiting);
-    await interaction.editReply({ embeds: [embed] });
-    const values = await userSelect(interaction, selectOptions);
-    return values;
+    try {
+        const values = await userSelect(interaction, selectOptions)
+        return values;
+    } catch (err) {
+        const embed = new Embed()
+            .setDescription('Failed to select options.')
+            .setColor(guildConfig.embedColors.error);
+        interaction.editReply({ embeds: [embed] });
+        return null;
+    }
 }
 
 
