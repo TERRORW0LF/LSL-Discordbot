@@ -1,3 +1,4 @@
+import axios from "axios";
 import { JWT } from "google-auth-library";
 import { google } from "googleapis";
 import { googleEmail, googleKey } from "../config/config";
@@ -136,5 +137,37 @@ async function deleteSubmit(guildId: string, sheetOptions: SheetOptions, submitI
 }
 
 
+interface SubmitOptions {
+    user: string,
+    season: string,
+    category: string,
+    map: string,
+    time: number,
+    proof: string
+}
+
+/**
+ * Submits a given submit to the sheets by making a forms submit.
+ * @param guildId The id of the guild the submit came from.
+ * @param submit The submit object.
+ */
+async function submit(guildId: string, submit: SubmitOptions): Promise<void> {
+    const guildFormsConfig = (guildsConfig as any)[guildId]?.forms;
+    if (!guildFormsConfig)
+        throw 'No submit form found';
+    
+    let submitURL = guildFormsConfig[submit.season];
+    submitURL += `&entry.${guildFormsConfig.user}=${encodeURIComponent(submit.user)}`
+    submitURL += `&entry.${guildFormsConfig.category}=${encodeURIComponent(submit.category)}`
+    submitURL += `&entry.${guildFormsConfig.map}=${encodeURIComponent(submit.map)}`
+    submitURL += `&entry.${guildFormsConfig.time}=${encodeURIComponent(submit.time.toFixed(2))}`
+    submitURL += `&entry.${guildFormsConfig.proof}=${encodeURIComponent(submit.proof)}`
+
+    const res = await axios.get(submitURL);
+    if (res.status !== 200)
+        throw 'Submit failed';
+}
+
+
 export { Run, SheetOptions };
-export { getJsDateFromSerialNumber, getSerialNumberFromJsDate, getAllSubmits, deleteSubmit };
+export { getJsDateFromSerialNumber, getSerialNumberFromJsDate, getAllSubmits, deleteSubmit, submit };
