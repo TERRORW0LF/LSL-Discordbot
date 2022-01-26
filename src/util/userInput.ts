@@ -92,12 +92,12 @@ async function userSelect (message: Message | CommandInteraction, options: UserS
     const buttonRow = new MessageActionRow().setComponents(prevButton, nextButton, doneButton);
 
     // add components to interaction / message
-    const selectEmbed = new Embed()
+    const infoEmbed = new Embed()
         .setDescription(`Select ${options.minValues} to ${options.maxValues} items.`)
         .setColor(guildConfig.embedColors.info);
-    const errorEmbed = new Embed()
-        .setDescription('Not enough or too many items selected.\nSelection has been reset.')
-        .setColor(guildConfig.embedColors.error);
+    const selectionEmbed = new Embed()
+        .setTitle('Selections:')
+        .setColor(guildConfig.embedColors.warning);
     if (message instanceof CommandInteraction)
         if (message.deferred || message.replied)
             componentMessage = (await message.fetchReply()) as Message;
@@ -105,15 +105,18 @@ async function userSelect (message: Message | CommandInteraction, options: UserS
             componentMessage = (await message.deferReply({ fetchReply: true })) as Message;
     else
         componentMessage = message;
-    await componentMessage.edit({ content: '', embeds: [selectEmbed], components: pages.length > 1 ? [buttonRow, new MessageActionRow().setComponents(selectMenu)] : [new MessageActionRow().setComponents(selectMenu)] });
+    await componentMessage.edit({ content: '', embeds: [infoEmbed, selectionEmbed], components: pages.length > 1 ? [buttonRow, new MessageActionRow().setComponents(selectMenu)] : [new MessageActionRow().setComponents(selectMenu)] });
     // get user seleted option(s)
     let values: number[] = [];
     const userId = (message instanceof CommandInteraction ? message.user.id : message.author.id);
     const filter = (interaction: MessageComponentInteraction) => (interaction.customId === 'previous' || interaction.customId === 'next' || interaction.customId === 'options') && interaction.user.id === userId;
     while (true) {
-        const interaction = await componentMessage.awaitMessageComponent({ filter, time: 30_000 }).catch(err => {
-            componentMessage.edit({ components: [] });
-            throw err;
+        const interaction = await componentMessage.awaitMessageComponent({ filter, time: 30_000 }).catch(reason => {
+            const errorEmbed = new Embed()
+                .setDescription('Failed to select options in time.')
+                .setColor(guildConfig.embedColors.error);
+            componentMessage.edit({ embeds: [errorEmbed], components: [] });
+            throw 'Failed to select in time.';
         });
         switch (interaction.customId) {
             case ('previous'):
@@ -131,25 +134,48 @@ async function userSelect (message: Message | CommandInteraction, options: UserS
                 componentMessage.edit({ components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
                 break;
             case ('done'):
-                if (values.length >= options.minValues && values.length <= options.maxValues) {
+                if (values.length < options.minValues || values.length > options.maxValues) {
                     values = [];
                     selectMenu.setOptions(pages[0]);
-                    componentMessage.edit({ embeds: [errorEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
-                }
-                return values;
+                    selectionEmbed.setDescription('');
+                    const errorEmbed = new Embed()
+                        .setDescription('Not enough or too many items selected.\nSelection has been reset.')
+                        .setColor(guildConfig.embedColors.warning);
+                    componentMessage.edit({ embeds: [errorEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
+                } else
+                    return values;
             case ('options'):
-                if (pages.length > 1)
-                    for (const value of (interaction as SelectMenuInteraction).values)
-                        if (!values.includes(parseInt(value)))
-                            values.push(parseInt(value));
-                if (values.length == options.maxValues) {
-                    componentMessage.edit({ components: [] });
-                    return (interaction as SelectMenuInteraction).values.map(str => parseInt(str));
-                }
+                const selectValues = (interaction as SelectMenuInteraction).values;
+                selectionEmbed.setDescription(selectionEmbed.description + '\n' 
+                    + pages[currPage].filter(option => selectValues.includes(option.value) && !values.includes(parseInt(option.value)))
+                                     .map((elem, index) => `${values.length + index + 1}: ${elem.label}`)
+                                     .join('\n'));
+                for (const value of selectValues)
+                    if (!values.includes(parseInt(value)))
+                        values.push(parseInt(value));
                 if (values.length > options.maxValues) {
                     values = [];
                     selectMenu.setOptions(pages[0]);
-                    componentMessage.edit({ embeds: [errorEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
+                    selectionEmbed.setDescription('');
+                    const errorEmbed = new Embed()
+                        .setDescription('Too many items selected.\nSelection has been reset.')
+                        .setColor(guildConfig.embedColors.warning);
+                    componentMessage.edit({ embeds: [errorEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
+                    break;
+                }
+                if (values.length > options.minValues) {
+                    const confirmEmbed = new Embed()
+                        .setDescription('Received selection.')
+                        .setColor(guildConfig.embedColors.success);
+                    componentMessage.edit({ embeds: [confirmEmbed, selectionEmbed], components: [] });
+                    return selectValues.map(str => parseInt(str));
+                }
+                if (pages.length == 1) {
+                    const errorEmbed = new Embed()
+                        .setDescription('Not enough items selected.')
+                        .setColor(guildConfig.embedColors.error);
+                        componentMessage.edit({ embeds: [errorEmbed], components: [] });
+                        throw "Not enough selections.";
                 }
                 break;
         }
@@ -162,7 +188,7 @@ async function userSelect (message: Message | CommandInteraction, options: UserS
  * @param optionsName The name of the options e.g. category.
  * @param interaction The interaction this option select belongs to.
  * @param selectOptions Options for the user select process.
- * @returns Option or array of options depending on selectOptions.
+ * @returns An array of user picked options in the range of minValue and maxValue of selectOptions.
  */
 async function getDesiredOptionLength(optionsName: string, interaction: CommandInteraction, selectOptions: UserSelectOptions): Promise<number[]> {
     selectOptions.minValues = selectOptions.minValues ?? 1;
@@ -183,17 +209,8 @@ async function getDesiredOptionLength(optionsName: string, interaction: CommandI
         .setDescription(`Select the desired ${optionsName} from the options below.`)
         .setColor(guildConfig.embeds.waiting);
     await interaction.editReply({ embeds: [embed] });
-    try {
-        const values = await userSelect(interaction, selectOptions);
-        return values;
-
-    } catch(e) {
-        const embed = new Embed()
-            .setDescription('No map selected.')
-            .setColor(guildConfig.embeds.error);
-        interaction.editReply({ embeds: [embed] });
-        throw `unable to narrow down options.`;
-    }
+    const values = await userSelect(interaction, selectOptions);
+    return values;
 }
 
 

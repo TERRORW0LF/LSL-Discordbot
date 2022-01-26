@@ -48,6 +48,7 @@
             "Nepal Village", "Nepal Sanctum", "Nepal Shrine", "Oasis City Center", "Oasis University", "Oasis Gardens"],
         "sheets": {
             "runs": "Record Log!A2:F",
+            "sheetID": "1091303763",
             "points": {
                 "total": "Points Sheet!G3:H",
                 "Standard": "Points Sheet!A3:B",
