@@ -46,7 +46,7 @@ function getSerialNumberFromJsDate(date: Date): number {
 
 
 interface Run {
-    submitID: number,
+    submitId: number,
     date: Date,
     username: string,
     time: number,
@@ -96,19 +96,19 @@ async function getAllSubmits(guildId: string, options: SheetOptions): Promise<Ru
                                                      season: options.season,
                                                      category: row[4],
                                                      map: row[5],
-                                                     submitID: row[6] }; 
+                                                     submitId: row[6] }; 
     }));
     return returnRuns;
 }
 
 
 /**
- * Deletes the submit belonging to the submitID at the specified sheet.
+ * Deletes the submit belonging to the submitId at the specified sheet.
  * @param guildId The id of the guild to get the sheet of.
  * @param sheetOptions The options the describe the sheet.
- * @param submitID The id of the submit.
+ * @param submitId The id of the submit.
  */
-async function deleteSubmit(guildId: string, sheetOptions: SheetOptions, submitID: number): Promise<void> {
+async function deleteSubmit(guildId: string, sheetOptions: SheetOptions, submitId: number): Promise<void> {
     const client = google.sheets('v4'),
           token = await getGoogleAuth(),
           guildConfig = (guildsConfig as any)[guildId],
@@ -116,7 +116,7 @@ async function deleteSubmit(guildId: string, sheetOptions: SheetOptions, submitI
     if (!sheetId) throw 'No sheet belonging to options found.';
 
     const submits = await getAllSubmits(guildId, sheetOptions);
-    const row = submits.findIndex(elem => elem.submitID == submitID) + 2;
+    const row = submits.findIndex(elem => elem.submitId == submitId) + 2;
 
     await client.spreadsheets.batchUpdate({
         spreadsheetId: sheetId,
@@ -132,6 +132,37 @@ async function deleteSubmit(guildId: string, sheetOptions: SheetOptions, submitI
                     }
                 }
             }]
+        }
+    });
+}
+
+
+async function submitNameChange(guildId: string, sheetOptions: SheetOptions, oldName: string, newName: string): Promise<void> {
+    const client = google.sheets('v4'),
+          token = await getGoogleAuth(),
+          guildConfig = (guildsConfig as any)[guildId],
+          sheetId: string | undefined = Object.values(sheetOptions).reduce((prev, curr) => prev?.[curr], guildConfig?.sheets);
+    if (!sheetId) throw 'No sheet belonging to options found.';
+
+    const submits = await getAllSubmits(guildId, sheetOptions);
+    const updatedSubmits = submits.map(submit => {
+        return [getSerialNumberFromJsDate(submit.date), 
+                submit.username === oldName ? newName : submit.username,
+                submit.time,
+                submit.proof,
+                submit.map,
+                submit.category,
+                submit.submitId]
+    });
+
+    await client.spreadsheets.values.update({
+        spreadsheetId: sheetId,
+        auth: token,
+        valueInputOption: 'RAW',
+        requestBody: {
+            majorDimension: 'ROWS',
+            range: guildConfig.sheets.runs,
+            values: updatedSubmits
         }
     });
 }
@@ -170,4 +201,4 @@ async function submit(guildId: string, submit: SubmitOptions): Promise<void> {
 
 
 export { Run, SheetOptions };
-export { getJsDateFromSerialNumber, getSerialNumberFromJsDate, getAllSubmits, deleteSubmit, submit };
+export { getJsDateFromSerialNumber, getSerialNumberFromJsDate, getAllSubmits, deleteSubmit, submit, submitNameChange };
