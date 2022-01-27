@@ -5,6 +5,8 @@ import { getDesiredOptionLength, getOptions } from '../../../util/userInput.js';
 import guildsConfig from '../../../config/guildConfig.json';
 
 export async function run (interaction: CommandInteraction) {
+    interaction.deferReply();
+
     const season = interaction.options.getInteger('season', true),
           category = interaction.options.getString('category', true),
           time = interaction.options.getNumber('time', true),
@@ -16,12 +18,10 @@ export async function run (interaction: CommandInteraction) {
     const mapOptions = getOptions(map, guildConfig.maps),
           selectData = mapOptions.map(value => { return { label: value } });
     
-    try {    
-        const mapIndexes = await getDesiredOptionLength('map', interaction, { placeholder: 'Select the desired map', data: selectData });
-        map = mapOptions[parseInt(mapIndexes[0])];
-    } catch (err) {
+    const mapIndexes = await getDesiredOptionLength('map', interaction, { placeholder: 'Select the desired map', data: selectData });
+    if (!mapIndexes)
         return;
-    }
+    map = mapOptions[mapIndexes[0]];
 
     const submitConfig = guildConfig.forms;
     let submitUrl = submitConfig[season]
