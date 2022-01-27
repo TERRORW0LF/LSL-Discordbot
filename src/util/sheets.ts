@@ -159,9 +159,9 @@ async function submitNameChange(guildId: string, sheetOptions: SheetOptions, old
         spreadsheetId: sheetId,
         auth: token,
         valueInputOption: 'RAW',
+        range: guildConfig.sheets.runs,
         requestBody: {
             majorDimension: 'ROWS',
-            range: guildConfig.sheets.runs,
             values: updatedSubmits
         }
     });
