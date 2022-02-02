@@ -251,7 +251,6 @@ async function userDecision(channel: TextBasedChannel, decision: string, options
     const denyButton = new MessageButton().setCustomId('accept').setEmoji('❌').setStyle('DANGER');
     const message = await channel.send({ embeds: [embed], components: [new MessageActionRow().setComponents(acceptButton, denyButton)]});
     const collector = message.createMessageComponentCollector({ filter: componentFilter({ users: options.userWhitelist, roles: options.roleWhitelist }), time: options.time ?? 1_800_000 });
-    // TODO: Update to components, add accept / dismiss counter to footer.
     collector.on('collect', interaction => {
         if (interaction.customId == 'accept' && !acceptUsers.includes(interaction.user.id)) {
             accepts++;
