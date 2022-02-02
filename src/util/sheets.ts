@@ -146,13 +146,7 @@ async function submitNameChange(guildId: string, sheetOptions: SheetOptions, old
 
     const submits = await getAllSubmits(guildId, sheetOptions);
     const updatedSubmits = submits.map(submit => {
-        return [getSerialNumberFromJsDate(submit.date), 
-                submit.username === oldName ? newName : submit.username,
-                submit.time,
-                submit.proof,
-                submit.map,
-                submit.category,
-                submit.submitId]
+        return [null, submit.username === oldName ? newName : submit.username]
     });
 
     await client.spreadsheets.values.update({

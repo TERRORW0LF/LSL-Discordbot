@@ -30,7 +30,9 @@
                 "enabled": false,
                 "role": ""
             },
-            "autoRoles": []
+            "autoRoles": [],
+            "moderation": [],
+            "admin": []
         },
         "embeds": {
             "working": 0,

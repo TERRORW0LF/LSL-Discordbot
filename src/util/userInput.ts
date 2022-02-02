@@ -1,5 +1,6 @@
 import { Embed } from '@discordjs/builders';
-import { Message, MessageButton, MessageActionRow, MessageSelectMenu, CommandInteraction, MessageComponentInteraction, SelectMenuInteraction, EmojiIdentifierResolvable } from 'discord.js';
+import { APIEmbed } from 'discord-api-types';
+import { Message, MessageButton, MessageActionRow, MessageSelectMenu, CommandInteraction, MessageComponentInteraction, SelectMenuInteraction, EmojiIdentifierResolvable, MessageReaction, User, TextBasedChannel, CollectorFilter, GuildMember, GuildTextBasedChannel } from 'discord.js';
 import { findBestMatch } from 'string-similarity';
 import guildsConfig from '../config/guildConfig.json';
 
@@ -187,26 +188,26 @@ async function userSelect (message: Message | CommandInteraction, options: UserS
  * Gets a desired amount of options from UserSelectOptions.
  * @param optionsName The name of the options e.g. category.
  * @param interaction The interaction this option select belongs to.
- * @param selectOptions Options for the user select process.
+ * @param options Options for the user select process.
  * @returns An array of user picked options in the range of minValue and maxValue of selectOptions.
  */
-async function getDesiredOptionLength(optionsName: string, interaction: CommandInteraction, selectOptions: UserSelectOptions): Promise<number[] | null> {
-    selectOptions.minValues = selectOptions.minValues ?? 1;
-    selectOptions.maxValues = selectOptions.maxValues ?? 1;
+async function getDesiredOptionLength(optionsName: string, interaction: CommandInteraction, options: UserSelectOptions): Promise<number[] | null> {
+    options.minValues = options.minValues ?? 1;
+    options.maxValues = options.maxValues ?? 1;
     const guildConfig = (guildsConfig as any)[interaction.guildId ?? 'default'];
 
-    if (selectOptions.data.length < selectOptions.minValues) {
+    if (options.data.length < options.minValues) {
         const embed = new Embed()
             .setDescription(`No ${optionsName} found for your input.`)
             .setColor(guildConfig.embeds.error);
         interaction.editReply({ embeds: [embed] });
         throw 'Not enough options provided.';
     }
-    if (selectOptions.data.length <= selectOptions.maxValues) {
-        return selectOptions.data.map((_, index) => index);
+    if (options.data.length <= options.maxValues) {
+        return options.data.map((_, index) => index);
     }
     try {
-        const values = await userSelect(interaction, selectOptions)
+        const values = await userSelect(interaction, options)
         return values;
     } catch (err) {
         const embed = new Embed()
@@ -218,4 +219,123 @@ async function getDesiredOptionLength(optionsName: string, interaction: CommandI
 }
 
 
-export { getOptions, userSelect, getDesiredOptionLength };
+interface DecisionOptions {
+    guildId?: string,
+    approvalNumber?: number,
+    userWhitelist?: string[],
+    roleWhitelist?: string[],
+    time?: number,
+    trueOnTie?: boolean
+}
+
+/**
+ * Sends a message with the decision and waits for users to accept or dimiss it.
+ * @param channel The channel to create the decision in.
+ * @param decision The decision text to vote on.
+ * @param options The Options for the collector.
+ * @returns A boolean indicating whether the decision got accepted or not.
+ */
+async function userDecision(channel: TextBasedChannel, decision: string, options: DecisionOptions = {}): Promise<boolean> {
+    options.trueOnTie ??= true;
+    options.guildId ??= "default";
+    options.approvalNumber ??= 1;
+    let accepts = 0;
+    let dismisses = 0;
+    let acceptUsers: string[] = [];
+    let dismissUsers: string[] = [];
+    const guildConfig = (guildsConfig as any)[options.guildId];
+    const embed = new Embed().setColor(guildConfig.embedColors.info)
+        .setDescription(decision)
+        .setFooter({ text: "accepts: 0 | dismisses: 0" });
+    const acceptButton = new MessageButton().setCustomId('accept').setEmoji('✅').setStyle('SUCCESS');
+    const denyButton = new MessageButton().setCustomId('accept').setEmoji('❌').setStyle('DANGER');
+    const message = await channel.send({ embeds: [embed], components: [new MessageActionRow().setComponents(acceptButton, denyButton)]});
+    const collector = message.createMessageComponentCollector({ filter: componentFilter({ users: options.userWhitelist, roles: options.roleWhitelist }), time: options.time ?? 1_800_000 });
+    // TODO: Update to components, add accept / dismiss counter to footer.
+    collector.on('collect', interaction => {
+        if (interaction.customId == 'accept' && !acceptUsers.includes(interaction.user.id)) {
+            accepts++;
+            if (dismissUsers.includes(interaction.user.id)) {
+                dismissUsers.splice(dismissUsers.indexOf(interaction.user.id), 1);
+                dismisses--;
+            }
+            embed.setFooter({ text: `accepts: ${accepts} | dismisse: ${dismisses}`});
+            message.edit({ embeds: [embed] });
+        }
+        else if(interaction.customId == 'dismiss' && !dismissUsers.includes(interaction.user.id)) {
+            dismisses++;
+            if (acceptUsers.includes(interaction.user.id)) {
+                acceptUsers.splice(acceptUsers.indexOf(interaction.user.id), 1);
+                accepts--;
+            }
+            embed.setFooter({ text: `accepts: ${accepts} | dismisse: ${dismisses}`});
+            message.edit({ embeds: [embed] });
+        }
+        if (accepts + dismisses >= (options.approvalNumber as number))
+            collector.stop("limit");
+    });
+    return new Promise((resolve, reject) => {
+        collector.once('end', (_collected, reason) => {
+            if (reason == "time") {
+                message.edit({ embeds: [{ color: guildConfig.embedColors.error, description: "Not enough people made a decision in time." }] });
+                resolve(false);
+            }
+            if (accepts > dismisses) {
+                message.edit({ embeds: [{ color: guildConfig.embedColors.success, description: `Decision greenlighted with **${accepts}** to ${dismisses} votes.` }] });
+                resolve(true);
+            }
+            if (accepts < dismisses) {
+                message.edit({ embeds: [{ color: guildConfig.embedColors.error, description: `Decision denied with **${accepts}** to ${dismisses} votes.` }] });
+                resolve(false);
+            }
+            message.edit({ embeds: [{ color: options.trueOnTie ? guildConfig.embedColors.success : guildConfig.embedColors.error, 
+                description: `Decision ${options.trueOnTie ? "greenlighted" : "denied"} with a tie of **${accepts}** to ${dismisses} votes.` }] });
+            resolve(!!options.trueOnTie);
+        });
+    });
+}
+
+
+interface ModDecisionOptions {
+    time?: number,
+    approvalNumber?: number
+}
+
+/**
+ * Sends a message with the decision and waits for moderators to accept or dimiss it.
+ * @param channel The channel to create the decision in.
+ * @param decision The decision text to vote on.
+ * @param options The Options for the collector.
+ * @returns A boolean indicating whether the decision got accepted or not.
+ */
+async function modDecision(channel: GuildTextBasedChannel, decision: string, options: ModDecisionOptions = {}): Promise<boolean> {
+    const guildConfig = (guildsConfig as any)[channel.guildId];
+    const roles: string[] = guildConfig.features.moderation;
+    return userDecision(channel, decision, {...options, guildId: channel.guildId, roleWhitelist: roles });
+}
+
+
+interface ComponentFilterOptions {
+    users?: string[],
+    roles?: string[]
+}
+
+/**
+ * Creates and returns a component filter to use in a component collector.
+ * @param options Options for the component filter.
+ * @returns A component filter to use in a component collector.
+ */
+function componentFilter(options: ComponentFilterOptions = {}): CollectorFilter<[MessageComponentInteraction]> {
+    return async (component: MessageComponentInteraction): Promise<boolean> => {
+        if (!options.users && !options.roles) return true;
+        let inUsers = !options.users || options.users.includes(component.user.id);
+        if (!options.roles || !component.inGuild()) return inUsers;
+        const member = component.member as GuildMember;
+        let inRoles = member.roles.cache.hasAny(...options.roles);
+        if (options.users) return inUsers || inRoles;
+        return inRoles;
+    }
+}
+
+
+export { getOptions, userSelect, getDesiredOptionLength, userDecision, modDecision, componentFilter };
