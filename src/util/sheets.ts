@@ -30,7 +30,7 @@ export async function getGoogleAuth(): Promise<JWT> {
  * @param serialNumber The Serial Number date representation.
  * @returns A Date object with the same time as the Serial Number.
  */
-function getJsDateFromSerialNumber(serialNumber: number): Date {
+export function getJsDateFromSerialNumber(serialNumber: number): Date {
     return new Date((serialNumber - (25567 + 2))*86400*1000);
 }
 
@@ -40,12 +40,12 @@ function getJsDateFromSerialNumber(serialNumber: number): Date {
  * @param date The Date object to get the Serial Number representation of.
  * @returns A Serial Number representing the time of the Date object.
  */
-function getSerialNumberFromJsDate(date: Date): number {
+export function getSerialNumberFromJsDate(date: Date): number {
     return (25567.0 + 2) + date.getTime() / (86400*1000);
 }
 
 
-interface Run {
+export interface Run {
     submitId: number,
     date: Date,
     username: string,
@@ -57,7 +57,7 @@ interface Run {
     map: string
 }
 
-interface SheetOptions {
+export interface SheetOptions {
     patch: string,
     season: string
 }
@@ -68,7 +68,7 @@ interface SheetOptions {
  * @param options Identifiers for the submits.
  * @returns The promisified runs on the sheet.
  */
-async function getAllSubmits(guildId: string, options: SheetOptions): Promise<Run[]> {
+export async function getAllSubmits(guildId: string, options: SheetOptions): Promise<Run[]> {
     const client = google.sheets('v4'),
           token = await getGoogleAuth(),
           guildConfig = (guildsConfig as any)[guildId],
@@ -108,7 +108,7 @@ async function getAllSubmits(guildId: string, options: SheetOptions): Promise<Ru
  * @param sheetOptions The options the describe the sheet.
  * @param submitId The id of the submit.
  */
-async function deleteSubmit(guildId: string, sheetOptions: SheetOptions, submitId: number): Promise<void> {
+export async function deleteSubmit(guildId: string, sheetOptions: SheetOptions, submitId: number): Promise<void> {
     const client = google.sheets('v4'),
           token = await getGoogleAuth(),
           guildConfig = (guildsConfig as any)[guildId],
@@ -137,7 +137,7 @@ async function deleteSubmit(guildId: string, sheetOptions: SheetOptions, submitI
 }
 
 
-async function submitNameChange(guildId: string, sheetOptions: SheetOptions, oldName: string, newName: string): Promise<void> {
+export async function submitNameChange(guildId: string, sheetOptions: SheetOptions, oldName: string, newName: string): Promise<void> {
     const client = google.sheets('v4'),
           token = await getGoogleAuth(),
           guildConfig = (guildsConfig as any)[guildId],
@@ -162,7 +162,7 @@ async function submitNameChange(guildId: string, sheetOptions: SheetOptions, old
 }
 
 
-interface SubmitOptions {
+export interface SubmitOptions {
     user: string,
     season: string,
     category: string,
@@ -176,7 +176,7 @@ interface SubmitOptions {
  * @param guildId The id of the guild the submit came from.
  * @param submit The submit object.
  */
-async function submit(guildId: string, submit: SubmitOptions): Promise<void> {
+export async function submit(guildId: string, submit: SubmitOptions): Promise<void> {
     const guildFormsConfig = (guildsConfig as any)[guildId]?.forms;
     if (!guildFormsConfig)
         throw 'No submit form found';
@@ -192,7 +192,3 @@ async function submit(guildId: string, submit: SubmitOptions): Promise<void> {
     if (res.status !== 200)
         throw 'Submit failed';
 }
-
-
-export { Run, SheetOptions };
-export { getJsDateFromSerialNumber, getSerialNumberFromJsDate, getAllSubmits, deleteSubmit, submit, submitNameChange };
