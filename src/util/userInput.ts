@@ -1,8 +1,8 @@
 import { Embed } from '@discordjs/builders';
-import { APIEmbed } from 'discord-api-types';
-import { Message, MessageButton, MessageActionRow, MessageSelectMenu, CommandInteraction, MessageComponentInteraction, SelectMenuInteraction, EmojiIdentifierResolvable, MessageReaction, User, TextBasedChannel, CollectorFilter, GuildMember, GuildTextBasedChannel } from 'discord.js';
+import { Message, MessageButton, MessageActionRow, MessageSelectMenu, CommandInteraction, MessageComponentInteraction, SelectMenuInteraction, EmojiIdentifierResolvable, TextBasedChannel, CollectorFilter, GuildMember } from 'discord.js';
 import { findBestMatch } from 'string-similarity';
 import guildsConfig from '../config/guildConfig.json';
+
 
 export interface getOptionsCompareValues {
     min?: number;
@@ -273,7 +273,7 @@ async function userDecision(channel: TextBasedChannel, decision: string, options
         if (accepts + dismisses >= (options.approvalNumber as number))
             collector.stop("limit");
     });
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _reject) => {
         collector.once('end', (_collected, reason) => {
             if (reason == "time") {
                 message.edit({ embeds: [{ color: guildConfig.embedColors.error, description: "Not enough people made a decision in time." }] });
@@ -307,7 +307,8 @@ interface ModDecisionOptions {
  * @param options The Options for the collector.
  * @returns A boolean indicating whether the decision got accepted or not.
  */
-async function modDecision(channel: GuildTextBasedChannel, decision: string, options: ModDecisionOptions = {}): Promise<boolean> {
+async function modDecision(channel: TextBasedChannel, decision: string, options: ModDecisionOptions = {}): Promise<boolean> {
+    if (channel.type === "DM") return userDecision(channel, decision);
     const guildConfig = (guildsConfig as any)[channel.guildId];
     const roles: string[] = guildConfig.features.moderation;
     return userDecision(channel, decision, {...options, guildId: channel.guildId, roleWhitelist: roles });
