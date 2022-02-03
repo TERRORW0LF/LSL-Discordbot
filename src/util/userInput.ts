@@ -16,7 +16,7 @@ export interface getOptionsCompareValues {
  * @param compareValues Min and max match accuracy.
  * @returns Possible options for the input order by similarity, if any.
  */
-function getOptions (input: string, options: string[], { min = 0.3, max = 0.8 }: getOptionsCompareValues = {}): string[] {
+export function getOptions (input: string, options: string[], { min = 0.3, max = 0.8 }: getOptionsCompareValues = {}): string[] {
     if (!options || !options.length) throw new Error('no options defined.');
     const lowerCaseOptions = options.map(x => x.toLowerCase());
     const data = findBestMatch(input.toLowerCase(), lowerCaseOptions);
@@ -52,7 +52,7 @@ export interface UserSelectOptionsOption {
  * @param options Options for the select menu.
  * @returns An array of selected values.
  */
-async function userSelect (message: Message | CommandInteraction, options: UserSelectOptions): Promise<number[]> {
+export async function userSelect (message: Message | CommandInteraction, options: UserSelectOptions): Promise<number[]> {
     options.minValues ??= 1;
     options.maxValues ??= 1;
     const guildConfig = ((guildsConfig as any)[message.guildId ?? 'default'] ?? guildsConfig.default);
@@ -191,7 +191,7 @@ async function userSelect (message: Message | CommandInteraction, options: UserS
  * @param options Options for the user select process.
  * @returns An array of user picked options in the range of minValue and maxValue of selectOptions.
  */
-async function getDesiredOptionLength(optionsName: string, interaction: CommandInteraction, options: UserSelectOptions): Promise<number[] | null> {
+export async function getDesiredOptionLength(optionsName: string, interaction: CommandInteraction, options: UserSelectOptions): Promise<number[] | null> {
     options.minValues = options.minValues ?? 1;
     options.maxValues = options.maxValues ?? 1;
     const guildConfig = (guildsConfig as any)[interaction.guildId ?? 'default'];
@@ -219,7 +219,7 @@ async function getDesiredOptionLength(optionsName: string, interaction: CommandI
 }
 
 
-interface DecisionOptions {
+export interface DecisionOptions {
     guildId?: string,
     approvalNumber?: number,
     userWhitelist?: string[],
@@ -235,7 +235,7 @@ interface DecisionOptions {
  * @param options The Options for the collector.
  * @returns A boolean indicating whether the decision got accepted or not.
  */
-async function userDecision(channel: TextBasedChannel, decision: string, options: DecisionOptions = {}): Promise<boolean> {
+export async function userDecision(channel: TextBasedChannel, decision: string, options: DecisionOptions = {}): Promise<boolean> {
     options.trueOnTie ??= true;
     options.guildId ??= "default";
     options.approvalNumber ??= 1;
@@ -295,7 +295,7 @@ async function userDecision(channel: TextBasedChannel, decision: string, options
 }
 
 
-interface ModDecisionOptions {
+export interface ModDecisionOptions {
     time?: number,
     approvalNumber?: number
 }
@@ -307,7 +307,7 @@ interface ModDecisionOptions {
  * @param options The Options for the collector.
  * @returns A boolean indicating whether the decision got accepted or not.
  */
-async function modDecision(channel: TextBasedChannel, decision: string, options: ModDecisionOptions = {}): Promise<boolean> {
+export async function modDecision(channel: TextBasedChannel, decision: string, options: ModDecisionOptions = {}): Promise<boolean> {
     if (channel.type === "DM") return userDecision(channel, decision);
     const guildConfig = (guildsConfig as any)[channel.guildId];
     const roles: string[] = guildConfig.features.moderation;
@@ -315,7 +315,7 @@ async function modDecision(channel: TextBasedChannel, decision: string, options:
 }
 
 
-interface ComponentFilterOptions {
+export interface ComponentFilterOptions {
     users?: string[],
     roles?: string[]
 }
@@ -325,7 +325,7 @@ interface ComponentFilterOptions {
  * @param options Options for the component filter.
  * @returns A component filter to use in a component collector.
  */
-function componentFilter(options: ComponentFilterOptions = {}): CollectorFilter<[MessageComponentInteraction]> {
+export function componentFilter(options: ComponentFilterOptions = {}): CollectorFilter<[MessageComponentInteraction]> {
     return async (component: MessageComponentInteraction): Promise<boolean> => {
         if (!options.users && !options.roles) return true;
         let inUsers = !options.users || options.users.includes(component.user.id);
@@ -336,6 +336,3 @@ function componentFilter(options: ComponentFilterOptions = {}): CollectorFilter<
         return inRoles;
     }
 }
-
-
-export { getOptions, userSelect, getDesiredOptionLength, userDecision, modDecision, componentFilter };
