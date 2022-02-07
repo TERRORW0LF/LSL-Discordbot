@@ -42,33 +42,46 @@ type Category = "Gravspeed" | "Standard";
  * @param data The members and their respective points.
  * @returns A boolean indicating whether all roles were applied.
  */
-export async function roleUpdates(guild: Guild, season: number, category: Category, data: Collection<string, Points>): Promise<void> {
+export async function roleUpdates(guild: Guild, season: number, data: Collection<string, Points>): Promise<void> {
     const guildCfg = (guildsConfig as any)[guild.id];
     if (!guildCfg) return;
 
     const rolesObj = guildCfg.roles["" + season];
-    const firstPlaceRole = guildCfg.roles?.firstPlace["" + season][category];
+    const firstPlaceStandardRole = guildCfg.roles?.firstPlace["" + season].Standard;
+    const firstPlaceGravspeedRole = guildCfg.roles?.firstPlace["" + season].Gravspeed;
     const roles = new Collection<number, string>();
     for (const role in rolesObj)
         roles.set(parseInt(role), rolesObj[role]);
     
     const members = await getMembersByName(guild, [...data.keys()]);
-    let oldFirstPlace: MemberWithPoints | null = null;
-    let newFirstPlace: MemberWithPoints | null = null;
-    let newFirstPlacePoints = 0;
+    let oldFirstPlaceStandard: MemberWithPoints | null = null;
+    let newFirstPlaceStandard: MemberWithPoints | null = null;
+    let oldFirstPlaceGravspeed: MemberWithPoints | null = null;
+    let newFirstPlaceGravspeed: MemberWithPoints | null = null;
+    let newFirstPlaceStandardPoints = 0;
+    let newFirstPlaceGravspeedPoints = 0;
     for (const memberName of data.keys()) {
-        let isNewFirstPlace = false;
-        if ((data.get(memberName) as Points)[category] > newFirstPlacePoints) {
-            newFirstPlacePoints = (data.get(memberName) as Points)[category];
-            isNewFirstPlace = true;
+        let isNewFirstPlaceStandard = false;
+        let isNewFirstPlaceGravspeed = false;
+        if ((data.get(memberName) as Points).Standard > newFirstPlaceStandardPoints) {
+            newFirstPlaceStandardPoints = (data.get(memberName) as Points).Standard;
+            isNewFirstPlaceStandard = true;
+        }
+        if ((data.get(memberName) as Points).Gravspeed > newFirstPlaceGravspeedPoints) {
+            newFirstPlaceGravspeedPoints = (data.get(memberName) as Points).Gravspeed;
+            isNewFirstPlaceGravspeed = true;
         }
         const guildMember = members.find(member => member.user.tag === memberName);
         if (!guildMember) return;
         const member: MemberWithPoints = { member: guildMember, points: data.get(memberName) as Points };
-        if (isNewFirstPlace)
-            newFirstPlace = member;
-        if (member.member.roles.cache.has(firstPlaceRole))
-            oldFirstPlace = member;
+        if (isNewFirstPlaceStandard)
+            newFirstPlaceStandard = member;
+        if (isNewFirstPlaceGravspeed)
+            newFirstPlaceGravspeed = member;
+        if (member.member.roles.cache.has(firstPlaceStandardRole))
+            oldFirstPlaceStandard = member;
+        if (member.member.roles.cache.has(firstPlaceGravspeedRole))
+            oldFirstPlaceGravspeed = member;
         const newRole = getRole(Math.max(member.points.Standard, member.points.Gravspeed), roles);
         for (const role in roles)
             if (role != newRole && member.member.roles.cache.has(role)) {
@@ -78,9 +91,13 @@ export async function roleUpdates(guild: Guild, season: number, category: Catego
         if (newRole && !member.member.roles.cache.has(newRole))
             member.member.roles.add(newRole);
     }
-    if (oldFirstPlace != newFirstPlace) {
-        oldFirstPlace?.member.roles.remove(firstPlaceRole);
-        newFirstPlace?.member.roles.add(firstPlaceRole);
+    if (oldFirstPlaceStandard != newFirstPlaceStandard) {
+        oldFirstPlaceStandard?.member.roles.remove(firstPlaceStandardRole);
+        newFirstPlaceStandard?.member.roles.add(firstPlaceStandardRole);
+    }
+    if (oldFirstPlaceGravspeed != newFirstPlaceGravspeed) {
+        oldFirstPlaceGravspeed?.member.roles.remove(firstPlaceGravspeedRole);
+        newFirstPlaceGravspeed?.member.roles.add(firstPlaceGravspeedRole);
     }
 }
 
