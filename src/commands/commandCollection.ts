@@ -1,11 +1,10 @@
 import fs from 'node:fs';
-import Collection from "@discordjs/collection";
-import { Interaction } from "discord.js";
+import { Collection, Interaction } from 'discord.js';
 import { RESTPostAPIApplicationCommandsJSONBody } from 'discord-api-types/v9';
 
 export interface ApplicationCommandExecuter {
     data: RESTPostAPIApplicationCommandsJSONBody,
-    execute(interaction: Interaction): Promise<void>; 
+    execute(interaction: Interaction): Promise<void>;
 }
 
 const commands: Collection<string, ApplicationCommandExecuter> = new Collection();
