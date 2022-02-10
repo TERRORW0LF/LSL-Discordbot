@@ -1,5 +1,6 @@
 import guildsConfig from "../config/guildConfig.json";
 import { Collection, Guild, GuildMember } from "discord.js";
+import { Points } from "./sheets";
 
 
 /**
@@ -24,17 +25,12 @@ export async function getMemberByName(guild: Guild, member: string): Promise<Gui
 }
 
 
-interface Points {
-    Standard: number,
-    Gravspeed: number
-}
-
-interface MemberWithPoints {
+export interface MemberWithPoints {
     member: GuildMember,
     points: Points
 }
 
-type Category = "Gravspeed" | "Standard";
+export type Category = "Gravspeed" | "Standard";
 
 /**
  * Updates the roles of the members according to their points.

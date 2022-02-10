@@ -1,6 +1,7 @@
 import axios from "axios";
+import { Collection, GuildMember } from "discord.js";
 import { JWT } from "google-auth-library";
-import { google } from "googleapis";
+import { google, sheets_v4 } from "googleapis";
 import { googleEmail, googleKey } from "../config/config";
 import guildsConfig from "../config/guildConfig.json";
 
@@ -134,6 +135,42 @@ export async function deleteSubmit(guildId: string, sheetOptions: SheetOptions, 
             }]
         }
     });
+}
+
+
+export interface Points {
+    Standard: number,
+    Gravspeed: number,
+    Total: number
+}
+
+export async function getMembersWithPoints(guildId: string, sheetOptions: SheetOptions): Promise<Collection<string, Points>> {
+    const client = google.sheets('v4'),
+          token = await getGoogleAuth(),
+          guildCfg = (guildsConfig as any)[guildId],
+          sheetId: string | undefined = Object.values(sheetOptions).reduce((prev, curr) => prev?.[curr], guildCfg?.sheets);
+    if (!sheetId) throw 'No sheet belonging to options found.';
+
+    const userPoints = (await client.spreadsheets.values.batchGet({
+        auth: token,
+        spreadsheetId: sheetId,
+        majorDimension: 'ROWS',
+        ranges: [guildCfg.sheets.points.standard, guildCfg.sheets.points.gravspeed, guildCfg.sheets.points.total]
+    })).data.valueRanges;
+    if (!userPoints) throw 'Couldn\'t get points.'
+
+    const points = new Collection<string, Points>();
+    for (const row of userPoints[2].values as any[][])
+        points.set(row[0], { Total: row[1], Standard: 0, Gravspeed: 0});
+    for (const row of userPoints[0].values as any[][]) {
+        const oldPoints = points.get(row[0]) as Points;
+        points.set(row[0], { Total: oldPoints.Total, Standard: row[1], Gravspeed: oldPoints.Gravspeed });
+    }
+    for (const row of userPoints[1].values as any[][]) {
+        const oldPoints = points.get(row[0]) as Points;
+        points.set(row[0], { Total: oldPoints.Total, Standard: oldPoints.Standard, Gravspeed: row[1] });
+    }
+    return points;
 }
 
 
