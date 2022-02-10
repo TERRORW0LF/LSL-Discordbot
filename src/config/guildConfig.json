@@ -21,6 +21,28 @@
     },
     "574522788967088128": {
         "features": {
+            "announce": {
+                "wr": {
+                    "enabled": true,
+                    "channel": ""
+                },
+                "pb": {
+                    "enabled": false,
+                    "channel": ""
+                },
+                "submit": {
+                    "enabled": true,
+                    "channel": ""
+                },
+                "delete": {
+                    "enabled": false,
+                    "channel": ""
+                },
+                "rank": {
+                    "enabled": false,
+                    "channel": ""
+                }
+            },
             "starboard": {
                 "enabled": true,
                 "count": 5,
@@ -101,6 +123,7 @@
                 "300": "5"
             }
         },
+        "patches": [1.00, 1.41, 1.50],
         "seasons": [1, 2, 3, 4, 5],
         "categories": ["Standard", "Gravspeed"],
         "maps": ["Hanamura", "Horizon Lunar Colony", "Paris", "Temple of Anubis", "Volskaya Industries", "Dorado", "Havana", "Junkertown","Rialto",

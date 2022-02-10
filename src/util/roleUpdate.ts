@@ -36,7 +36,6 @@ export type Category = "Gravspeed" | "Standard";
  * Updates the roles of the members according to their points.
  * @param guild The guild the members belong to.
  * @param data The members and their respective points.
- * @returns A boolean indicating whether all roles were applied.
  */
 export async function roleUpdates(guild: Guild, season: number, data: Collection<string, Points>): Promise<void> {
     const guildCfg = (guildsConfig as any)[guild.id];
