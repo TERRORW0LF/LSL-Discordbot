@@ -20,7 +20,7 @@ export async function sendSubmit(client: Client, guildId: string, submit: Run): 
         author: { name: name, icon_url: member?.avatarURL() ?? undefined },
         title: `New Submit by ${name}`,
         url: submit.proof,
-        thumbnail: { url: `https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/main/pictures/${encodeURIComponent(submit.map)}.jpg`},
+        thumbnail: { url: `https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/main/assets/pictures/${encodeURIComponent(submit.map)}.jpg`},
         description: `*patch:* ${submit.patch}\n*season*: ${submit.season}\n*category*: ${submit.category}\n*map*: ${submit.map}\n*time*: ${submit.time}\n*proof*: ${Formatters.hyperlink("link", submit.proof)}\n*date*: ${Formatters.time(submit.date, Formatters.TimestampStyles.ShortDateTime)}`,
         footer: { text: "" + submit.submitId }
     }
