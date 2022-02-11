@@ -78,6 +78,7 @@ export async function roleUpdates(guild: Guild, season: number, data: Collection
         if (member.member.roles.cache.has(firstPlaceGravspeedRole))
             oldFirstPlaceGravspeed = member;
         const newRole = getRole(Math.max(member.points.Standard, member.points.Gravspeed), roles);
+        //TODO: Add rank announcements.
         for (const role in roles)
             if (role != newRole && member.member.roles.cache.has(role)) {
                 member.member.roles.remove(role);
@@ -97,6 +98,12 @@ export async function roleUpdates(guild: Guild, season: number, data: Collection
 }
 
 
+/**
+ * Gets the role a user should have based on his points.
+ * @param points The points the user has.
+ * @param roles A Collections of all possible roles the user could get (key = required points, value = role id).
+ * @returns The role id if the user should get a role, null otherwise.
+ */
 function getRole(points: number, roles: Collection<number, string>): string | null {
     let nearestLowerRolePoints = 0;
     for (const point of roles.keys())

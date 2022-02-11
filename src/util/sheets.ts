@@ -144,6 +144,12 @@ export interface Points {
     Total: number
 }
 
+/**
+ * Gets the users with their points from the given sheets.
+ * @param guildId The guild which the sheet belongs to.
+ * @param sheetOptions The options for the sheet to fetch.
+ * @returns A Promisified Collection with the username as the key and the points as the value.
+ */
 export async function getMembersWithPoints(guildId: string, sheetOptions: SheetOptions): Promise<Collection<string, Points>> {
     const client = google.sheets('v4'),
           token = await getGoogleAuth(),
@@ -174,6 +180,13 @@ export async function getMembersWithPoints(guildId: string, sheetOptions: SheetO
 }
 
 
+/**
+ * Updates the name of a user on the sheets from the old name to the new name.
+ * @param guildId The guild whch the sheet belongs to.
+ * @param sheetOptions The options for the sheet to get.
+ * @param oldName The old name.
+ * @param newName The new name.
+ */
 export async function submitNameChange(guildId: string, sheetOptions: SheetOptions, oldName: string, newName: string): Promise<void> {
     const client = google.sheets('v4'),
           token = await getGoogleAuth(),
