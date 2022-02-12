@@ -1,6 +1,7 @@
 import guildsConfig from "../config/guildConfig.json";
 import { Collection, Guild, GuildMember } from "discord.js";
 import { Points } from "./sheets";
+import { sendRank } from "./automatedMessages";
 
 
 /**
@@ -78,22 +79,31 @@ export async function roleUpdates(guild: Guild, season: number, data: Collection
         if (member.member.roles.cache.has(firstPlaceGravspeedRole))
             oldFirstPlaceGravspeed = member;
         const newRole = getRole(Math.max(member.points.Standard, member.points.Gravspeed), roles);
-        //TODO: Add rank announcements.
+        let oldRole: string | null = null;
         for (const role in roles)
             if (role != newRole && member.member.roles.cache.has(role)) {
+                oldRole = role;
                 member.member.roles.remove(role);
                 break;
             }
         if (newRole && !member.member.roles.cache.has(newRole))
             member.member.roles.add(newRole);
+        if (newRole != oldRole && guildCfg?.features?.announce?.rank?.enabled)
+            sendRank(guild.client, guild.id, member.member, newRole ?? "", compareRoles(roles, oldRole, newRole))
     }
-    if (oldFirstPlaceStandard != newFirstPlaceStandard) {
+    if (oldFirstPlaceStandard && oldFirstPlaceStandard != newFirstPlaceStandard)
         oldFirstPlaceStandard?.member.roles.remove(firstPlaceStandardRole);
+    if (newFirstPlaceStandard && !newFirstPlaceStandard.member.roles.cache.has(firstPlaceStandardRole)) {
         newFirstPlaceStandard?.member.roles.add(firstPlaceStandardRole);
+        if (guildCfg?.features?.announce?.rank?.enabled)
+            sendRank(guild.client, guild.id, newFirstPlaceStandard.member, firstPlaceStandardRole, true);
     }
-    if (oldFirstPlaceGravspeed != newFirstPlaceGravspeed) {
+    if (oldFirstPlaceGravspeed && oldFirstPlaceGravspeed != newFirstPlaceGravspeed)
         oldFirstPlaceGravspeed?.member.roles.remove(firstPlaceGravspeedRole);
+    if (newFirstPlaceGravspeed && !newFirstPlaceGravspeed.member.roles.cache.has(firstPlaceGravspeedRole)) {
         newFirstPlaceGravspeed?.member.roles.add(firstPlaceGravspeedRole);
+        if (guildCfg?.features?.announce?.rank?.enabled)
+            sendRank(guild.client, guild.id, newFirstPlaceGravspeed.member, firstPlaceGravspeedRole, true);
     }
 }
 
@@ -110,4 +120,24 @@ function getRole(points: number, roles: Collection<number, string>): string | nu
         if (nearestLowerRolePoints < point && point <= points)
             nearestLowerRolePoints = point;
     return nearestLowerRolePoints == 0 ? roles.get(nearestLowerRolePoints) as string : null;
+}
+
+
+/**
+ * Compares 2 roles by the points needed to get them, breaks if both roles are the same.
+ * @param roles A collection of role ids keyed by the required points.
+ * @param oldRole The old role id.
+ * @param newRole The new rold id to compare against.
+ * @returns True of the points required for the new role are higher than the points required for the old role, false otherwise.
+ */
+function compareRoles(roles: Collection<number, string>, oldRole: string | null, newRole: string | null): boolean {
+    let oldPoints = 0;
+    let newPoints = 0;
+    for (const [key, entry] of roles) {
+        if (entry == oldRole)
+            oldPoints = key;
+        if (entry == newRole)
+            newPoints = key;
+    }
+    return oldPoints < newPoints;
 }
