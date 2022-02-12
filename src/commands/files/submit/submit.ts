@@ -1,8 +1,8 @@
-import { CommandInteraction } from 'discord.js';
-import { Embed } from '@discordjs/builders';
-import axios from 'axios';
 import { getDesiredOptionLength, getOptions } from '../../../util/userInput.js';
 import guildsConfig from '../../../config/guildConfig.json';
+import { submit } from '../../../util/sheets.js';
+import { CommandInteraction } from 'discord.js';
+import { APIEmbed } from 'discord-api-types';
 
 export async function run (interaction: CommandInteraction) {
     interaction.deferReply();
@@ -22,24 +22,19 @@ export async function run (interaction: CommandInteraction) {
     if (!mapIndexes)
         return;
     map = mapOptions[mapIndexes[0]];
-
-    const submitConfig = guildConfig.forms;
-    let submitUrl = submitConfig[season]
-        + `entry.${submitConfig.user}=${encodeURIComponent(name)}`
-        + `entry.${submitConfig.category}=${encodeURIComponent(category)}`
-        + `entry.${submitConfig.map}=${encodeURIComponent(map)}`
-        + `entry.${submitConfig.time}=${encodeURIComponent(time)}`
-        + `entry.${submitConfig.proof}=${encodeURIComponent(proof)}`;
-    const res = await axios.post(submitUrl);
-    if (res.status !== 200) {
-        const embed = new Embed()
-            .setDescription(`Failed to correctly submit run.`)
-            .setColor(guildConfig.embeds.error);
-        interaction.editReply({ embeds: [embed] });
-        return;
+    try {
+        await submit(interaction.guildId ?? "", { user: name, season: "" + season, category, map, time, proof });
+    } catch (error) {
+        const embed: APIEmbed = {
+        description: `Failed to correctly submit run.`,
+        color: guildConfig.embeds.error
     }
-    const embed = new Embed()
-        .setDescription('Successfully submitted run.')
-        .setColor(guildConfig.embeds.success);
+    interaction.editReply({ embeds: [embed] });
+    return;
+    }
+    const embed: APIEmbed = {
+        description: 'Successfully submitted run.',
+        color: guildConfig.embeds.success
+    }
     interaction.editReply({ embeds: [embed] });
 }
