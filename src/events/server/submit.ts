@@ -11,7 +11,6 @@ export default async (client: Client<true>, req: Request, res: Response, next: N
     const membersWithPoints = await getMembersWithPoints(req.body.id, { patch: req.body.patch, season: req.body.season});
     res.sendStatus(200);
     roleUpdates(await client.guilds.fetch(req.body.id), parseInt(req.body.season), membersWithPoints);
-    //TODO: World record check and sending.
     const submit: Run = {
         date: getJsDateFromSerialNumber(parseFloat(req.body.date)),
         patch: req.body.patch, 

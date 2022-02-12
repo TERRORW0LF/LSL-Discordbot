@@ -13,8 +13,6 @@ import listen from './events/server/listen';
 process.on('unhandledRejection', () => {});
 process.on('uncaughtException', () => {});
 
-//TODO: outsource events into their own files.
-
 // API
 const app = express();
 
