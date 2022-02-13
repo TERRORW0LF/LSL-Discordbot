@@ -36,7 +36,7 @@ const command: ApplicationCommandExecuter = {
                 option.setName('map')
                 .setDescription('The map of the run.')
                 .setRequired(true))).toJSON(),
-    async execute (interaction: CommandInteraction) {
+    async execute (interaction: CommandInteraction<"present">) {
         switch (interaction.options.getSubcommand(true)) {
             case 'id':
                 return deleteId(interaction);

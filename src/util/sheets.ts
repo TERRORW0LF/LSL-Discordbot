@@ -1,7 +1,7 @@
 import axios from "axios";
-import { Collection, GuildMember } from "discord.js";
+import { Collection } from "discord.js";
 import { JWT } from "google-auth-library";
-import { google, sheets_v4 } from "googleapis";
+import { google } from "googleapis";
 import { googleEmail, googleKey } from "../config/config";
 import guildsConfig from "../config/guildConfig.json";
 
@@ -109,7 +109,7 @@ export async function getAllSubmits(guildId: string, options: SheetOptions): Pro
  * @param sheetOptions The options the describe the sheet.
  * @param submitId The id of the submit.
  */
-export async function deleteSubmit(guildId: string, sheetOptions: SheetOptions, submitId: number): Promise<void> {
+export async function deleteSubmit(guildId: string, submitId: number, sheetOptions: SheetOptions): Promise<void> {
     const client = google.sheets('v4'),
           token = await getGoogleAuth(),
           guildConfig = (guildsConfig as any)[guildId],
@@ -187,7 +187,7 @@ export async function getMembersWithPoints(guildId: string, sheetOptions: SheetO
  * @param oldName The old name.
  * @param newName The new name.
  */
-export async function submitNameChange(guildId: string, sheetOptions: SheetOptions, oldName: string, newName: string): Promise<void> {
+export async function submitNameChange(guildId: string, oldName: string, newName: string, sheetOptions: SheetOptions): Promise<void> {
     const client = google.sheets('v4'),
           token = await getGoogleAuth(),
           guildConfig = (guildsConfig as any)[guildId],

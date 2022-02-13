@@ -1,5 +1,5 @@
 import { getDesiredOptionLength, getOptions } from '../../../util/userInput.js';
-import guildsConfig from '../../../config/guildConfig.json';
+import guildsCfg from '../../../config/guildConfig.json';
 import { submit } from '../../../util/sheets.js';
 import { CommandInteraction } from 'discord.js';
 import { APIEmbed } from 'discord-api-types';
@@ -12,10 +12,10 @@ export async function run (interaction: CommandInteraction) {
           time = interaction.options.getNumber('time', true),
           proof = interaction.options.getString('proof', true),
           name = interaction.user.tag,
-          guildConfig = (guildsConfig as any)[interaction.guildId ?? 'default'];
+          guildCfg = ((guildsCfg as any)[interaction.guildId ?? ""]) ?? guildsCfg.default;
     let map = interaction.options.getString('map', true);
     
-    const mapOptions = getOptions(map, guildConfig.maps),
+    const mapOptions = getOptions(map, guildCfg.maps),
           selectData = mapOptions.map(value => { return { label: value } });
     
     const mapIndexes = await getDesiredOptionLength('map', interaction, { placeholder: 'Select the desired map', data: selectData });
@@ -26,15 +26,15 @@ export async function run (interaction: CommandInteraction) {
         await submit(interaction.guildId ?? "", { user: name, season: "" + season, category, map, time, proof });
     } catch (error) {
         const embed: APIEmbed = {
-        description: `Failed to correctly submit run.`,
-        color: guildConfig.embeds.error
+        description: `Failed to submit run.`,
+        color: guildCfg.embeds.error
     }
     interaction.editReply({ embeds: [embed] });
     return;
     }
     const embed: APIEmbed = {
         description: 'Successfully submitted run.',
-        color: guildConfig.embeds.success
+        color: guildCfg.embeds.success
     }
     interaction.editReply({ embeds: [embed] });
 }
