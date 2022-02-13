@@ -47,7 +47,7 @@ const command: ApplicationCommandExecuter = {
                 .setDescription('The patch of the ranking.')
                 .addChoices([['Pre 1.41', 1.00], ['1.41-1.50', 1.41], ['Post 1.50', 1.50]])
                 .setRequired(false))).toJSON(),
-    async execute (interaction: CommandInteraction) {
+    async execute (interaction: CommandInteraction<"present">) {
         switch (interaction.options.getSubcommand(true)) {
             case 'season':
                 return rankSeason(interaction);

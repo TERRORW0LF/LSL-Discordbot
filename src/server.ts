@@ -1,4 +1,3 @@
-import axios from 'axios';
 import express from 'express';
 import { Client, Intents } from 'discord.js';
 import { discordToken, port } from './config/config';

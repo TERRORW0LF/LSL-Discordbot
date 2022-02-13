@@ -29,7 +29,7 @@ const command: ApplicationCommandExecuter = {
             option.setName('proof')
             .setDescription('A link to video proof of the run.')
             .setRequired(true)).toJSON(),
-    async execute (interaction: CommandInteraction) {
+    async execute (interaction: CommandInteraction<"present">) {
         return submit(interaction);
     }
 }
