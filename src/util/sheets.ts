@@ -104,6 +104,49 @@ export async function getAllSubmits(guildId: string, options: SheetOptions): Pro
 
 
 /**
+ * Sorts the runs by time and if the time is equal by submit date.
+ * This methods transforms the original array and returns the transformed original array.
+ * @param runs The runs to sort.
+ * @returns The sorted runs.
+ */
+export function sortRuns(runs: Run[]): Run[] {
+    runs.sort((run1, run2) => {
+        const timeDiff = run1.time - run2.time;
+        return timeDiff ? timeDiff : run1.date.getTime() - run2.date.getTime();
+    });
+    return runs;
+}
+
+
+/**
+ * Filters an array so that only pbs are left. Each combo of:
+ * patch, season, category, map, and user
+ * has its own pb.
+ * @param runs The runs to extract the pbs out of.
+ * @returns An array consisting only of the pbs in the runs array.
+ */
+export function pbsOnly(runs: Run[]): Run[] {
+    const pbs: Run[] = [];
+    for (const run of runs) {
+        const index = pbs.findIndex(run1 => 
+            run1.patch === run.patch
+            && run1.season === run.season
+            && run1.category === run.category
+            && run1.map === run.map
+            && run1.username === run.username
+        );
+        if (index === -1) {
+            pbs.push(run);
+            continue;
+        }
+        if (run.time < pbs[index].time || (run.time === pbs[index].time && run.date.getTime() < pbs[index].date.getTime()))
+            pbs[index] = run;
+    }
+    return pbs;
+}
+
+
+/**
  * Deletes the submit belonging to the submitId at the specified sheet.
  * @param guildId The id of the guild to get the sheet of.
  * @param sheetOptions The options the describe the sheet.
