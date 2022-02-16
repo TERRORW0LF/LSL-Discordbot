@@ -11,10 +11,10 @@ const command: ApplicationCommandExecuter = {
         .addSubcommand(sub =>
             sub.setName('id')
             .setDescription('Delete a run by it\'s submit id.')
-            .addIntegerOption(option =>
+            .addStringOption(option =>
                 option.setName('season')
                 .setDescription('The season of the run.')
-                .addChoices([['Season 1', 1], ['Season 2', 2], ['Season 3', 3], ['Season 4', 4], ['Season 5', 5]])
+                .addChoices([['Season 1', '1'], ['Season 2', '2'], ['Season 3', '3'], ['Season 4', '4'], ['Season 5', '5']])
                 .setRequired(true))
             .addIntegerOption(option =>
                 option.setName('id')
@@ -22,10 +22,10 @@ const command: ApplicationCommandExecuter = {
         .addSubcommand(sub =>
             sub.setName('map')
             .setDescription('Delete a run by map.')
-            .addIntegerOption(option =>
+            .addStringOption(option =>
                 option.setName('season')
                 .setDescription('The season of the run.')
-                .addChoices([['Season 1', 1], ['Season 2', 2], ['Season 3', 3], ['Season 4', 4], ['Season 5', 5]])
+                .addChoices([['Season 1', '1'], ['Season 2', '2'], ['Season 3', '3'], ['Season 4', '4'], ['Season 5', '5']])
                 .setRequired(true))
             .addStringOption(option =>
                 option.setName('category')

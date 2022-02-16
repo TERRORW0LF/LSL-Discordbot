@@ -9,7 +9,7 @@ export async function run (interaction: CommandInteraction<"present">) {
 
     const guildCfg = ((guildsCfg as any)[interaction.guildId]) ?? guildsCfg.default,
           name = interaction.user.tag,
-          season = interaction.options.getInteger('season', true),
+          season = interaction.options.getString('season', true),
           category = interaction.options.getString('category', true);
     let map = interaction.options.getString('map', true);
 
@@ -29,7 +29,7 @@ export async function run (interaction: CommandInteraction<"present">) {
     const run = runs[runIndexes[0]];
 
     try {
-        await deleteSubmit(interaction.guildId, run.submitId, { patch: "1.50", season: "" + season });
+        await deleteSubmit(interaction.guildId, run.submitId, { patch: "1.50", season });
     } catch (error) {
         const embed: APIEmbed = {
             description: 'Failed to delete run.',

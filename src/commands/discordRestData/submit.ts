@@ -7,10 +7,10 @@ const command: ApplicationCommandExecuter = {
     data: new SlashCommandBuilder()
         .setName('submit')
         .setDescription('Submit a run to the leaderboards.')
-        .addIntegerOption(option => 
+        .addStringOption(option => 
             option.setName('season')
             .setDescription('The season of the run.')
-            .addChoices([['Season 1', 1], ['Season 2', 2], ['Season 3', 3], ['Season 4', 4], ['Season 5', 5]])
+            .addChoices([['Season 1', '1'], ['Season 2', '2'], ['Season 3', '3'], ['Season 4', '4'], ['Season 5', '5']])
             .setRequired(true))
         .addStringOption(option =>
             option.setName('category')

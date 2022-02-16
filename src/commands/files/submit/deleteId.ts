@@ -6,12 +6,12 @@ import { CommandInteraction } from "discord.js";
 export async function run (interaction: CommandInteraction<"present">) {
     interaction.deferReply();
 
-    const season = interaction.options.getInteger('season', true),
+    const season = interaction.options.getString('season', true),
           id = interaction.options.getInteger('id', true),
           guildCfg = ((guildsCfg as any)[interaction.guildId ?? ""]) ?? guildsCfg.default;
 
     try {
-        await deleteSubmit(interaction.guildId, id, { patch: "1.50", season: "" + season });
+        await deleteSubmit(interaction.guildId, id, { patch: "1.50", season });
     } catch (error) {
         const embed: APIEmbed = {
             description: "Failed to delete run.",

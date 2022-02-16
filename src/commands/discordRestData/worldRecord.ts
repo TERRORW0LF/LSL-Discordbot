@@ -7,10 +7,10 @@ const command: ApplicationCommandExecuter = {
     data: new SlashCommandBuilder()
         .setName('world_record')
         .setDescription('Show a world record.')
-        .addIntegerOption(option =>
+        .addStringOption(option =>
             option.setName('season')
             .setDescription('The season of the run.')
-            .addChoices([['Season 1', 1], ['Season 2', 2], ['Season 3', 3], ['Season 4', 4], ['Season 5', 5]])
+            .addChoices([['Season 1', '1'], ['Season 2', '2'], ['Season 3', '3'], ['Season 4', '4'], ['Season 5', '5']])
             .setRequired(true))
         .addStringOption(option =>
             option.setName('category')
@@ -21,10 +21,10 @@ const command: ApplicationCommandExecuter = {
             option.setName('map')
             .setDescription('The map of the run.')
             .setRequired(true))
-        .addNumberOption(option =>
+        .addStringOption(option =>
             option.setName('patch')
             .setDescription('The patch of the leaderboard.')
-            .addChoices([['Pre 1.41', 1.00], ['1.41-1.50', 1.41], ['Post 1.50', 1.50]])
+            .addChoices([['Pre 1.41', '1.00'], ['1.41-1.50', '1.41'], ['Post 1.50', '1.50']])
             .setRequired(false)).toJSON(),
     async execute (interaction: CommandInteraction<"present">) {
         return wr(interaction);
