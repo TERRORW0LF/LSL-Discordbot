@@ -89,15 +89,18 @@ export async function getAllSubmits(guildId: string, options: SheetOptions): Pro
     if (!rawRuns)
         throw 'No runs found';
 
-    returnRuns.push(...rawRuns.map(row => { return { date: getJsDateFromSerialNumber(row[0]), 
-                                                     username: row[1], 
-                                                     time: row[2], 
-                                                     proof: row[3], 
-                                                     patch: options.patch,
-                                                     season: options.season,
-                                                     category: row[4],
-                                                     map: row[5],
-                                                     submitId: row[6] }; 
+    returnRuns.push(...rawRuns.map(row => { 
+        return { 
+            date: getJsDateFromSerialNumber(row[0]), 
+            username: row[1], 
+            time: row[2], 
+            proof: row[3], 
+            patch: options.patch,
+            season: options.season,
+            category: row[4],
+            map: row[5],
+            submitId: row[6] 
+        };
     }));
     return returnRuns;
 }
