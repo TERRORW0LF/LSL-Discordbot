@@ -11,7 +11,7 @@ export async function run (interaction: CommandInteraction<"present">) {
     const season = interaction.options.getString("season", true);
     const category = interaction.options.getString("category", true);
     let map = interaction.options.getString("map", true);
-    const user = interaction.user.tag;
+    const user = interaction.options.getUser('user', false) ?? interaction.user;
     const guildId = interaction.guildId;
     const guildCfg = (guildsCfg as any)[guildId] ?? guildsCfg.default;
 
@@ -26,7 +26,7 @@ export async function run (interaction: CommandInteraction<"present">) {
     map = mapOptions[mapIndexes[0]];
 
     const submits = await submitsPromise;
-    submits.filter(run => run.category === category && run.map === map && run.username === user);
+    submits.filter(run => run.category === category && run.map === map && run.username === user.tag);
     sortRuns(submits);
     const pb = submits[0];
     if (!pb) {
