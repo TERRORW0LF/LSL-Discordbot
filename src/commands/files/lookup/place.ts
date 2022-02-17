@@ -1,5 +1,62 @@
-import { CommandInteraction } from "discord.js";
+import { CommandInteraction, Formatters } from "discord.js";
+import { getAllSubmits, Run, sortRuns } from "../../../util/sheets";
+import { getDesiredOptionLength, getOptions } from "../../../util/userInput";
+import guildsCfg from '../../../config/guildConfig.json';
+import { APIEmbed } from "discord-api-types";
 
 export async function run (interaction: CommandInteraction<"present">) {
-    interaction.deferReply();
+    const defer = interaction.deferReply();
+
+    const rawPlace = interaction.options.getInteger('place', true);
+    const patch = interaction.options.getString('patch', false) ?? '1.50';
+    const season = interaction.options.getString('season', true);
+    const category = interaction.options.getString('category', true);
+    let map = interaction.options.getString('map', true);
+    const guildCfg = (guildsCfg as any)[interaction.guildId] ?? guildsCfg.default;
+
+    const runsPromise = getAllSubmits(interaction.guildId, { patch, season });
+    
+    const mapOptions = getOptions(map, guildCfg.maps),
+          selectData = mapOptions.map(value => { return { label: value } });
+    
+    const mapIndexes = await getDesiredOptionLength('map', interaction, { placeholder: 'Select the desired map', data: selectData });
+    if (!mapIndexes)
+        return;
+    map = mapOptions[mapIndexes[0]];
+
+    const allRuns = await runsPromise;
+    const runs = allRuns.filter(run => run.category === category && run.map === map);
+    sortRuns(runs);
+    let reqPlace: number;
+    if (rawPlace === 0) reqPlace = 1;
+    else if (rawPlace < 0)
+        if (rawPlace + runs.length <= 0) reqPlace = 1;
+        else reqPlace = rawPlace + runs.length + 1;
+    else if (rawPlace > runs.length) reqPlace = runs.length;
+    else reqPlace = rawPlace;
+    const run = runs.at(reqPlace - 1);
+    if (!run) {
+        const embed: APIEmbed = {
+            description: `This map has no submitted runs.`,
+            color: guildCfg.embeds.error
+        };
+        await defer;
+        interaction.editReply({ embeds: [embed] });
+        return;
+    }
+    const place = runs.findIndex(run1 => run1.time === run.time) + 1;
+    const samePlaceUsers: string[] = [];
+    if (run.submitId !== runs[0].submitId)
+        for (const run1 of runs)
+            if (run1.time === run.time && run1.submitId !== runs[0].submitId)
+                samePlaceUsers.push(run1.username);
+    const embed: APIEmbed = {
+        title: `Place:`,
+        description: `Translated place: *${reqPlace}*\nSheets place: *${place}*\nUser: *${run.username}*\nOther users: *${samePlaceUsers.join(', ')}*\n`
+            + `Time: *${run.time.toFixed(2)}*\nDate: *${Formatters.time(run.date)}*\nProof: *${Formatters.hyperlink('link', run.proof)}*`,
+        footer: { text: `ID: ${run.submitId}` }
+    };
+    await defer;
+    interaction.editReply({ embeds: [embed] });
+    interaction.followUp(run.proof);
 }

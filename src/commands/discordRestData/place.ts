@@ -9,7 +9,7 @@ const command: ApplicationCommandExecuter = {
         .setDescription('Show the run at the specified place.')
         .addIntegerOption(option =>
             option.setName('place')
-            .setDescription('The place the run is at.')
+            .setDescription('The place the run is at. Negative values count backwards.')
             .setRequired(true))
         .addStringOption(option =>
             option.setName('season')

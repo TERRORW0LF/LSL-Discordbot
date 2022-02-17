@@ -27,17 +27,17 @@ export async function run (interaction: CommandInteraction<"present">) {
         await submit(interaction.guildId, { user, season, category, map, time, proof });
     } catch (error) {
         const embed: APIEmbed = {
-        description: `Failed to submit run.`,
-        color: guildCfg.embeds.error
-    }
-    await defer;
-    interaction.editReply({ embeds: [embed] });
-    return;
+            description: `Failed to submit run.`,
+            color: guildCfg.embeds.error
+        };
+        await defer;
+        interaction.editReply({ embeds: [embed] });
+        return;
     }
     const embed: APIEmbed = {
         description: 'Successfully submitted run.',
         color: guildCfg.embeds.success
-    }
+    };
     await defer;
     interaction.editReply({ embeds: [embed] });
 }

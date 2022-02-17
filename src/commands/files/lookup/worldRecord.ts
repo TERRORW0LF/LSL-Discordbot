@@ -24,10 +24,10 @@ export async function run (interaction: CommandInteraction<"present">) {
         return;
     map = mapOptions[mapIndexes[0]];
 
-    const submits = await submitsPromise;
-    submits.filter(run => run.category === category && run.map === map);
-    sortRuns(submits);
-    const wr = submits[0];
+    const allRuns = await submitsPromise;
+    const runs = allRuns.filter(run => run.category === category && run.map === map);
+    sortRuns(runs);
+    const wr = runs[0];
     if (!wr) {
         const embed: APIEmbed = {
             description: `Couldn't find the world record.`,
@@ -37,6 +37,7 @@ export async function run (interaction: CommandInteraction<"present">) {
         interaction.editReply({ embeds: [embed] });
         return;
     }
+    //TODO: calculate points.
     const embed: APIEmbed = {
         title: `World Record:`,
         description: `User: *${wr.username}*\nTime: *${wr.time.toFixed(2)}*\nDate: *${Formatters.time(wr.date)}*\nProof: *${Formatters.hyperlink('link', wr.proof)}*`,

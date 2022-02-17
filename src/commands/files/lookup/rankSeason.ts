@@ -21,7 +21,7 @@ export async function run (interaction: CommandInteraction<"present">) {
         await defer;
         interaction.editReply({ embeds: [embed] });
         return;
-    }
+    };
     let rank = 1;
     for (const memberPoint of memberPoints.values())
         if (memberPoint.Total > rankUser.Total)
@@ -29,7 +29,7 @@ export async function run (interaction: CommandInteraction<"present">) {
     const embed: APIEmbed = {
         title: `Season Rank:`,
         description: `Rank: *${rank}*\nPoints: *${rankUser.Total}*`
-    }
+    };
     await defer;
     interaction.editReply({ embeds: [embed] });
 }

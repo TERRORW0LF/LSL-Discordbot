@@ -25,10 +25,10 @@ export async function run (interaction: CommandInteraction<"present">) {
         return;
     map = mapOptions[mapIndexes[0]];
 
-    const submits = await submitsPromise;
-    submits.filter(run => run.category === category && run.map === map && run.username === user.tag);
-    sortRuns(submits);
-    const pb = submits[0];
+    const allRuns = await submitsPromise;
+    const runs = allRuns.filter(run => run.category === category && run.map === map && run.username === user.tag);
+    sortRuns(runs);
+    const pb = runs[0];
     if (!pb) {
         const embed: APIEmbed = {
             description: `Couldn't find your personal best.`,
@@ -37,7 +37,8 @@ export async function run (interaction: CommandInteraction<"present">) {
         await defer;
         interaction.editReply({ embeds: [embed] });
         return;
-    }
+    };
+    //TODO: calculate points.
     const embed: APIEmbed = {
         title: `Personal Best:`,
         description: `Time: *${pb.time.toFixed(2)}*\nDate: *${Formatters.time(pb.date)}*\nProof: *${Formatters.hyperlink('link', pb.proof)}*`,

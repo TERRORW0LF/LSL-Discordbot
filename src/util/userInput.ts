@@ -1,4 +1,5 @@
 import { Embed } from '@discordjs/builders';
+import { APIEmbed } from 'discord-api-types';
 import { Message, MessageButton, MessageActionRow, MessageSelectMenu, CommandInteraction, MessageComponentInteraction, SelectMenuInteraction, EmojiIdentifierResolvable, TextBasedChannel, CollectorFilter, GuildMember } from 'discord.js';
 import { findBestMatch } from 'string-similarity';
 import guildsConfig from '../config/guildConfig.json';
@@ -64,11 +65,14 @@ export async function userSelect (message: Message | CommandInteraction, options
 
     // create option bundles of lenth PAGE_LENGTH
     for (let i=0; i++ ; i <= maxPage)
-        pages.push(options.data.slice(i*PAGE_LENGTH, (i+1)*PAGE_LENGTH)
-                               .map((option, index) => { return { label: option.label, 
-                                                                  value: `${currPage * PAGE_LENGTH + index}`, 
-                                                                  description: option.description, 
-                                                                  emoji: option.emoji } }));
+        pages.push(options.data.slice(i*PAGE_LENGTH, (i+1)*PAGE_LENGTH).map((option, index) => { 
+            return { 
+                label: option.label, 
+                value: `${currPage * PAGE_LENGTH + index}`, 
+                description: option.description, 
+                emoji: option.emoji 
+            } 
+        }));
 
     // create message components
     let prevButton = new MessageButton()
@@ -93,9 +97,10 @@ export async function userSelect (message: Message | CommandInteraction, options
     const buttonRow = new MessageActionRow().setComponents(prevButton, nextButton, doneButton);
 
     // add components to interaction / message
-    const infoEmbed = new Embed()
-        .setDescription(`Select ${options.minValues} to ${options.maxValues} items.`)
-        .setColor(guildConfig.embedColors.info);
+    const infoEmbed: APIEmbed = {
+        description: `Select ${options.minValues} to ${options.maxValues} items.`,
+        color: guildConfig.embedColors.info
+    };
     const selectionEmbed = new Embed()
         .setTitle('Selections:')
         .setColor(guildConfig.embedColors.warning);
@@ -113,9 +118,10 @@ export async function userSelect (message: Message | CommandInteraction, options
     const filter = (interaction: MessageComponentInteraction) => (interaction.customId === 'previous' || interaction.customId === 'next' || interaction.customId === 'options') && interaction.user.id === userId;
     while (true) {
         const interaction = await componentMessage.awaitMessageComponent({ filter, time: 30_000 }).catch(reason => {
-            const errorEmbed = new Embed()
-                .setDescription('Failed to select options in time.')
-                .setColor(guildConfig.embedColors.error);
+            const errorEmbed: APIEmbed = {
+                description: `Failed to select options in time.`,
+                color: guildConfig.embedColors.error
+            };
             componentMessage.edit({ embeds: [errorEmbed], components: [] });
             throw 'Failed to select in time.';
         });
@@ -125,32 +131,47 @@ export async function userSelect (message: Message | CommandInteraction, options
                 if (currPage === 0) prevButton.setDisabled(true);
                 nextButton.setDisabled(false);
                 selectMenu.setOptions(pages[currPage]);
-                componentMessage.edit({ components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
+                componentMessage.edit({ embeds: [infoEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
                 break;
             case ('next'):
                 currPage++;
                 if (currPage === maxPage) nextButton.setDisabled(true);
                 nextButton.setDisabled(false);
                 selectMenu.setOptions(pages[currPage]);
-                componentMessage.edit({ components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
+                componentMessage.edit({ embeds: [infoEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
                 break;
             case ('done'):
-                if (values.length < options.minValues || values.length > options.maxValues) {
+                if (values.length > options.maxValues) {
                     values = [];
                     selectMenu.setOptions(pages[0]);
                     selectionEmbed.setDescription('');
-                    const errorEmbed = new Embed()
-                        .setDescription('Not enough or too many items selected.\nSelection has been reset.')
-                        .setColor(guildConfig.embedColors.warning);
+                    const errorEmbed: APIEmbed = {
+                        description: `Too many items selected. Selection has been reset.`,
+                        color: guildConfig.embedColors.warning
+                    };
                     componentMessage.edit({ embeds: [errorEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
-                } else
+                
+                } else if (values.length < options.minValues) {
+                    const errorEmbed: APIEmbed = {
+                        description: `Not enough items selected. Please select the minimum amount required.`,
+                        color: guildConfig.embedColors.warning
+                    };
+                    componentMessage.edit( { embeds: [errorEmbed, selectionEmbed] });
+                } else {
+                    const confirmEmbed: APIEmbed = {
+                        description: `Received selection.`,
+                        color: guildConfig.embedColors.success
+                    };
+                    componentMessage.edit({ embeds: [confirmEmbed, selectionEmbed], components: [] });
                     return values;
+                }
             case ('options'):
                 const selectValues = (interaction as SelectMenuInteraction).values;
                 selectionEmbed.setDescription(selectionEmbed.description + '\n' 
-                    + pages[currPage].filter(option => selectValues.includes(option.value) && !values.includes(parseInt(option.value)))
-                                     .map((elem, index) => `${values.length + index + 1}: ${elem.label}`)
-                                     .join('\n'));
+                    + pages[currPage]
+                        .filter(option => selectValues.includes(option.value) && !values.includes(parseInt(option.value)))
+                        .map((elem, index) => `${values.length + index + 1}: ${elem.label}`)
+                        .join('\n'));
                 for (const value of selectValues)
                     if (!values.includes(parseInt(value)))
                         values.push(parseInt(value));
@@ -158,26 +179,22 @@ export async function userSelect (message: Message | CommandInteraction, options
                     values = [];
                     selectMenu.setOptions(pages[0]);
                     selectionEmbed.setDescription('');
-                    const errorEmbed = new Embed()
-                        .setDescription('Too many items selected.\nSelection has been reset.')
-                        .setColor(guildConfig.embedColors.warning);
+                    const errorEmbed: APIEmbed = {
+                        description: `Too many items selected. Selection has been reset.`,
+                        color: guildConfig.embedColors.warning
+                    };
                     componentMessage.edit({ embeds: [errorEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
                     break;
                 }
-                if (values.length > options.minValues) {
-                    const confirmEmbed = new Embed()
-                        .setDescription('Received selection.')
-                        .setColor(guildConfig.embedColors.success);
+                if (pages.length == 1 && values.length >= options.minValues) {
+                    const confirmEmbed: APIEmbed = {
+                        description: `Received selection.`,
+                        color: guildConfig.embedColors.success
+                    };
                     componentMessage.edit({ embeds: [confirmEmbed, selectionEmbed], components: [] });
-                    return selectValues.map(str => parseInt(str));
+                    return values;
                 }
-                if (pages.length == 1) {
-                    const errorEmbed = new Embed()
-                        .setDescription('Not enough items selected.')
-                        .setColor(guildConfig.embedColors.error);
-                        componentMessage.edit({ embeds: [errorEmbed], components: [] });
-                        throw "Not enough selections.";
-                }
+                componentMessage.edit({ embeds: [infoEmbed, selectionEmbed] });
                 break;
         }
     }

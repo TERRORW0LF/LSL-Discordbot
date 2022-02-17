@@ -19,7 +19,7 @@ export async function getGoogleAuth(): Promise<JWT> {
         googleEmail,
         undefined,
         googleKey,
-    ['https://www.googleapis.com/auth/spreadsheets']
+        ['https://www.googleapis.com/auth/spreadsheets']
     );
     await token.authorize();
     return token;

@@ -19,7 +19,7 @@ export async function run (interaction: CommandInteraction<"present">) {
         const embed: APIEmbed = {
             description: `Unable to find your season ${season} ${category} rank.`,
             color: guildCfg.embeds.error
-        }
+        };
         await defer;
         interaction.editReply({ embeds: [embed] });
         return;
@@ -31,7 +31,7 @@ export async function run (interaction: CommandInteraction<"present">) {
     const embed: APIEmbed = {
         title: `Category Rank:`,
         description: `Rank: *${rank}*\nPoints: *${rankUser[category]}*`
-    }
+    };
     await defer;
     interaction.editReply({ embeds: [embed] });
 }

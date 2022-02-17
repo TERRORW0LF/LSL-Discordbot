@@ -34,7 +34,7 @@ export async function run (interaction: CommandInteraction<"present">) {
         const embed: APIEmbed = {
             description: 'Failed to delete run.',
             color: guildCfg.embeds.error
-        }
+        };
         await defer;
         interaction.editReply({ embeds: [embed] });
         return;
@@ -42,7 +42,7 @@ export async function run (interaction: CommandInteraction<"present">) {
     const embed: APIEmbed = {
         description: 'Successfully deleted run.',
         color: guildCfg.embeds.success
-    }
+    };
     await defer;
     interaction.editReply({ embeds: [embed] });
 }

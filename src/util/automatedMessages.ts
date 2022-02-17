@@ -24,12 +24,13 @@ export async function sendSubmit(client: Client<true>, guildId: string, submit: 
     const name = member?.displayName ?? submit.username.split('#')[0];
     const embed: APIEmbed = {
         author: { name: name, icon_url: member?.avatarURL() ?? undefined },
+        color: guildCfg.embeds.info,
         title: `New Submit by ${name}`,
         url: submit.proof,
         thumbnail: { url: `https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/main/assets/pictures/${encodeURIComponent(submit.map)}.jpg`},
         description: `*patch:* ${submit.patch}\n*season*: ${submit.season}\n*category*: ${submit.category}\n*map*: ${submit.map}\n*time*: ${submit.time.toFixed(2)}\n*proof*: ${Formatters.hyperlink("link", submit.proof)}\n*date*: ${Formatters.time(submit.date, Formatters.TimestampStyles.ShortDateTime)}`,
         footer: { text: "" + submit.submitId }
-    }
+    };
     await channel.send({ content: member ? Formatters.userMention(member.id) : "", embeds: [embed] });
     channel.send(submit.proof);
 }
@@ -55,12 +56,13 @@ export async function sendPb(client: Client<true>, guildId: string, submit: Run,
     const name = member?.displayName ?? submit.username.split('#')[0];
     const embed: APIEmbed = {
         author: { name: name, icon_url: member?.avatarURL() ?? undefined },
+        color: guildCfg.embeds.warning,
         title: `New Personal Best by ${name}`,
         url: submit.proof,
         thumbnail: { url: `https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/main/assets/pictures/${encodeURIComponent(submit.map)}.jpg`},
         description: `*patch:* ${submit.patch}\n*season*: ${submit.season}\n*category*: ${submit.category}\n*map*: ${submit.map}\n*time*: ${submit.time.toFixed(2)}\n*saved:* ${(pb.time - submit.time).toFixed(2)}\n*proof*: ${Formatters.hyperlink("link", submit.proof)}\n*date*: ${Formatters.time(submit.date, Formatters.TimestampStyles.ShortDateTime)}`,
         footer: { text: "ID: " + submit.submitId }
-    }
+    };
     await channel.send({ content: member ? Formatters.userMention(member.id) : "", embeds: [embed] });
     channel.send(submit.proof);
 }
@@ -86,12 +88,13 @@ export async function sendWr(client: Client<true>, guildId: string, submit: Run,
     const name = member?.displayName ?? submit.username.split('#')[0];
     const embed: APIEmbed = {
         author: { name: name, icon_url: member?.avatarURL() ?? undefined },
+        color: guildCfg.embeds.success,
         title: `New World Record by ${name}`,
         url: submit.proof,
         thumbnail: { url: `https://raw.githubusercontent.com/TERRORW0LF/LSL-Discordbot/main/assets/pictures/${encodeURIComponent(submit.map)}.jpg`},
         description: `*patch:* ${submit.patch}\n*season*: ${submit.season}\n*category*: ${submit.category}\n*map*: ${submit.map}\n*time*: ${submit.time.toFixed(2)}\n*saved:* ${(record.time - submit.time).toFixed(2)}\n*proof*: ${Formatters.hyperlink("link", submit.proof)}\n*date*: ${Formatters.time(submit.date, Formatters.TimestampStyles.ShortDateTime)}`,
         footer: { text: "ID: " + submit.submitId }
-    }
+    };
     await channel.send({ content: member ? Formatters.userMention(member.id) : "", embeds: [embed] });
     channel.send((submit.username != record.username ? getBm(name) : "") + "\n" + submit.proof);
 }
@@ -129,9 +132,10 @@ export async function sendRank(client: Client<true>, guildId: string, member: Gu
     const role = await guild.roles.fetch(newRole);
     const embed: APIEmbed = {
         author: { name: member.displayName, icon_url: member.avatarURL() ?? undefined },
+        color: isRankUp ? guildCfg.embeds.success : guildCfg.embeds.error,
         title: `${Formatters.userMention(member.id)} ${(isRankUp ? "Ranked up to" : "Ranked down to") + (role ? Formatters.roleMention(role.id) : "no role")}`,
         description: isRankUp ? getRolePa(member.displayName) : getRoleBm(member.displayName)
-    }
+    };
     await channel.send({ content: Formatters.userMention(member.id), embeds: [embed] });
 }
 
