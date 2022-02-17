@@ -5,7 +5,7 @@ import { getAllSubmits, sortRuns } from "../../../util/sheets";
 import { APIEmbed } from "discord-api-types";
 
 export async function run (interaction: CommandInteraction<"present">) {
-    interaction.deferReply();
+    const defer = interaction.deferReply();
 
     const patch = interaction.options.getString("patch", false) ?? "1.50";
     const season = interaction.options.getString("season", true);
@@ -33,6 +33,7 @@ export async function run (interaction: CommandInteraction<"present">) {
             description: `Couldn't find the world record.`,
             color: guildCfg.embeds.error
         }
+        await defer;
         interaction.editReply({ embeds: [embed] });
         return;
     }
@@ -41,6 +42,7 @@ export async function run (interaction: CommandInteraction<"present">) {
         description: `User: *${wr.username}*\nTime: *${wr.time.toFixed(2)}*\nDate: *${Formatters.time(wr.date)}*\nProof: *${Formatters.hyperlink('link', wr.proof)}*`,
         footer: { text: `ID: ${wr.submitId}` }
     };
+    await defer;
     interaction.editReply({ embeds: [embed] });
     interaction.followUp(wr.proof);
 }

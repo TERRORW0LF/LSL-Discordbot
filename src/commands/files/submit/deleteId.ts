@@ -4,7 +4,7 @@ import { APIEmbed } from "discord-api-types";
 import { CommandInteraction } from "discord.js";
 
 export async function run (interaction: CommandInteraction<"present">) {
-    interaction.deferReply();
+    const defer = interaction.deferReply();
 
     const season = interaction.options.getString('season', true),
           id = interaction.options.getInteger('id', true),
@@ -17,6 +17,7 @@ export async function run (interaction: CommandInteraction<"present">) {
             description: "Failed to delete run.",
             color: guildCfg.embeds.error
         }
+        await defer;
         interaction.editReply({ embeds: [embed] });
         return;
     }
@@ -24,5 +25,6 @@ export async function run (interaction: CommandInteraction<"present">) {
         description: "Successfully deleted run.",
         color: guildCfg.embeds.success
     }
+    await defer;
     interaction.editReply({ embeds: [embed] });
 }

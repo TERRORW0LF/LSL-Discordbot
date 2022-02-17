@@ -5,7 +5,7 @@ import { APIEmbed } from "discord-api-types";
 import { CommandInteraction, Formatters } from "discord.js";
 
 export async function run (interaction: CommandInteraction<"present">) {
-    interaction.deferReply();
+    const defer = interaction.deferReply();
 
     const patch = interaction.options.getString("patch", false) ?? "1.50";
     const season = interaction.options.getString("season", true);
@@ -34,6 +34,7 @@ export async function run (interaction: CommandInteraction<"present">) {
             description: `Couldn't find your personal best.`,
             color: guildCfg.embeds.error
         }
+        await defer;
         interaction.editReply({ embeds: [embed] });
         return;
     }
@@ -42,6 +43,7 @@ export async function run (interaction: CommandInteraction<"present">) {
         description: `Time: *${pb.time.toFixed(2)}*\nDate: *${Formatters.time(pb.date)}*\nProof: *${Formatters.hyperlink('link', pb.proof)}*`,
         footer: { text: `ID: ${pb.submitId}` }
     };
+    await defer;
     interaction.editReply({ embeds: [embed] });
     interaction.followUp(pb.proof);
 }

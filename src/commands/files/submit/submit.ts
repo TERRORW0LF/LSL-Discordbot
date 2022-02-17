@@ -5,7 +5,7 @@ import { CommandInteraction } from 'discord.js';
 import { APIEmbed } from 'discord-api-types';
 
 export async function run (interaction: CommandInteraction<"present">) {
-    interaction.deferReply();
+    const defer = interaction.deferReply();
 
     const season = interaction.options.getString('season', true),
           category = interaction.options.getString('category', true),
@@ -30,6 +30,7 @@ export async function run (interaction: CommandInteraction<"present">) {
         description: `Failed to submit run.`,
         color: guildCfg.embeds.error
     }
+    await defer;
     interaction.editReply({ embeds: [embed] });
     return;
     }
@@ -37,5 +38,6 @@ export async function run (interaction: CommandInteraction<"present">) {
         description: 'Successfully submitted run.',
         color: guildCfg.embeds.success
     }
+    await defer;
     interaction.editReply({ embeds: [embed] });
 }
