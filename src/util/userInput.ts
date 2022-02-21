@@ -1,8 +1,8 @@
 import { Embed } from '@discordjs/builders';
 import { APIEmbed } from 'discord-api-types';
-import { Message, MessageButton, MessageActionRow, MessageSelectMenu, CommandInteraction, MessageComponentInteraction, SelectMenuInteraction, EmojiIdentifierResolvable, TextBasedChannel, CollectorFilter, GuildMember } from 'discord.js';
+import { Message, MessageButton, MessageActionRow, MessageSelectMenu, CommandInteraction, MessageComponentInteraction, SelectMenuInteraction, EmojiIdentifierResolvable, TextBasedChannel, CollectorFilter, GuildMember, Collection } from 'discord.js';
 import { findBestMatch } from 'string-similarity';
-import guildsConfig from '../config/guildConfig.json';
+import guildsCfg from '../config/guildConfig.json';
 
 
 export interface getOptionsCompareValues {
@@ -56,7 +56,7 @@ export interface UserSelectOptionsOption {
 export async function userSelect (message: Message | CommandInteraction, options: UserSelectOptions): Promise<number[]> {
     options.minValues ??= 1;
     options.maxValues ??= 1;
-    const guildConfig = ((guildsConfig as any)[message.guildId ?? 'default'] ?? guildsConfig.default);
+    const guildCfg = (guildsCfg as any)[message.guildId ?? 'default'];
     const PAGE_LENGTH = 25;
     let currPage = 0,
         maxPage = Math.floor(options.data.length / 25),
@@ -77,12 +77,12 @@ export async function userSelect (message: Message | CommandInteraction, options
     // create message components
     let prevButton = new MessageButton()
         .setCustomId('previous')
-        .setEmoji('⬅️')
+        .setEmoji('◀️')
         .setStyle('SECONDARY')
         .setDisabled(true);
     let nextButton = new MessageButton()
         .setCustomId('next')
-        .setEmoji('➡️')
+        .setEmoji('▶️')
         .setStyle('SECONDARY');
     let doneButton = new MessageButton()
         .setCustomId('done')
@@ -99,11 +99,11 @@ export async function userSelect (message: Message | CommandInteraction, options
     // add components to interaction / message
     const infoEmbed: APIEmbed = {
         description: `Select ${options.minValues} to ${options.maxValues} items.`,
-        color: guildConfig.embedColors.info
+        color: guildCfg.embeds.info
     };
     const selectionEmbed = new Embed()
         .setTitle('Selections:')
-        .setColor(guildConfig.embedColors.warning);
+        .setColor(guildCfg.embeds.warning);
     if (message instanceof CommandInteraction)
         if (message.deferred || message.replied)
             componentMessage = (await message.fetchReply()) as Message;
@@ -115,52 +115,58 @@ export async function userSelect (message: Message | CommandInteraction, options
     // get user seleted option(s)
     let values: number[] = [];
     const userId = (message instanceof CommandInteraction ? message.user.id : message.author.id);
-    const filter = (interaction: MessageComponentInteraction) => (interaction.customId === 'previous' || interaction.customId === 'next' || interaction.customId === 'options') && interaction.user.id === userId;
+    const filter = componentFilter({ users: [userId] });
     while (true) {
         const interaction = await componentMessage.awaitMessageComponent({ filter, time: 30_000 }).catch(reason => {
             const errorEmbed: APIEmbed = {
                 description: `Failed to select options in time.`,
-                color: guildConfig.embedColors.error
+                color: guildCfg.embeds.error
             };
             componentMessage.edit({ embeds: [errorEmbed], components: [] });
             throw 'Failed to select in time.';
         });
         switch (interaction.customId) {
             case ('previous'):
-                currPage--;
-                if (currPage === 0) prevButton.setDisabled(true);
+                if (--currPage > maxPage) {
+                    currPage = maxPage;
+                    prevButton.setDisabled(true);
+                }
                 nextButton.setDisabled(false);
                 selectMenu.setOptions(pages[currPage]);
                 componentMessage.edit({ embeds: [infoEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
                 break;
             case ('next'):
-                currPage++;
-                if (currPage === maxPage) nextButton.setDisabled(true);
-                nextButton.setDisabled(false);
+                if (++currPage > maxPage) {
+                    currPage = maxPage;
+                    nextButton.setDisabled(true);
+                }
+                prevButton.setDisabled(false);
                 selectMenu.setOptions(pages[currPage]);
                 componentMessage.edit({ embeds: [infoEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
                 break;
             case ('done'):
                 if (values.length > options.maxValues) {
                     values = [];
+                    prevButton.setDisabled(true);
+                    nextButton.setDisabled(false);
                     selectMenu.setOptions(pages[0]);
                     selectionEmbed.setDescription('');
                     const errorEmbed: APIEmbed = {
                         description: `Too many items selected. Selection has been reset.`,
-                        color: guildConfig.embedColors.warning
+                        color: guildCfg.embeds.warning
                     };
                     componentMessage.edit({ embeds: [errorEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
                 
                 } else if (values.length < options.minValues) {
                     const errorEmbed: APIEmbed = {
                         description: `Not enough items selected. Please select the minimum amount required.`,
-                        color: guildConfig.embedColors.warning
+                        color: guildCfg.embeds.warning
                     };
                     componentMessage.edit( { embeds: [errorEmbed, selectionEmbed] });
                 } else {
                     const confirmEmbed: APIEmbed = {
                         description: `Received selection.`,
-                        color: guildConfig.embedColors.success
+                        color: guildCfg.embeds.success
                     };
                     componentMessage.edit({ embeds: [confirmEmbed, selectionEmbed], components: [] });
                     return values;
@@ -177,11 +183,13 @@ export async function userSelect (message: Message | CommandInteraction, options
                         values.push(parseInt(value));
                 if (values.length > options.maxValues) {
                     values = [];
+                    prevButton.setDisabled(true);
+                    nextButton.setDisabled(false);
                     selectMenu.setOptions(pages[0]);
                     selectionEmbed.setDescription('');
                     const errorEmbed: APIEmbed = {
                         description: `Too many items selected. Selection has been reset.`,
-                        color: guildConfig.embedColors.warning
+                        color: guildCfg.embeds.warning
                     };
                     componentMessage.edit({ embeds: [errorEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
                     break;
@@ -189,7 +197,7 @@ export async function userSelect (message: Message | CommandInteraction, options
                 if (pages.length == 1 && values.length >= options.minValues) {
                     const confirmEmbed: APIEmbed = {
                         description: `Received selection.`,
-                        color: guildConfig.embedColors.success
+                        color: guildCfg.embeds.success
                     };
                     componentMessage.edit({ embeds: [confirmEmbed, selectionEmbed], components: [] });
                     return values;
@@ -211,12 +219,12 @@ export async function userSelect (message: Message | CommandInteraction, options
 export async function getDesiredOptionLength(optionsName: string, interaction: CommandInteraction, options: UserSelectOptions): Promise<number[] | null> {
     options.minValues = options.minValues ?? 1;
     options.maxValues = options.maxValues ?? 1;
-    const guildConfig = (guildsConfig as any)[interaction.guildId ?? 'default'];
+    const guildCfg = (guildsCfg as any)[interaction.guildId ?? 'default'];
 
     if (options.data.length < options.minValues) {
         const embed = new Embed()
             .setDescription(`No ${optionsName} found for your input.`)
-            .setColor(guildConfig.embeds.error);
+            .setColor(guildCfg.embeds.error);
         interaction.editReply({ embeds: [embed] });
         throw 'Not enough options provided.';
     }
@@ -229,9 +237,116 @@ export async function getDesiredOptionLength(optionsName: string, interaction: C
     } catch (err) {
         const embed = new Embed()
             .setDescription('Failed to select options.')
-            .setColor(guildConfig.embedColors.error);
+            .setColor(guildCfg.embeds.error);
         interaction.editReply({ embeds: [embed] });
         return null;
+    }
+}
+
+
+export interface SelectShowcaseOption {
+    dense: { [key: string]: string },
+    verbose: { [key: string]: string }
+}
+
+export async function selectShowcase(interaction: CommandInteraction, options: SelectShowcaseOption[]): Promise<number> {
+    const guildCfg = (guildsCfg as any)[interaction.guildId ?? 'default'];
+
+    const mappedOptions = options.map(option => { 
+        return { 
+            dense: Object.values(option.dense).join(' - '),
+            verbose: Object.entries(option.verbose).map(arr => `${arr[0]}: *${arr[1]}*`).join('\n')
+        }
+    });
+    const PAGE_LENGTH = 5;
+    const maxPage = Math.floor(options.length / PAGE_LENGTH);
+    const pages: { dense: string, verbose: string}[][] = [];
+    for (let i = 0; i <= maxPage; i++)
+        pages.push(mappedOptions.slice(i * PAGE_LENGTH, (i + 1) * PAGE_LENGTH));
+    let currPage = 0;
+
+    if (options.length === 1) return 0;
+
+    const prevFiveButton = new MessageButton()
+        .setCustomId('prevFive')
+        .setStyle('PRIMARY')
+        .setEmoji('⏪')
+        .setDisabled(true);
+    const prevOneButton = new MessageButton()
+        .setCustomId('prevOne')
+        .setStyle('PRIMARY')
+        .setEmoji('◀️')
+        .setDisabled(true);
+    const doneButton = new MessageButton()
+        .setCustomId('done')
+        .setStyle('SUCCESS')
+        .setEmoji('✅')
+    const nextOneButton = new MessageButton()
+        .setCustomId('nextOne')
+        .setStyle('PRIMARY')
+        .setEmoji('▶️');
+    const nextFiveButton = new MessageButton()
+        .setCustomId('nextFive')
+        .setStyle('PRIMARY')
+        .setEmoji('⏩')
+    const denseButton = new MessageButton()
+        .setCustomId('dense')
+        .setStyle('PRIMARY')
+        .setLabel('Dense View')
+    const verboseButton = new MessageButton()
+        .setCustomId('verbose')
+        .setStyle('PRIMARY')
+        .setLabel('Verbose view')
+        .setDisabled(true);
+    const embed = new Embed()
+        .setTitle('Showcase')
+        .setDescription(pages[currPage].join('\n'));
+
+    const selectRow = new MessageActionRow().setComponents(prevFiveButton, prevOneButton, doneButton, nextOneButton, nextFiveButton);
+    const viewRow = new MessageActionRow().setComponents(denseButton, verboseButton);
+
+    let interactionMessage: Message;
+    if (interaction.replied || interaction.deferred)
+        interactionMessage = (await interaction.editReply({ embeds: [embed], components: [selectRow, viewRow] })) as Message;
+    else
+        interactionMessage = (await interaction.reply({ embeds: [embed], components: [selectRow, viewRow], fetchReply: true })) as Message;
+    
+    const filter = componentFilter({ users: [interaction.user.id] });
+    const startDate = Date.now();
+    while (true) {
+        if (Date.now() - startDate > 600_000) {
+            const errorEmbed: APIEmbed = {
+                description: `Showcase has been going on for too long.`,
+                color: guildCfg.embeds.error
+            };
+            interactionMessage.edit( { embeds: [errorEmbed] });
+            throw 'showcase going too long';
+        }
+        const buttonInteraction = await interactionMessage.awaitMessageComponent({ filter, time: 60_000 }).catch(reason => {
+            const errorEmbed: APIEmbed = {
+                description: `Failed to select options in time.`,
+                color: guildCfg.embeds.error
+            };
+            interactionMessage.edit({ embeds: [errorEmbed], components: [] });
+            throw 'Failed to select in time.';
+        });
+
+        switch(buttonInteraction.customId) {
+            case 'prevFive':
+                break;
+            case 'prevOne':
+                break;
+            case 'done':
+                break;
+            case 'nextOne':
+                break;
+            case 'nextFive':
+                break;
+            case 'dense':
+                break;
+            case 'verbose':
+                break;
+        }
     }
 }
 
@@ -260,8 +375,8 @@ export async function userDecision(channel: TextBasedChannel, decision: string, 
     let dismisses = 0;
     let acceptUsers: string[] = [];
     let dismissUsers: string[] = [];
-    const guildConfig = (guildsConfig as any)[options.guildId];
-    const embed = new Embed().setColor(guildConfig.embedColors.info)
+    const guildCfg = (guildsCfg as any)[options.guildId];
+    const embed = new Embed().setColor(guildCfg.embeds.info)
         .setDescription(decision)
         .setFooter({ text: "accepts: 0 | dismisses: 0" });
     const acceptButton = new MessageButton().setCustomId('accept').setEmoji('✅').setStyle('SUCCESS');
@@ -293,18 +408,18 @@ export async function userDecision(channel: TextBasedChannel, decision: string, 
     return new Promise((resolve, _reject) => {
         collector.once('end', (_collected, reason) => {
             if (reason == "time") {
-                message.edit({ embeds: [{ color: guildConfig.embedColors.error, description: "Not enough people made a decision in time." }] });
+                message.edit({ embeds: [{ color: guildCfg.embeds.error, description: "Not enough people made a decision in time." }] });
                 resolve(false);
             }
             if (accepts > dismisses) {
-                message.edit({ embeds: [{ color: guildConfig.embedColors.success, description: `Decision greenlighted with **${accepts}** to ${dismisses} votes.` }] });
+                message.edit({ embeds: [{ color: guildCfg.embeds.success, description: `Decision greenlighted with **${accepts}** to ${dismisses} votes.` }] });
                 resolve(true);
             }
             if (accepts < dismisses) {
-                message.edit({ embeds: [{ color: guildConfig.embedColors.error, description: `Decision denied with **${accepts}** to ${dismisses} votes.` }] });
+                message.edit({ embeds: [{ color: guildCfg.embeds.error, description: `Decision denied with **${accepts}** to ${dismisses} votes.` }] });
                 resolve(false);
             }
-            message.edit({ embeds: [{ color: options.trueOnTie ? guildConfig.embedColors.success : guildConfig.embedColors.error, 
+            message.edit({ embeds: [{ color: options.trueOnTie ? guildCfg.embeds.success : guildCfg.embeds.error, 
                 description: `Decision ${options.trueOnTie ? "greenlighted" : "denied"} with a tie of **${accepts}** to ${dismisses} votes.` }] });
             resolve(!!options.trueOnTie);
         });
@@ -326,8 +441,8 @@ export interface ModDecisionOptions {
  */
 export async function modDecision(channel: TextBasedChannel, decision: string, options: ModDecisionOptions = {}): Promise<boolean> {
     if (channel.type === "DM") return userDecision(channel, decision);
-    const guildConfig = (guildsConfig as any)[channel.guildId];
-    const roles: string[] = guildConfig.features.moderation;
+    const guildCfg = (guildsCfg as any)[channel.guildId];
+    const roles: string[] = guildCfg.features.moderation;
     return userDecision(channel, decision, {...options, guildId: channel.guildId, roleWhitelist: roles });
 }
 

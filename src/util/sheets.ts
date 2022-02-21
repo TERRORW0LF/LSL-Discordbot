@@ -3,7 +3,7 @@ import { Collection } from "discord.js";
 import { JWT } from "google-auth-library";
 import { google } from "googleapis";
 import { googleEmail, googleKey } from "../config/config";
-import guildsConfig from "../config/guildConfig.json";
+import guildsCfg from "../config/guildConfig.json";
 
 let token: JWT;
 
@@ -72,8 +72,8 @@ export interface SheetOptions {
 export async function getAllSubmits(guildId: string, options: SheetOptions): Promise<Run[]> {
     const client = google.sheets('v4'),
           token = await getGoogleAuth(),
-          guildConfig = (guildsConfig as any)[guildId],
-          sheetId: string | undefined = Object.values(options).reduce((prev, curr) => prev?.[curr], guildConfig?.sheets);
+          guildCfg = (guildsCfg as any)[guildId],
+          sheetId: string | undefined = Object.values(options).reduce((prev, curr) => prev?.[curr], guildCfg?.sheets);
     if (!sheetId)
         throw 'No sheet belonging to options found.';
 
@@ -81,7 +81,7 @@ export async function getAllSubmits(guildId: string, options: SheetOptions): Pro
     const rawRuns = (await client.spreadsheets.values.get({
         auth: token,
         spreadsheetId: sheetId,
-        range: guildConfig.sheets.runs,
+        range: guildCfg.sheets.runs,
         majorDimension: 'ROWS',
         valueRenderOption: 'UNFORMATTED_VALUE',
     })).data.values;
@@ -158,8 +158,8 @@ export function pbsOnly(runs: Run[]): Run[] {
 export async function deleteSubmit(guildId: string, submitId: number, sheetOptions: SheetOptions): Promise<void> {
     const client = google.sheets('v4'),
           token = await getGoogleAuth(),
-          guildConfig = (guildsConfig as any)[guildId],
-          sheetId: string | undefined = Object.values(sheetOptions).reduce((prev, curr) => prev?.[curr], guildConfig?.sheets);
+          guildCfg = (guildsCfg as any)[guildId],
+          sheetId: string | undefined = Object.values(sheetOptions).reduce((prev, curr) => prev?.[curr], guildCfg?.sheets);
     if (!sheetId) throw 'No sheet belonging to options found.';
 
     const submits = await getAllSubmits(guildId, sheetOptions);
@@ -172,7 +172,7 @@ export async function deleteSubmit(guildId: string, submitId: number, sheetOptio
             requests: [{
                 deleteDimension: {
                     range: {
-                        sheetId: parseInt(guildConfig.sheets.sheetID),
+                        sheetId: parseInt(guildCfg.sheets.sheetID),
                         dimension: 'ROWS',
                         startIndex: row,
                         endIndex: row + 1
@@ -199,7 +199,7 @@ export interface Points {
 export async function getMembersWithPoints(guildId: string, sheetOptions: SheetOptions): Promise<Collection<string, Points>> {
     const client = google.sheets('v4'),
           token = await getGoogleAuth(),
-          guildCfg = (guildsConfig as any)[guildId],
+          guildCfg = (guildsCfg as any)[guildId],
           sheetId: string | undefined = Object.values(sheetOptions).reduce((prev, curr) => prev?.[curr], guildCfg?.sheets);
     if (!sheetId) throw 'No sheet belonging to options found.';
 
@@ -236,8 +236,8 @@ export async function getMembersWithPoints(guildId: string, sheetOptions: SheetO
 export async function submitNameChange(guildId: string, oldName: string, newName: string, sheetOptions: SheetOptions): Promise<void> {
     const client = google.sheets('v4'),
           token = await getGoogleAuth(),
-          guildConfig = (guildsConfig as any)[guildId],
-          sheetId: string | undefined = Object.values(sheetOptions).reduce((prev, curr) => prev?.[curr], guildConfig?.sheets);
+          guildCfg = (guildsCfg as any)[guildId],
+          sheetId: string | undefined = Object.values(sheetOptions).reduce((prev, curr) => prev?.[curr], guildCfg?.sheets);
     if (!sheetId) throw 'No sheet belonging to options found.';
 
     const submits = await getAllSubmits(guildId, sheetOptions);
@@ -249,7 +249,7 @@ export async function submitNameChange(guildId: string, oldName: string, newName
         spreadsheetId: sheetId,
         auth: token,
         valueInputOption: 'RAW',
-        range: guildConfig.sheets.runs,
+        range: guildCfg.sheets.runs,
         requestBody: {
             majorDimension: 'ROWS',
             values: updatedSubmits
@@ -273,7 +273,7 @@ export interface SubmitOptions {
  * @param submit The submit object.
  */
 export async function submit(guildId: string, submit: SubmitOptions): Promise<void> {
-    const guildFormsConfig = (guildsConfig as any)[guildId]?.forms;
+    const guildFormsConfig = (guildsCfg as any)[guildId]?.forms;
     if (!guildFormsConfig)
         throw 'No submit form found';
     
