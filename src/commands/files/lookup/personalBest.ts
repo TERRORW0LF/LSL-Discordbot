@@ -1,21 +1,21 @@
-import { getAllSubmits, sortRuns } from "../../../util/sheets";
+import { getAllSubmits } from "../../../util/sheets";
 import { getDesiredOptionLength, getOptions } from "../../../util/userInput";
 import guildsCfg from '../../../config/guildConfig.json';
 import { APIEmbed } from "discord-api-types";
 import { CommandInteraction, Formatters } from "discord.js";
+import { sortRuns } from "../../../util/runs";
 
 export async function run (interaction: CommandInteraction<"present">) {
     const defer = interaction.deferReply();
 
+    const guildCfg = (guildsCfg as any)[interaction.guildId] ?? guildsCfg.default;
     const patch = interaction.options.getString("patch", false) ?? "1.50";
     const season = interaction.options.getString("season", true);
     const category = interaction.options.getString("category", true);
     let map = interaction.options.getString("map", true);
     const user = interaction.options.getUser('user', false) ?? interaction.user;
-    const guildId = interaction.guildId;
-    const guildCfg = (guildsCfg as any)[guildId] ?? guildsCfg.default;
 
-    const submitsPromise = getAllSubmits(guildId, { patch, season });
+    const submitsPromise = getAllSubmits(interaction.guildId, { patch, season });
 
     const mapOptions = getOptions(map, guildCfg.maps),
           selectData = mapOptions.map(value => { return { label: value } });

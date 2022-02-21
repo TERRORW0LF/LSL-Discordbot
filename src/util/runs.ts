@@ -49,22 +49,23 @@ export interface RunWithPlaceAndPoints extends Run {
 }
 
 /**
- * Adds place and points to the given runs. The returned runs are also sorted.
+ * Adds place and points to the given runs. The returned runs are also sorted and incluce only pbs.
  * Place and points are missing from the runs returned in getAllSubmits bc their calculation are quite resource intensive
  * and should only be done if necessary.
- * @param runs The runs the add the place and points to.
+ * @param pbs The runs the add the place and points to.
  * @returns The runs with their respective place and points.
  */
 export function addPlaceAndPoints(runs: Run[]): RunWithPlaceAndPoints[] {
-    sortRuns(runs);
-    const mappedRuns = runs.map<RunWithPlaceAndPoints>(run => {
-        const sameMap = runs.filter(run1 => run1.patch === run.patch 
+    const pbs = pbsOnly(sortRuns(runs));
+
+    const mappedRuns = pbs.map<RunWithPlaceAndPoints>(run => {
+        const sameMap = pbs.filter(run1 => run1.patch === run.patch 
             && run1.season === run.season 
             && run1.category === run.category
             && run1.map === run.map);
         const wr = sameMap[0];
-        let place = runs.filter(run1 => run1.time - run.time < 0.0002).length + 1;
-        if (place === 1 && run !== wr) place = 2;
+        let place = pbs.filter(run1 => run1.time - run.time < 0.0002).length + 1;
+        if (place === 1 && run.submitId !== wr.submitId) place = 2;
         const points = getPoints(run, wr, place, run.map, run.category);
         return { ...run, place, points };
     });
