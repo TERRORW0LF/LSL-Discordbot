@@ -127,8 +127,8 @@ export async function userSelect (message: Message | CommandInteraction, options
         });
         switch (interaction.customId) {
             case ('previous'):
-                if (--currPage > maxPage) {
-                    currPage = maxPage;
+                if (--currPage < 0) {
+                    currPage = 0;
                     prevButton.setDisabled(true);
                 }
                 nextButton.setDisabled(false);
@@ -246,7 +246,8 @@ export async function getDesiredOptionLength(optionsName: string, interaction: C
 
 export interface SelectShowcaseOption {
     dense: { [key: string]: string },
-    verbose: { [key: string]: string }
+    verbose: { [key: string]: string },
+    link?: string
 }
 
 export async function selectShowcase(interaction: CommandInteraction, options: SelectShowcaseOption[]): Promise<number> {
@@ -254,18 +255,15 @@ export async function selectShowcase(interaction: CommandInteraction, options: S
 
     const mappedOptions = options.map(option => { 
         return { 
-            dense: Object.values(option.dense).join(' - '),
-            verbose: Object.entries(option.verbose).map(arr => `${arr[0]}: *${arr[1]}*`).join('\n')
-        }
+            dense: `*${Object.values(option.dense).join(' - ')}*`,
+            verbose: Object.entries(option.verbose).map(arr => `${arr[0]}: *${arr[1]}*`).join('\n'),
+            link: option.link
+        };
     });
-    const PAGE_LENGTH = 5;
-    const maxPage = Math.floor(options.length / PAGE_LENGTH);
-    const pages: { dense: string, verbose: string}[][] = [];
-    for (let i = 0; i <= maxPage; i++)
-        pages.push(mappedOptions.slice(i * PAGE_LENGTH, (i + 1) * PAGE_LENGTH));
-    let currPage = 0;
+    const DENSE_LENGTH = 5;
+    let currItem = 0;
 
-    if (options.length === 1) return 0;
+    if (options.length <= 1) return 0;
 
     const prevFiveButton = new MessageButton()
         .setCustomId('prevFive')
@@ -300,19 +298,22 @@ export async function selectShowcase(interaction: CommandInteraction, options: S
         .setDisabled(true);
     const embed = new Embed()
         .setTitle('Showcase')
-        .setDescription(pages[currPage].join('\n'));
+        .setDescription(mappedOptions.slice(0, DENSE_LENGTH).map(page => page.dense).join('\n'))
+        .setColor(guildCfg.embeds.info);
 
     const selectRow = new MessageActionRow().setComponents(prevFiveButton, prevOneButton, doneButton, nextOneButton, nextFiveButton);
     const viewRow = new MessageActionRow().setComponents(denseButton, verboseButton);
 
     let interactionMessage: Message;
     if (interaction.replied || interaction.deferred)
-        interactionMessage = (await interaction.editReply({ embeds: [embed], components: [selectRow, viewRow] })) as Message;
+        interactionMessage = (await interaction.editReply({ embeds: [embed] })) as Message;
     else
-        interactionMessage = (await interaction.reply({ embeds: [embed], components: [selectRow, viewRow], fetchReply: true })) as Message;
-    
+        interactionMessage = (await interaction.reply({ embeds: [embed], fetchReply: true })) as Message;
+    const componentMessage = (await interaction.followUp({ content: '.', components: [selectRow, viewRow] })) as Message;
+
     const filter = componentFilter({ users: [interaction.user.id] });
     const startDate = Date.now();
+    let dense = true;
     while (true) {
         if (Date.now() - startDate > 600_000) {
             const errorEmbed: APIEmbed = {
@@ -322,31 +323,48 @@ export async function selectShowcase(interaction: CommandInteraction, options: S
             interactionMessage.edit( { embeds: [errorEmbed] });
             throw 'showcase going too long';
         }
-        const buttonInteraction = await interactionMessage.awaitMessageComponent({ filter, time: 60_000 }).catch(reason => {
-            const errorEmbed: APIEmbed = {
-                description: `Failed to select options in time.`,
-                color: guildCfg.embeds.error
-            };
-            interactionMessage.edit({ embeds: [errorEmbed], components: [] });
-            throw 'Failed to select in time.';
-        });
-
-        switch(buttonInteraction.customId) {
-            case 'prevFive':
-                break;
-            case 'prevOne':
-                break;
-            case 'done':
-                break;
-            case 'nextOne':
-                break;
-            case 'nextFive':
-                break;
-            case 'dense':
-                break;
-            case 'verbose':
-                break;
+        let buttonInteraction;
+        try {
+            buttonInteraction = await componentMessage.awaitMessageComponent({ filter, time: 60_000 });
+        } catch (_error) {
+            interactionMessage.edit({ embeds: [embed] });
+            componentMessage.edit({ content: (!dense && mappedOptions[currItem].link ? mappedOptions[currItem].link : '.')});
+            return currItem;
         }
+
+        if (buttonInteraction.customId.startsWith('prev')) {
+            if ((currItem -= (buttonInteraction.customId === 'prevFive' ? 5 : 1) * (dense ? DENSE_LENGTH : 1)) <= 0) {
+                currItem = 0;
+                prevFiveButton.setDisabled(true);
+                prevOneButton.setDisabled(true);
+            }
+            if ([currItem + (dense ? DENSE_LENGTH : 1)]) {
+                nextFiveButton.setDisabled(false);
+                nextOneButton.setDisabled(false);
+            }
+        }
+        else if (buttonInteraction.customId.startsWith('next')) {
+            if ((currItem += (buttonInteraction.customId === 'nextFive' ? 5 : 1) * (dense ? DENSE_LENGTH : 1)) >= mappedOptions.length - (dense ? DENSE_LENGTH + 1 : 1)) {
+                if (currItem >= mappedOptions.length - 1)
+                    currItem = mappedOptions.length - 1;
+                nextOneButton.setDisabled(true);
+                nextFiveButton.setDisabled(true);
+            }
+            prevFiveButton.setDisabled(false);
+            prevOneButton.setDisabled(false);
+        }
+        else {
+            embed.setColor(guildCfg.embeds.success);
+            interactionMessage.edit({ embeds: [embed] });
+            componentMessage.edit({ content: mappedOptions[currItem].link, components: [] });
+            return currItem;
+        }
+        if (dense)
+            embed.setDescription(mappedOptions.slice(currItem, currItem + DENSE_LENGTH).map(page => page.dense).join('\n'));
+        else
+            embed.setDescription(mappedOptions[currItem].verbose);
+        interactionMessage.edit({ embeds: [embed] });
+        componentMessage.edit({ content: (!dense && mappedOptions[currItem].link ? mappedOptions[currItem].link : '.'), components: [selectRow, viewRow] });
     }
 }
 
