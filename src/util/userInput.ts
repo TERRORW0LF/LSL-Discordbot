@@ -250,6 +250,13 @@ export interface SelectShowcaseOption {
     link?: string
 }
 
+/**
+ * Adds a showcase to an interaction. Resolves when the user clicked done. If the user clicked done while in the dense view
+ * the index of the first option visible in the dense view will be returned.
+ * @param interaction The interaction to add the showcase to.
+ * @param options The showcase data that can be displayed.
+ * @returns The index of the selected option.
+ */
 export async function selectShowcase(interaction: CommandInteraction, options: SelectShowcaseOption[]): Promise<number> {
     const guildCfg = (guildsCfg as any)[interaction.guildId ?? 'default'];
 
