@@ -353,6 +353,24 @@ export async function selectShowcase(interaction: CommandInteraction, options: S
             prevFiveButton.setDisabled(false);
             prevOneButton.setDisabled(false);
         }
+        else if (buttonInteraction.customId === 'dense') {
+            denseButton.setDisabled(true);
+            verboseButton.setDisabled(false);
+            embed.setDescription(mappedOptions.slice(currItem, currItem + DENSE_LENGTH).map(option => option.dense).join('\n'));
+            if (!mappedOptions[currItem + DENSE_LENGTH]) {
+                nextOneButton.setDisabled(true);
+                nextFiveButton.setDisabled(true);
+            }
+        }
+        else if (buttonInteraction.customId === 'verbose') {
+            verboseButton.setDisabled(true);
+            denseButton.setDisabled(false);
+            embed.setDescription(mappedOptions[currItem].verbose);
+            if (mappedOptions[currItem + 1]) {
+                nextOneButton.setDisabled(false);
+                nextFiveButton.setDisabled(false);
+            }
+        }
         else {
             embed.setColor(guildCfg.embeds.success);
             interactionMessage.edit({ embeds: [embed] });
