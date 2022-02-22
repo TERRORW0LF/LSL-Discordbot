@@ -8,6 +8,8 @@ import submit from './events/server/submit';
 import remove from './events/server/delete';
 import ping from './events/server/ping';
 import listen from './events/server/listen';
+import guildMemberAdd from './events/discord/guildMemberAdd';
+import guildMemberUpdate from './events/discord/guildMemberUpdate';
 
 process.on('unhandledRejection', () => {});
 process.on('uncaughtException', () => {});
@@ -26,5 +28,7 @@ const client = new Client({ restTimeOffset: 100, partials: ['USER', 'GUILD_MEMBE
 
 client.once('ready', (...args) => ready(...args));
 client.on('interactionCreate', async (...args) => interactionCreate(commandCollection, ...args));
+client.on('guildMemberAdd', async (...args) => guildMemberAdd(...args));
+client.on('guildMemberUpdate', async (...args) => guildMemberUpdate(...args));
 
 client.login(discordToken);
