@@ -38,15 +38,19 @@ export async function run (interaction: CommandInteraction<"present">) {
                 proof: Formatters.hyperlink('link', run.proof)
             },
             verbose: {
-                Place: `${run.place}`,
-                User: run.username,
-                Time: run.time.toFixed(2),
-                Points: `${run.points}`,
-                Date: Formatters.time(run.date),
-                Proof: Formatters.hyperlink('link', run.proof),
-                ID: `${run.submitId}`
-            },
-            link: run.proof
+                description: {
+                    Place: `${run.place}`,
+                    User: run.username,
+                    Time: run.time.toFixed(2),
+                    Points: `${run.points}`,
+                    Date: Formatters.time(run.date),
+                    Proof: Formatters.hyperlink('link', run.proof),
+                },
+                footer: {
+                    ID: `${run.submitId}`
+                },
+                link: run.proof
+            }
         };
     });
     await defer;

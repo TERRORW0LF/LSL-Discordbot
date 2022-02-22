@@ -24,12 +24,9 @@ export async function run (interaction: CommandInteraction<"present">) {
         interaction.editReply({ embeds: [embed] });
         return;
     }
-    let rank = 1;
-    for (const memberPoint of memberPoints.values())
-        if (memberPoint[category] > rankUser[category])
-            rank++;
+    const rank = memberPoints.filter(points => points[category] < rankUser[category]).size + 1;
     const embed: APIEmbed = {
-        title: `Category Rank:`,
+        title: `Category Rank`,
         description: `Rank: *${rank}*\nPoints: *${rankUser[category]}*`
     };
     await defer;

@@ -64,8 +64,7 @@ export function addPlaceAndPoints(runs: Run[]): RunWithPlaceAndPoints[] {
             && run1.category === run.category
             && run1.map === run.map);
         const wr = sameMap[0];
-        let place = pbs.filter(run1 => run1.time - run.time < 0.0002).length + 1;
-        if (place === 1 && run.submitId !== wr.submitId) place = 2;
+        const place = getPlace(run, wr, sameMap);
         const points = getPoints(run, wr, place, run.map, run.category);
         return { ...run, place, points };
     });
@@ -73,6 +72,41 @@ export function addPlaceAndPoints(runs: Run[]): RunWithPlaceAndPoints[] {
 }
 
 
+/**
+ * Gets the place of the run in the given runs.
+ * This function assumes that the given runs include only pbs on the same map as the run.
+ * No guarantees are made to the validity of the result if these conditions are not fulfilled.
+ * @param run The run to get the place of.
+ * @param runs The other runs on the same map.
+ * @returns The place of the run in the runs.
+ */
+export function getPlace(run: Run, wr: Run, runs: Run[]): number {
+    let place = runs.filter(run1 => run1.time - run.time < 0.0002).length + 1;
+    if (place === 1 && run.submitId !== wr.submitId) place = 2;
+    return place;
+}
+
+
+/**
+ * Gets the points of a run.
+ * @param run The run to get the points of.
+ * @param wr The wr on the map.
+ * @param place The place of the run.
+ * @param map The map of the run.
+ * @param category The category of the run.
+ * @returns The overall points the run has achieved.
+ */
+export function getPoints(run: Run, wr: Run, place: number, map: string, category: string) {
+    return getPercentilePoints(run, wr) + getMapBasePoints(map, category) + getPlacePoints(place);
+}
+
+
+/**
+ * Gets the percentile points of a run.
+ * @param run The run to get the points of.
+ * @param wr The wr on the map.
+ * @returns The percentile points the run has achieved.
+ */
 export function getPercentilePoints(run: Run, wr: Run) {
     let normalizedTime: number;
     if ((normalizedTime = 1 - ((run.time - wr.time) / wr.time)) < 0) normalizedTime = 0;
@@ -80,11 +114,12 @@ export function getPercentilePoints(run: Run, wr: Run) {
 }
 
 
-export function getPoints(run: Run, wr: Run, place: number, map: string, category: string) {
-    return getPercentilePoints(run, wr) + getMapBasePoints(map, category) + getPlacePoints(place);
-}
-
-
+/**
+ * Gets the base points for submitting a run.
+ * @param map The map.
+ * @param category The category.
+ * @returns The base points for the map / category combination.
+ */
 export function getMapBasePoints(map: string, category: string) {
     let points;
     if (['Gibraltar', 'Havana', 'Rialto', 'Route66'].includes(map)) points = 80;
@@ -96,6 +131,11 @@ export function getMapBasePoints(map: string, category: string) {
 }
 
 
+/**
+ * Gets the points for achieving the given place.
+ * @param place The place.
+ * @returns The points for achieving the place.
+ */
 export function getPlacePoints(place: number) {
     switch(place) {
         case 1: return 200;

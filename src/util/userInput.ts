@@ -1,6 +1,6 @@
 import { Embed } from '@discordjs/builders';
 import { APIEmbed } from 'discord-api-types';
-import { Message, MessageButton, MessageActionRow, MessageSelectMenu, CommandInteraction, MessageComponentInteraction, SelectMenuInteraction, EmojiIdentifierResolvable, TextBasedChannel, CollectorFilter, GuildMember, Collection } from 'discord.js';
+import { Message, MessageButton, MessageActionRow, MessageSelectMenu, CommandInteraction, MessageComponentInteraction, SelectMenuInteraction, EmojiIdentifierResolvable, TextBasedChannel, CollectorFilter, GuildMember } from 'discord.js';
 import { findBestMatch } from 'string-similarity';
 import guildsCfg from '../config/guildConfig.json';
 
@@ -246,8 +246,13 @@ export async function getDesiredOptionLength(optionsName: string, interaction: C
 
 export interface SelectShowcaseOption {
     dense: { [key: string]: string },
-    verbose: { [key: string]: string },
-    link?: string
+    verbose: { 
+        description?: { [key: string]: string },
+        footer?: { [key: string]: string },
+        image?: string,
+        thumbnail?: string,
+        link?: string
+    }
 }
 
 /**
@@ -263,8 +268,13 @@ export async function selectShowcase(interaction: CommandInteraction, options: S
     const mappedOptions = options.map(option => { 
         return { 
             dense: `*${Object.values(option.dense).join(' - ')}*`,
-            verbose: Object.entries(option.verbose).map(arr => `${arr[0]}: *${arr[1]}*`).join('\n'),
-            link: option.link
+            verbose: {
+                description: option.verbose.description ? Object.values(option.verbose.description).map(arr => `${arr[0]}: *${arr[1]}*`).join('\n') : undefined,
+                image: option.verbose.image,
+                thumbnail: option.verbose.thumbnail,
+                footer: option.verbose.footer ? Object.values(option.verbose.footer).map(arr => `${arr[0]}: ${arr[1]}`).join(' | ') : undefined,
+                link: option.verbose.link
+            }
         };
     });
     const DENSE_LENGTH = 5;
@@ -335,7 +345,7 @@ export async function selectShowcase(interaction: CommandInteraction, options: S
             buttonInteraction = await componentMessage.awaitMessageComponent({ filter, time: 60_000 });
         } catch (_error) {
             interactionMessage.edit({ embeds: [embed] });
-            componentMessage.edit({ content: (!dense && mappedOptions[currItem].link ? mappedOptions[currItem].link : '.')});
+            componentMessage.edit({ content: (!dense && mappedOptions[currItem].verbose.link ? mappedOptions[currItem].verbose.link : '.')});
             return currItem;
         }
 
@@ -363,7 +373,6 @@ export async function selectShowcase(interaction: CommandInteraction, options: S
         else if (buttonInteraction.customId === 'dense') {
             denseButton.setDisabled(true);
             verboseButton.setDisabled(false);
-            embed.setDescription(mappedOptions.slice(currItem, currItem + DENSE_LENGTH).map(option => option.dense).join('\n'));
             if (!mappedOptions[currItem + DENSE_LENGTH]) {
                 nextOneButton.setDisabled(true);
                 nextFiveButton.setDisabled(true);
@@ -372,7 +381,6 @@ export async function selectShowcase(interaction: CommandInteraction, options: S
         else if (buttonInteraction.customId === 'verbose') {
             verboseButton.setDisabled(true);
             denseButton.setDisabled(false);
-            embed.setDescription(mappedOptions[currItem].verbose);
             if (mappedOptions[currItem + 1]) {
                 nextOneButton.setDisabled(false);
                 nextFiveButton.setDisabled(false);
@@ -381,15 +389,24 @@ export async function selectShowcase(interaction: CommandInteraction, options: S
         else {
             embed.setColor(guildCfg.embeds.success);
             interactionMessage.edit({ embeds: [embed] });
-            componentMessage.edit({ content: mappedOptions[currItem].link, components: [] });
+            componentMessage.edit({ content: mappedOptions[currItem].verbose.link, components: [] });
             return currItem;
         }
-        if (dense)
-            embed.setDescription(mappedOptions.slice(currItem, currItem + DENSE_LENGTH).map(page => page.dense).join('\n'));
-        else
-            embed.setDescription(mappedOptions[currItem].verbose);
+        if (dense) {
+            embed.setDescription(mappedOptions.slice(currItem, currItem + DENSE_LENGTH).map(option => option.dense).join('\n'));
+            embed.setImage(null);
+            embed.setThumbnail(null);
+            embed.setFooter(null);
+        }
+        else {
+            const embedCfg = mappedOptions[currItem].verbose;
+            embed.setDescription(embedCfg.description ?? null);
+            embed.setImage(embedCfg.description ?? null);
+            embed.setThumbnail(embedCfg.thumbnail ?? null);
+            embed.setFooter({ text: embedCfg.footer ?? "" });
+        }
         interactionMessage.edit({ embeds: [embed] });
-        componentMessage.edit({ content: (!dense && mappedOptions[currItem].link ? mappedOptions[currItem].link : '.'), components: [selectRow, viewRow] });
+        componentMessage.edit({ content: (!dense && mappedOptions[currItem].verbose.link ? mappedOptions[currItem].verbose.link : '.'), components: [selectRow, viewRow] });
     }
 }
 

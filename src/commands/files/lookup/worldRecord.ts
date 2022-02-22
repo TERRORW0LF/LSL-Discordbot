@@ -3,7 +3,7 @@ import guildsCfg from '../../../config/guildConfig.json';
 import { CommandInteraction, Formatters } from "discord.js";
 import { getAllSubmits } from "../../../util/sheets";
 import { APIEmbed } from "discord-api-types";
-import { sortRuns } from "../../../util/runs";
+import { getPoints, sortRuns } from "../../../util/runs";
 
 export async function run (interaction: CommandInteraction<"present">) {
     const defer = interaction.deferReply();
@@ -37,10 +37,10 @@ export async function run (interaction: CommandInteraction<"present">) {
         interaction.editReply({ embeds: [embed] });
         return;
     }
-    //TODO: calculate points.
+    const points = getPoints(wr, wr, 1, map, category);
     const embed: APIEmbed = {
-        title: `World Record:`,
-        description: `User: *${wr.username}*\nTime: *${wr.time.toFixed(2)}*\nDate: *${Formatters.time(wr.date)}*\nProof: *${Formatters.hyperlink('link', wr.proof)}*`,
+        title: `World Record`,
+        description: `User: *${wr.username}*\nTime: *${wr.time.toFixed(2)}*\nPoints: *${points}*\nDate: *${Formatters.time(wr.date)}*\nProof: *${Formatters.hyperlink('link', wr.proof)}*`,
         footer: { text: `ID: ${wr.submitId}` }
     };
     await defer;

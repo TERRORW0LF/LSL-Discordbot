@@ -3,7 +3,7 @@ import { getDesiredOptionLength, getOptions } from "../../../util/userInput";
 import guildsCfg from '../../../config/guildConfig.json';
 import { APIEmbed } from "discord-api-types";
 import { CommandInteraction, Formatters } from "discord.js";
-import { sortRuns } from "../../../util/runs";
+import { getPlace, getPoints, pbsOnly } from "../../../util/runs";
 
 export async function run (interaction: CommandInteraction<"present">) {
     const defer = interaction.deferReply();
@@ -26,9 +26,9 @@ export async function run (interaction: CommandInteraction<"present">) {
     map = mapOptions[mapIndexes[0]];
 
     const allRuns = await submitsPromise;
-    const runs = allRuns.filter(run => run.category === category && run.map === map && run.username === user.tag);
-    sortRuns(runs);
-    const pb = runs[0];
+    const runs = allRuns.filter(run => run.category === category && run.map === map);
+    const pbs = pbsOnly(runs);
+    const pb = pbs.find(pb => pb.username === user.tag);
     if (!pb) {
         const embed: APIEmbed = {
             description: `Couldn't find your personal best.`,
@@ -38,10 +38,11 @@ export async function run (interaction: CommandInteraction<"present">) {
         interaction.editReply({ embeds: [embed] });
         return;
     };
-    //TODO: calculate points.
+    const place = getPlace(pb, pbs[0], pbs);
+    const points = getPoints(pb, pbs[0], place, map, category);
     const embed: APIEmbed = {
-        title: `Personal Best:`,
-        description: `Time: *${pb.time.toFixed(2)}*\nDate: *${Formatters.time(pb.date)}*\nProof: *${Formatters.hyperlink('link', pb.proof)}*`,
+        title: `Personal Best`,
+        description: `Place: *${place}*\nTime: *${pb.time.toFixed(2)}*\nPoints: *${points}*\nDate: *${Formatters.time(pb.date)}*\nProof: *${Formatters.hyperlink('link', pb.proof)}*`,
         footer: { text: `ID: ${pb.submitId}` }
     };
     await defer;

@@ -3,7 +3,7 @@ import { getAllSubmits } from "../../../util/sheets";
 import { getDesiredOptionLength, getOptions } from "../../../util/userInput";
 import guildsCfg from '../../../config/guildConfig.json';
 import { APIEmbed } from "discord-api-types";
-import { pbsOnly, sortRuns } from "../../../util/runs";
+import { getPlace, getPoints, pbsOnly, sortRuns } from "../../../util/runs";
 
 export async function run (interaction: CommandInteraction<"present">) {
     const defer = interaction.deferReply();
@@ -27,7 +27,7 @@ export async function run (interaction: CommandInteraction<"present">) {
 
     const allRuns = await runsPromise;
     const runs = allRuns.filter(run => run.category === category && run.map === map);
-    const pbs = pbsOnly(sortRuns(runs));
+    const pbs = sortRuns(pbsOnly(runs));
     let reqPlace: number;
     if (rawPlace === 0) reqPlace = 1;
     else if (rawPlace < 0)
@@ -45,17 +45,16 @@ export async function run (interaction: CommandInteraction<"present">) {
         interaction.editReply({ embeds: [embed] });
         return;
     }
-    let place = runs.findIndex(run1 => run1.time === run.time) + 1;
-    if (place === 1 && run.submitId !== pbs[0].submitId) place = 2;
-    const samePlaceUsers: string[] = [];
+    const place = getPlace(run, pbs[0], pbs);
+    const points = getPoints(run, pbs[0], place, map, category);
+    let samePlaceUsers = "";
     if (run.submitId !== runs[0].submitId)
-        for (const run1 of pbs)
-            if (run1.time === run.time && run1.submitId !== pbs[0].submitId)
-                samePlaceUsers.push(run1.username);
+        samePlaceUsers = pbs.filter(run1 => run1.time === run.time && run1.username !== run.username).join(', ');
+    
     const embed: APIEmbed = {
-        title: `Place:`,
-        description: `Translated place: *${reqPlace}*\nSheets place: *${place}*\nUser: *${run.username}*\nOther users: *${samePlaceUsers.join(', ')}*\n`
-            + `Time: *${run.time.toFixed(2)}*\nDate: *${Formatters.time(run.date)}*\nProof: *${Formatters.hyperlink('link', run.proof)}*`,
+        title: `Place`,
+        description: `Translated place: *${reqPlace}*\nSheets place: *${place}*\nUser: *${run.username}*\nOther users: *${samePlaceUsers}*\n`
+            + `Time: *${run.time.toFixed(2)}*\nPoints: *${points}*\nDate: *${Formatters.time(run.date)}*\nProof: *${Formatters.hyperlink('link', run.proof)}*`,
         footer: { text: `ID: ${run.submitId}` }
     };
     await defer;

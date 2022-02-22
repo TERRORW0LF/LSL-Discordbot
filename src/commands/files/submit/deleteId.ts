@@ -1,7 +1,7 @@
 import guildsCfg from '../../../config/guildConfig.json';
 import { deleteSubmit, getAllSubmits } from "../../../util/sheets";
 import { APIEmbed } from "discord-api-types";
-import { CommandInteraction } from "discord.js";
+import { CommandInteraction, GuildMember } from "discord.js";
 
 export async function run (interaction: CommandInteraction<"present">) {
     const defer = interaction.deferReply();
@@ -12,7 +12,8 @@ export async function run (interaction: CommandInteraction<"present">) {
 
     const runs = await getAllSubmits(interaction.guildId, { patch: '1.50', season });
     const run = runs.find(run => run.submitId === id);
-    if (!run || !(run.username === interaction.user.tag)) {
+    if (!run || (run.username !== interaction.user.tag 
+        && !(interaction.member as GuildMember).roles.cache.hasAny(guildCfg.features.moderation))) {
         const embed: APIEmbed = {
             description: "No run with matching id found or missing permission.",
             color: guildCfg.embeds.error

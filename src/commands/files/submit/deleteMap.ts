@@ -1,7 +1,7 @@
 import { getOptions, getDesiredOptionLength, UserSelectOptionsOption } from "../../../util/userInput";
 import guildsCfg from '../../../config/guildConfig.json';
 import { deleteSubmit, getAllSubmits } from "../../../util/sheets";
-import { CommandInteraction, Formatters } from "discord.js";
+import { CommandInteraction, Formatters, GuildMember } from "discord.js";
 import { APIEmbed } from "discord-api-types";
 
 export async function run (interaction: CommandInteraction<"present">) {
@@ -20,9 +20,13 @@ export async function run (interaction: CommandInteraction<"present">) {
         return;
     map = mapOptions[mapIndexes[0]];
 
-    const submits = await getAllSubmits(interaction.guildId, { patch: "1.50", season: "" + season }),
-          runs = submits.filter(submit => submit.username == name && submit.category == category && submit.map == map),
-          runSelectData: UserSelectOptionsOption[] = runs.map(run => { return { label: "" + run.submitId, description: `${Formatters.time(run.date)} | ${run.time.toFixed(2)}` } }),
+    const submits = await getAllSubmits(interaction.guildId, { patch: "1.50", season });
+    let runs;
+    if ((interaction.member as GuildMember).roles.cache.hasAny(guildCfg.features.moderation))
+        runs = submits.filter(submit => submit.category == category && submit.map == map);
+    else
+        runs = submits.filter(submit => submit.username === name && submit.category == category && submit.map == map);
+    const runSelectData: UserSelectOptionsOption[] = runs.map(run => { return { label: "" + run.submitId, description: `${Formatters.time(run.date)} | ${run.time.toFixed(2)}` } }),
           runIndexes = await getDesiredOptionLength('submit', interaction, { placeholder: 'Select the run to delete.', data: runSelectData });
     if (!runIndexes)
         return;
