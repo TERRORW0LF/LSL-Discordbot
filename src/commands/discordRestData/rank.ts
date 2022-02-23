@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { run as rankSeason } from '../files/lookup/rankSeason';
-import { run as rankCategory } from '../files/lookup/rankCategory';
+import { run as rankSeason } from '../files/lookup/rankSeason.js';
+import { run as rankCategory } from '../files/lookup/rankCategory.js';
 import { CommandInteraction } from 'discord.js';
-import { ApplicationCommandExecuter } from '../commandCollection';
+import { ApplicationCommandExecuter } from '../commandCollection.js';
 
 const command: ApplicationCommandExecuter = {
     data: new SlashCommandBuilder()

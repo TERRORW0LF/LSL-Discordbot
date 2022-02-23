@@ -1,9 +1,9 @@
-import { getAllSubmits } from "../../../util/sheets";
-import { getDesiredOptionLength, getOptions } from "../../../util/userInput";
+import { getAllSubmits } from "../../../util/sheets.js";
+import { getDesiredOptionLength, getOptions } from "../../../util/userInput.js";
 import guildsCfg from '../../../config/guildConfig.json';
 import { APIEmbed } from "discord-api-types";
 import { CommandInteraction, Formatters } from "discord.js";
-import { getPlace, getPoints, pbsOnly } from "../../../util/runs";
+import { getPlace, getPoints, pbsOnly } from "../../../util/runs.js";
 
 export async function run (interaction: CommandInteraction<"present">) {
     const defer = interaction.deferReply();

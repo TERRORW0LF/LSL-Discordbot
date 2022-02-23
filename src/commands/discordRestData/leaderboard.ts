@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction } from 'discord.js';
-import { ApplicationCommandExecuter } from '../commandCollection';
-import { run as lb } from '../files/lookup/leaderboard';
+import { ApplicationCommandExecuter } from '../commandCollection.js';
+import { run as lb } from '../files/lookup/leaderboard.js';
 
 const command: ApplicationCommandExecuter = {
     data: new SlashCommandBuilder()

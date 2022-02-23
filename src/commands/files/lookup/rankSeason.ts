@@ -1,6 +1,6 @@
 import { APIEmbed } from "discord-api-types";
 import { CommandInteraction } from "discord.js";
-import { getMembersWithPoints } from "../../../util/sheets";
+import { getMembersWithPoints } from "../../../util/sheets.js";
 import guildsCfg from '../../../config/guildConfig.json';
 
 export async function run (interaction: CommandInteraction<"present">) {

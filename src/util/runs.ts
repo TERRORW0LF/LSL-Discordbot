@@ -1,4 +1,4 @@
-import { Run } from "./sheets";
+import { Run } from "./sheets.js";
 
 /**
  * Sorts the runs by time and if the time is equal by submit date.

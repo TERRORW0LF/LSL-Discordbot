@@ -1,15 +1,15 @@
 import express from 'express';
 import { Client, Intents } from 'discord.js';
-import { discordToken, herokuAuth, port } from './config/config';
-import commandCollection from './commands/commandCollection';
-import interactionCreate from './events/discord/interactionCreate';
-import ready from './events/discord/ready';
-import submit from './events/server/submit';
-import remove from './events/server/delete';
-import ping from './events/server/ping';
-import listen from './events/server/listen';
-import guildMemberAdd from './events/discord/guildMemberAdd';
-import guildMemberUpdate from './events/discord/guildMemberUpdate';
+import { discordToken, herokuAuth, port } from './config/config.js';
+import commandCollection from './commands/commandCollection.js';
+import interactionCreate from './events/discord/interactionCreate.js';
+import ready from './events/discord/ready.js';
+import submit from './events/server/submit.js';
+import remove from './events/server/delete.js';
+import ping from './events/server/ping.js';
+import listen from './events/server/listen.js';
+import guildMemberAdd from './events/discord/guildMemberAdd.js';
+import guildMemberUpdate from './events/discord/guildMemberUpdate.js';
 import axios from 'axios';
 
 process.on('unhandledRejection', () => {});

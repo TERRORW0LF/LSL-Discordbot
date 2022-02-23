@@ -1,5 +1,5 @@
 import axios from "axios";
-import { port } from "../../config/config";
+import { port } from "../../config/config.js";
 
 export default () => {
     console.log(`Listening on port ${port}`);

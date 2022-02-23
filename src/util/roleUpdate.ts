@@ -1,7 +1,7 @@
 import guildsConfig from "../config/guildConfig.json";
 import { Collection, Guild, GuildMember } from "discord.js";
-import { Points } from "./sheets";
-import { sendRank } from "./automatedMessages";
+import { Points } from "./sheets.js";
+import { sendRank } from "./automatedMessages.js";
 
 
 /**

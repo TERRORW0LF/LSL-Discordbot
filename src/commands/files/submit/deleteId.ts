@@ -1,5 +1,5 @@
 import guildsCfg from '../../../config/guildConfig.json';
-import { deleteSubmit, getAllSubmits } from "../../../util/sheets";
+import { deleteSubmit, getAllSubmits } from "../../../util/sheets.js";
 import { APIEmbed } from "discord-api-types";
 import { CommandInteraction, GuildMember } from "discord.js";
 

@@ -13,11 +13,63 @@
     "678275066064142347": {
         "embeds": {
             "working": 0,
-            "waiting": 0,
-            "info": 0,
-            "success": 0,
-            "warning": 0,
-            "error": 0
+            "waiting": 15461355,
+            "info": 1342207,
+            "success": 7798548,
+            "warning": 16764928,
+            "error": 12064000
+        },
+        "features": {
+            "announce": {
+                "wr": {
+                    "enabled": true,
+                    "channel": "678275161853788210"
+                },
+                "pb": {
+                    "enabled": true,
+                    "channel": "678275161853788210"
+                },
+                "submit": {
+                    "enabled": true,
+                    "channel": "678275161853788210"
+                },
+                "delete": {
+                    "enabled": false,
+                    "channel": "678275161853788210"
+                },
+                "rank": {
+                    "enabled": true,
+                    "channel": "678275161853788210"
+                }
+            },
+            "moderation": ["688689304897323055"]
+        },
+        "patches": [1.00, 1.41, 1.50],
+        "seasons": [1, 2, 3, 4, 5],
+        "categories": ["Standard", "Gravspeed"],
+        "maps": ["Hanamura", "Horizon Lunar Colony", "Paris", "Temple of Anubis", "Volskaya Industries", "Dorado", "Havana", "Junkertown","Rialto",
+            "Route 66", "Gibraltar", "Blizzard World", "Eichenwalde", "Hollywood", "King's Row","Numbani", "Busan Sanctuary", "Busan MEKA Base",
+            "Busan Downtown", "Ilios Well", "Ilios Ruins", "Ilios Lighthouse", "Lijiang Night Market", "Lijiang Garden", "Lijiang Control Center",
+            "Nepal Village", "Nepal Sanctum", "Nepal Shrine", "Oasis City Center", "Oasis University", "Oasis Gardens"],
+        "sheets": {
+            "runs": "Record Log!A2:G",
+            "sheetID": "1091303763",
+            "points": {
+                "total": "Points Sheet!G3:H",
+                "Standard": "Points Sheet!A3:B",
+                "Gravspeed": "Points Sheet!D3:E"
+            },
+            "1.00": {
+                "1": "1FVWxhVCEFe1MXuclEwQe-fBxdxeqB3ZQtUmfJ8aPxWg"
+            }
+        },
+        "forms": {
+            "user": "58689989",
+            "category": "933601746",
+            "map": "428387040",
+            "time": "927634646",
+            "proof": "774918022",
+            "1": "https://docs.google.com/forms/d/e/1FAIpQLSdnC0z2SxbYgIXlAShRQnPJdFYnJ9st8YM6yTEZe_QoNgAofg/formResponse?&submit=SUBMIT"
         }
     },
 

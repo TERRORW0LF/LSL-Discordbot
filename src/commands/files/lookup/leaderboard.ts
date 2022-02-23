@@ -1,8 +1,8 @@
 import { CommandInteraction, Formatters } from "discord.js";
-import { getDesiredOptionLength, getOptions, selectShowcase, SelectShowcaseOption } from "../../../util/userInput";
-import { getAllSubmits } from "../../../util/sheets";
+import { getDesiredOptionLength, getOptions, selectShowcase, SelectShowcaseOption } from "../../../util/userInput.js";
+import { getAllSubmits } from "../../../util/sheets.js";
 import guildsCfg from '../../../config/guildConfig.json';
-import { addPlaceAndPoints } from "../../../util/runs";
+import { addPlaceAndPoints } from "../../../util/runs.js";
 
 export async function run (interaction: CommandInteraction<"present">) {
     const defer = interaction.deferReply();

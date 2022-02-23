@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { run as deleteId } from '../files/submit/deleteId';
-import { run as deleteMap } from '../files/submit/deleteMap';
+import { run as deleteId } from '../files/submit/deleteId.js';
+import { run as deleteMap } from '../files/submit/deleteMap.js';
 import { CommandInteraction } from 'discord.js';
-import { ApplicationCommandExecuter } from '../commandCollection';
+import { ApplicationCommandExecuter } from '../commandCollection.js';
 
 const command: ApplicationCommandExecuter = {
     data: new SlashCommandBuilder()

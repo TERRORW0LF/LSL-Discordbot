@@ -1,6 +1,6 @@
 import guildsConfig from "../../config/guildConfig.json";
 import { Collection, Interaction } from "discord.js";
-import { ApplicationCommandExecuter } from "../../commands/commandCollection";
+import { ApplicationCommandExecuter } from "../../commands/commandCollection.js";
 
 export default async (commandCollection: Collection<string, ApplicationCommandExecuter>, interaction: Interaction) => {
     if (interaction.isCommand()) {
