@@ -3,4 +3,3 @@ node_modules/
 dist/
 test.js
 .env
-src/testCommandRegister.js

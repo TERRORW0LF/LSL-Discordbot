@@ -4,8 +4,10 @@ import { getAllSubmits, getJsDateFromSerialNumber, getMembersWithPoints, Run } f
 import { sendPb, sendSubmit, sendWr } from "../../util/automatedMessages";
 import { Client } from "discord.js";
 import { NextFunction, Request, Response } from "express";
+import { herokuAuth } from '../../config/config';
 
 export default async (client: Client<true>, req: Request, res: Response, next: NextFunction): Promise<void> => {
+    if (req.query.auth !== herokuAuth) res.sendStatus(403);
     if (!client.isReady()) res.sendStatus(500);
     res.sendStatus(200);
     const announceCfg = (guildsCfg as any)[req.body.guildId]?.features?.announce;
