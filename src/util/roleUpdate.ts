@@ -38,13 +38,13 @@ export type Category = "Gravspeed" | "Standard";
  * @param guild The guild the members belong to.
  * @param data The members and their respective points.
  */
-export async function roleUpdates(guild: Guild, season: number, data: Collection<string, Points>): Promise<void> {
+export async function roleUpdates(guild: Guild, season: string, data: Collection<string, Points>): Promise<void> {
     const guildCfg = (guildsConfig as any)[guild.id];
     if (!guildCfg) return;
 
-    const rolesObj = guildCfg.roles["" + season];
-    const firstPlaceStandardRole = guildCfg.roles?.firstPlace["" + season].Standard;
-    const firstPlaceGravspeedRole = guildCfg.roles?.firstPlace["" + season].Gravspeed;
+    const rolesObj = guildCfg.roles[season];
+    const firstPlaceStandardRole = guildCfg.roles?.firstPlace[season].Standard;
+    const firstPlaceGravspeedRole = guildCfg.roles?.firstPlace[season].Gravspeed;
     const roles = new Collection<number, string>();
     for (const role in rolesObj)
         roles.set(parseInt(role), rolesObj[role]);

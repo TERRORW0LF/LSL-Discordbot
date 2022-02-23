@@ -7,10 +7,10 @@ import { NextFunction, Request, Response } from "express";
 
 export default async (client: Client<true>, req: Request, res: Response, next: NextFunction): Promise<void> => {
     if (!client.isReady()) res.sendStatus(500);
-    const announceCfg = (guildsCfg as any)[req.body.id]?.features?.announce;
-    const membersWithPoints = await getMembersWithPoints(req.body.id, { patch: req.body.patch, season: req.body.season});
     res.sendStatus(200);
-    roleUpdates(await client.guilds.fetch(req.body.id), parseInt(req.body.season), membersWithPoints);
+    const announceCfg = (guildsCfg as any)[req.body.guildId]?.features?.announce;
+    const membersWithPoints = await getMembersWithPoints(req.body.guildId, { patch: req.body.patch, season: req.body.season});
+    roleUpdates(await client.guilds.fetch(req.body.guildId), req.body.season, membersWithPoints);
     const submit: Run = {
         date: getJsDateFromSerialNumber(parseFloat(req.body.date)),
         patch: req.body.patch, 
@@ -23,9 +23,9 @@ export default async (client: Client<true>, req: Request, res: Response, next: N
         proof: req.body.proof
     }
     if (announceCfg?.submit?.enabled)
-        sendSubmit(client, req.body.id, submit);
+        sendSubmit(client, req.body.guildId, submit);
     if (announceCfg?.pb?.enabled || announceCfg?.wr?.enabled) {
-        const mapSubmits = (await getAllSubmits(req.body.id, { patch: req.body.patch, season: req.body.season })).filter(run => run.category == req.body.category && run.map == req.body.map);
+        const mapSubmits = (await getAllSubmits(req.body.guildId, { patch: req.body.patch, season: req.body.season })).filter(run => run.category == req.body.category && run.map == req.body.map);
         mapSubmits.sort((run1, run2) => {
             const diff = run1.time - run2.time;
             return diff ? diff : run1.date.getTime() - run2.date.getTime();
@@ -33,10 +33,10 @@ export default async (client: Client<true>, req: Request, res: Response, next: N
         const wr = mapSubmits[1];
         const pb = mapSubmits.filter(run => run.username == req.body.name)[1];
         if (announceCfg?.pb?.enabled && pb && pb.time - submit.time > 0) {
-            sendPb(client, req.body.id, submit, pb);
+            sendPb(client, req.body.guildId, submit, pb);
         }
         if (announceCfg?.wr?.enabled && wr && wr.time - submit.time > 0) {
-            sendWr(client, req.body.id, submit, wr);
+            sendWr(client, req.body.guildId, submit, wr);
         }
     }
 }

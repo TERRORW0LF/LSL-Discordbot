@@ -7,9 +7,9 @@ import { sendDelete } from '../../util/automatedMessages';
 
 export default async (client: Client, req: Request, res: Response, next: NextFunction): Promise<void> => {
     if (!client.isReady()) res.sendStatus(500);
-    const guildCfg = (guildsCfg as any)[req.body.id];
     res.sendStatus(200);
-    roleUpdates(await client.guilds.fetch(req.body.id), req.body.season, await getMembersWithPoints(req.body.id, { patch: req.body.patch, season: req.body.season }));
+    const guildCfg = (guildsCfg as any)[req.body.guildId];
+    roleUpdates(await client.guilds.fetch(req.body.guildId), req.body.season, await getMembersWithPoints(req.body.guildId, { patch: req.body.patch, season: req.body.season }));
     if (guildCfg?.features?.announce?.delete?.enabled) {
         // If I ever get the deleted data then this will be possible.
         // sendDelete()
