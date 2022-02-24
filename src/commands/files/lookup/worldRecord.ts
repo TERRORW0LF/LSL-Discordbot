@@ -22,8 +22,10 @@ export async function run (interaction: CommandInteraction<"present">) {
           selectData = mapOptions.map(value => { return { label: value } });
     
     const mapIndexes = await getDesiredOptionLength('map', interaction, { placeholder: 'Select the desired map', data: selectData });
-    if (!mapIndexes)
+    if (!mapIndexes) {
+        (await proofMessage)?.delete();
         return;
+    }
     map = mapOptions[mapIndexes[0]];
 
     const allRuns = await submitsPromise;

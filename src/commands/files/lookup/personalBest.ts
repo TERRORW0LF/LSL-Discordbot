@@ -23,8 +23,10 @@ export async function run (interaction: CommandInteraction<"present">) {
     
     await defer;
     const mapIndexes = await getDesiredOptionLength('map', interaction, { placeholder: 'Select the desired map', data: selectData });
-    if (!mapIndexes)
+    if (!mapIndexes) {
+        (await proofMessage)?.delete();
         return;
+    }
     map = mapOptions[mapIndexes[0]];
 
     const allRuns = await submitsPromise;
@@ -38,6 +40,7 @@ export async function run (interaction: CommandInteraction<"present">) {
         }
         await defer;
         interaction.editReply({ embeds: [embed] });
+        (await proofMessage)?.delete();
         return;
     };
     const place = getPlace(pb, pbs[0], pbs);
