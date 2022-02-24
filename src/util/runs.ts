@@ -36,7 +36,7 @@ import { Run } from "./sheets.js";
             pbs.push(run);
             continue;
         }
-        if (run.time < pb.time || (run.time === pb.time && pb.date.getTime() < run.date.getTime()))
+        if (run.time < pb.time || (run.time === pb.time && run.date.getTime() < pb.date.getTime()))
             pbs[pbs.indexOf(pb)] = run;
     }
     return pbs;
