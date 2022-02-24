@@ -134,7 +134,7 @@ export async function userSelect (message: Message | CommandInteraction, options
                 }
                 nextButton.setDisabled(false);
                 selectMenu.setOptions(pages[currPage]);
-                componentMessage.edit({ embeds: [infoEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
+                interaction.update({ embeds: [infoEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
                 break;
             case ('next'):
                 if (++currPage > maxPage) {
@@ -143,7 +143,7 @@ export async function userSelect (message: Message | CommandInteraction, options
                 }
                 prevButton.setDisabled(false);
                 selectMenu.setOptions(pages[currPage]);
-                componentMessage.edit({ embeds: [infoEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
+                interaction.update({ embeds: [infoEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
                 break;
             case ('done'):
                 if (values.length > options.maxValues) {
@@ -156,20 +156,20 @@ export async function userSelect (message: Message | CommandInteraction, options
                         description: `Too many items selected. Selection has been reset.`,
                         color: guildCfg.embeds.warning
                     };
-                    componentMessage.edit({ embeds: [errorEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
+                    interaction.update({ embeds: [errorEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
                 
                 } else if (values.length < options.minValues) {
                     const errorEmbed: APIEmbed = {
                         description: `Not enough items selected. Please select the minimum amount required.`,
                         color: guildCfg.embeds.warning
                     };
-                    componentMessage.edit( { embeds: [errorEmbed, selectionEmbed] });
+                    interaction.update({ embeds: [errorEmbed, selectionEmbed] });
                 } else {
                     const confirmEmbed: APIEmbed = {
                         description: `Received selection.`,
                         color: guildCfg.embeds.success
                     };
-                    componentMessage.edit({ embeds: [confirmEmbed, selectionEmbed], components: [] });
+                    interaction.update({ embeds: [confirmEmbed, selectionEmbed], components: [] });
                     return values;
                 }
             case ('options'):
@@ -192,7 +192,7 @@ export async function userSelect (message: Message | CommandInteraction, options
                         description: `Too many items selected. Selection has been reset.`,
                         color: guildCfg.embeds.warning
                     };
-                    componentMessage.edit({ embeds: [errorEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
+                    interaction.update({ embeds: [errorEmbed, selectionEmbed], components: [buttonRow, new MessageActionRow().setComponents(selectMenu)] });
                     break;
                 }
                 if (pages.length == 1 && values.length >= options.minValues) {
@@ -200,10 +200,10 @@ export async function userSelect (message: Message | CommandInteraction, options
                         description: `Received selection.`,
                         color: guildCfg.embeds.success
                     };
-                    componentMessage.edit({ embeds: [confirmEmbed, selectionEmbed], components: [] });
+                    interaction.update({ embeds: [confirmEmbed, selectionEmbed], components: [] });
                     return values;
                 }
-                componentMessage.edit({ embeds: [infoEmbed, selectionEmbed] });
+                interaction.update({ embeds: [infoEmbed, selectionEmbed] });
                 break;
         }
     }
@@ -328,11 +328,10 @@ export async function selectShowcase(interaction: CommandInteraction, options: S
     const selectRow = new MessageActionRow().setComponents(prevFiveButton, prevOneButton, doneButton, nextOneButton, nextFiveButton);
     const viewRow = new MessageActionRow().setComponents(denseButton, verboseButton);
 
-    let interactionMessage: Message;
     if (interaction.replied || interaction.deferred)
-        interactionMessage = (await interaction.editReply({ content: null, embeds: [embed] })) as Message;
+        await interaction.editReply({ content: null, embeds: [embed] });
     else
-        interactionMessage = (await interaction.reply({ embeds: [embed], fetchReply: true })) as Message;
+        await interaction.reply({ embeds: [embed] });
     const componentMessage = (await interaction.followUp({ content: '.', components: [selectRow, viewRow] })) as Message;
 
     const filter = componentFilter({ users: [interaction.user.id] });
@@ -344,14 +343,14 @@ export async function selectShowcase(interaction: CommandInteraction, options: S
                 description: `Showcase has been going on for too long.`,
                 color: guildCfg.embeds.error
             };
-            interactionMessage.edit( { embeds: [errorEmbed] });
+            interaction.editReply({ embeds: [errorEmbed] });
             throw 'showcase going too long';
         }
         let buttonInteraction;
         try {
             buttonInteraction = await componentMessage.awaitMessageComponent({ filter, time: 60_000 });
         } catch (_error) {
-            interactionMessage.edit({ embeds: [embed] });
+            interaction.editReply({ embeds: [embed] });
             componentMessage.edit({ content: (!dense && mappedOptions[currItem].verbose.link ? mappedOptions[currItem].verbose.link : '.')});
             return currItem;
         }
@@ -395,8 +394,8 @@ export async function selectShowcase(interaction: CommandInteraction, options: S
         }
         else {
             embed.setColor(guildCfg.embeds.success);
-            interactionMessage.edit({ embeds: [embed] });
-            componentMessage.edit({ content: mappedOptions[currItem].verbose.link, components: [] });
+            interaction.editReply({ embeds: [embed] });
+            buttonInteraction.update({ content: mappedOptions[currItem].verbose.link, components: [] });
             return currItem;
         }
         if (dense) {
@@ -412,8 +411,8 @@ export async function selectShowcase(interaction: CommandInteraction, options: S
             embed.setThumbnail(embedCfg.thumbnail ?? null);
             embed.setFooter({ text: embedCfg.footer ?? "" });
         }
-        interactionMessage.edit({ embeds: [embed] });
-        componentMessage.edit({ content: (!dense && mappedOptions[currItem].verbose.link ? mappedOptions[currItem].verbose.link : '.'), components: [selectRow, viewRow] });
+        interaction.editReply({ embeds: [embed] });
+        buttonInteraction.update({ content: (!dense && mappedOptions[currItem].verbose.link ? mappedOptions[currItem].verbose.link : '.'), components: [selectRow, viewRow] });
     }
 }
 
