@@ -118,12 +118,12 @@ export async function userSelect (message: Message | CommandInteraction, options
     const userId = (message instanceof CommandInteraction ? message.user.id : message.author.id);
     const filter = componentFilter({ users: [userId] });
     while (true) {
-        const interaction = await componentMessage.awaitMessageComponent({ filter, time: 30_000 }).catch(reason => {
+        const interaction = await componentMessage.awaitMessageComponent({ filter, time: 30_000 }).catch(async reason => {
             const errorEmbed: APIEmbed = {
                 description: `Failed to select options in time.`,
                 color: guildCfg.embeds.error
             };
-            componentMessage.edit({ embeds: [errorEmbed], components: [] });
+            await componentMessage.edit({ embeds: [errorEmbed], components: [] });
             throw 'Failed to select in time.';
         });
         switch (interaction.customId) {
@@ -239,13 +239,6 @@ export async function getDesiredOptionLength(optionsName: string, interaction: C
         const values = await userSelect(interaction, options);
         return values;
     } catch (err) {
-        const embed = new Embed()
-            .setDescription('Failed to select options.')
-            .setColor(guildCfg.embeds.error);
-        if (interaction.replied || interaction.deferred)
-            await interaction.editReply({ content: null, embeds: [embed] });
-        else
-            await interaction.reply({ content: null, embeds: [embed] });
         return null;
     }
 }
