@@ -137,8 +137,8 @@
                     "Standard": "718518957140606976"
                 },
                 "5": {
-                    "Gravspeed": "",
-                    "Standard": ""
+                    "Gravspeed": "946492311938949140",
+                    "Standard": "946492275817603092"
                 }
             },
             "1": {
@@ -170,11 +170,11 @@
                 "300": "761721582774910996"
             },
             "5": {
-                "5500": "1",
-                "4000": "2",
-                "2000": "3",
-                "1000": "4",
-                "300": "5"
+                "5500": "946492232251359322",
+                "4000": "946492164685328414",
+                "2000": "946492118808010852",
+                "1000": "946492075036250183",
+                "300": "946491754138452008"
             }
         },
         "patches": [1.00, 1.41, 1.50],
@@ -193,8 +193,8 @@
                 "Gravspeed": "Points Sheet!D3:E"
             },
             "1.00": {
-                "1": "1ZWHbz7dM0PIic-jMaDlzP7bIE9hXEGCb97N9_05RExA",
-                "2": "1W6Z2q453MqOl09133lvV97EyL5y2oa1sldZN8R2W2_s"
+                "1": "1zKSGlgzojk9ZaJTCEDY5Bol0tl66VVUjew_S9tVKYIQ",
+                "2": "1c67xTyerEAXbzmDGveA3voSrQKkwybY70rESPhWxFLc"
             },
             "1.41": {
                 "1": "1vWtqNrRQsuZFsp8-Y-CGBIppjSzSbR4bkN151lCzaQA",
