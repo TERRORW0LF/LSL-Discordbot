@@ -269,7 +269,7 @@ export interface SelectShowcaseOption {
  * @param options The showcase data that can be displayed.
  * @returns The index of the selected option.
  */
-export async function selectShowcase(interaction: CommandInteraction, options: SelectShowcaseOption[]): Promise<number> {
+export async function selectShowcase(interaction: CommandInteraction, linkMessage: Message, options: SelectShowcaseOption[]): Promise<number> {
     const guildCfg = (guildsCfg as any)[interaction.guildId ?? ''] ?? guildsCfg.default;
 
     const mappedOptions = options.map(option => { 
@@ -328,11 +328,11 @@ export async function selectShowcase(interaction: CommandInteraction, options: S
     const selectRow = new MessageActionRow().setComponents(prevFiveButton, prevOneButton, doneButton, nextOneButton, nextFiveButton);
     const viewRow = new MessageActionRow().setComponents(denseButton, verboseButton);
 
+    let componentMessage: Message;
     if (interaction.replied || interaction.deferred)
-        await interaction.editReply({ content: null, embeds: [embed] });
+        componentMessage = linkMessage ?? (await interaction.editReply({ content: null, embeds: [embed] })) as Message;
     else
-        await interaction.reply({ embeds: [embed] });
-    const componentMessage = (await interaction.followUp({ content: '.', components: [selectRow, viewRow] })) as Message;
+        componentMessage = linkMessage ?? (await interaction.reply({ embeds: [embed], fetchReply: true })) as Message;
 
     const filter = componentFilter({ users: [interaction.user.id] });
     const startDate = Date.now();

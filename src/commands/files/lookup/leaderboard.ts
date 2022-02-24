@@ -1,4 +1,4 @@
-import { CommandInteraction, Formatters } from "discord.js";
+import { CommandInteraction, Formatters, Message } from "discord.js";
 import { getDesiredOptionLength, getOptions, selectShowcase, SelectShowcaseOption } from "../../../util/userInput.js";
 import { getAllSubmits } from "../../../util/sheets.js";
 import { addPlaceAndPoints } from "../../../util/runs.js";
@@ -6,6 +6,7 @@ import guildsCfg from '../../../config/guildConfig.json' assert { type: 'json' }
 
 export async function run (interaction: CommandInteraction<"present">) {
     const defer = interaction.deferReply();
+    const proofMessage = interaction.channel?.send('.');
 
     const guildCfg = (guildsCfg as any)[interaction.guildId] ?? guildsCfg.default;
     const patch = interaction.options.getString('patch', false) ?? '1.50';
@@ -55,5 +56,5 @@ export async function run (interaction: CommandInteraction<"present">) {
         };
     });
     await defer;
-    selectShowcase(interaction, showcaseRuns);
+    selectShowcase(interaction, (await proofMessage) as Message, showcaseRuns);
 }

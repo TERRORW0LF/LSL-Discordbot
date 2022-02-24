@@ -1,4 +1,4 @@
-import { CommandInteraction, Formatters } from "discord.js";
+import { CommandInteraction, Formatters, Message } from "discord.js";
 import { getAllSubmits } from "../../../util/sheets.js";
 import { getDesiredOptionLength, getOptions } from "../../../util/userInput.js";
 import { APIEmbed } from "discord-api-types";
@@ -7,6 +7,7 @@ import guildsCfg from '../../../config/guildConfig.json' assert { type: 'json' }
 
 export async function run (interaction: CommandInteraction<"present">) {
     const defer = interaction.deferReply();
+    const proofMessage = interaction.channel?.send('.');
 
     const rawPlace = interaction.options.getInteger('place', true);
     const patch = interaction.options.getString('patch', false) ?? '1.50';
@@ -56,9 +57,10 @@ export async function run (interaction: CommandInteraction<"present">) {
         title: `Place`,
         description: `Translated place: *${reqPlace}*\nSheets place: *${place}*\nUser: *${run.username}*\nOther users: *${samePlaceUsers}*\n`
             + `Time: *${run.time.toFixed(2)}*\nPoints: *${points}*\nDate: *${Formatters.time(run.date)}*\nProof: *${Formatters.hyperlink('link', run.proof)}*`,
-        footer: { text: `ID: ${run.submitId}` }
+        footer: { text: `ID: ${run.submitId}` },
+        color: guildCfg.embeds.success
     };
     await defer;
     interaction.editReply({ embeds: [embed] });
-    interaction.followUp(run.proof);
+    ((await proofMessage) as Message).edit(run.proof);
 }

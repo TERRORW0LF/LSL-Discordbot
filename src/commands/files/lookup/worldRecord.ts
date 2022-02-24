@@ -1,5 +1,5 @@
 import { getDesiredOptionLength, getOptions } from "../../../util/userInput.js";
-import { CommandInteraction, Formatters } from "discord.js";
+import { CommandInteraction, Formatters, Message } from "discord.js";
 import { getAllSubmits } from "../../../util/sheets.js";
 import { APIEmbed } from "discord-api-types";
 import { getPoints, sortRuns } from "../../../util/runs.js";
@@ -7,6 +7,7 @@ import guildsCfg from '../../../config/guildConfig.json' assert { type: 'json' }
 
 export async function run (interaction: CommandInteraction<"present">) {
     const defer = interaction.deferReply();
+    const proofMessage = interaction?.channel?.send('.');
 
     const guildCfg = (guildsCfg as any)[interaction.guildId] ?? guildsCfg.default;
     const patch = interaction.options.getString("patch", false) ?? "1.50";
@@ -42,9 +43,10 @@ export async function run (interaction: CommandInteraction<"present">) {
     const embed: APIEmbed = {
         title: `World Record`,
         description: `User: *${wr.username}*\nTime: *${wr.time.toFixed(2)}*\nPoints: *${points}*\nDate: *${Formatters.time(wr.date)}*\nProof: *${Formatters.hyperlink('link', wr.proof)}*`,
-        footer: { text: `ID: ${wr.submitId}` }
+        footer: { text: `ID: ${wr.submitId}` },
+        color: guildCfg.embeds.success
     };
     await defer;
     interaction.editReply({ embeds: [embed] });
-    interaction.followUp(wr.proof);
+    ((await proofMessage) as Message).edit(wr.proof);
 }

@@ -27,7 +27,8 @@ export async function run (interaction: CommandInteraction<"present">) {
     const rank = memberPoints.filter(points => points[category] < rankUser[category]).size + 1;
     const embed: APIEmbed = {
         title: `Category Rank`,
-        description: `Rank: *${rank}*\nPoints: *${rankUser[category]}*`
+        description: `Rank: *${rank}*\nPoints: *${rankUser[category]}*`,
+        color: guildCfg.embeds.success
     };
     await defer;
     interaction.editReply({ embeds: [embed] });
