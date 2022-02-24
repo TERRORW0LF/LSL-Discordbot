@@ -174,7 +174,7 @@ export async function userSelect (message: Message | CommandInteraction, options
                 }
             case ('options'):
                 const selectValues = (interaction as SelectMenuInteraction).values;
-                selectionEmbed.setDescription(selectionEmbed.description + '\n' 
+                selectionEmbed.setDescription((selectionEmbed.description ?? '') + '\n'
                     + pages[currPage]
                         .filter(option => selectValues.includes(option.value) && !values.includes(parseInt(option.value)))
                         .map((elem, index) => `${values.length + index + 1}: ${elem.label}`)
