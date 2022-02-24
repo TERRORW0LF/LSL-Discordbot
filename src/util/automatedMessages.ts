@@ -31,7 +31,7 @@ export async function sendSubmit(client: Client<true>, guildId: string, submit: 
         description: `*patch:* ${submit.patch}\n*season*: ${submit.season}\n*category*: ${submit.category}\n*map*: ${submit.map}\n*time*: ${submit.time.toFixed(2)}\n*proof*: ${Formatters.hyperlink("link", submit.proof)}\n*date*: ${Formatters.time(submit.date, Formatters.TimestampStyles.ShortDateTime)}`,
         footer: { text: "" + submit.submitId }
     };
-    await channel.send({ content: member ? Formatters.userMention(member.id) : "", embeds: [embed] });
+    await channel.send({ content: member ? Formatters.userMention(member.id) : null, embeds: [embed] });
     channel.send(submit.proof);
 }
 
@@ -63,7 +63,7 @@ export async function sendPb(client: Client<true>, guildId: string, submit: Run,
         description: `*patch:* ${submit.patch}\n*season*: ${submit.season}\n*category*: ${submit.category}\n*map*: ${submit.map}\n*time*: ${submit.time.toFixed(2)}\n*saved:* ${(pb.time - submit.time).toFixed(2)}\n*proof*: ${Formatters.hyperlink("link", submit.proof)}\n*date*: ${Formatters.time(submit.date, Formatters.TimestampStyles.ShortDateTime)}`,
         footer: { text: "ID: " + submit.submitId }
     };
-    await channel.send({ content: member ? Formatters.userMention(member.id) : "", embeds: [embed] });
+    await channel.send({ content: member ? Formatters.userMention(member.id) : null, embeds: [embed] });
     channel.send(submit.proof);
 }
 
@@ -95,8 +95,8 @@ export async function sendWr(client: Client<true>, guildId: string, submit: Run,
         description: `*patch:* ${submit.patch}\n*season*: ${submit.season}\n*category*: ${submit.category}\n*map*: ${submit.map}\n*time*: ${submit.time.toFixed(2)}\n*saved:* ${(record.time - submit.time).toFixed(2)}\n*proof*: ${Formatters.hyperlink("link", submit.proof)}\n*date*: ${Formatters.time(submit.date, Formatters.TimestampStyles.ShortDateTime)}`,
         footer: { text: "ID: " + submit.submitId }
     };
-    await channel.send({ content: member ? Formatters.userMention(member.id) : "", embeds: [embed] });
-    channel.send((submit.username != record.username ? getBm(name) : "") + "\n" + submit.proof);
+    await channel.send({ content: member ? Formatters.userMention(member.id) : null, embeds: [embed] });
+    channel.send((submit.username != record.username ? getBm(name) : "" + "\n") + submit.proof);
 }
 
 

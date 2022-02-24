@@ -56,7 +56,7 @@ export interface UserSelectOptionsOption {
 export async function userSelect (message: Message | CommandInteraction, options: UserSelectOptions): Promise<number[]> {
     options.minValues ??= 1;
     options.maxValues ??= 1;
-    const guildCfg = (guildsCfg as any)[message.guildId ?? 'default'];
+    const guildCfg = (guildsCfg as any)[message.guildId ?? ''] ?? guildsCfg.default;
     const PAGE_LENGTH = 25;
     let currPage = 0,
         maxPage = Math.floor(options.data.length / 25),
@@ -64,7 +64,7 @@ export async function userSelect (message: Message | CommandInteraction, options
         componentMessage: Message;
 
     // create option bundles of lenth PAGE_LENGTH
-    for (let i=0; i++ ; i <= maxPage)
+    for (let i=0; i <= maxPage; i++)
         pages.push(options.data.slice(i*PAGE_LENGTH, (i+1)*PAGE_LENGTH).map((option, index) => { 
             return { 
                 label: option.label, 
@@ -95,6 +95,7 @@ export async function userSelect (message: Message | CommandInteraction, options
         .setMinValues(options.minValues)
         .setMaxValues(options.maxValues);
     const buttonRow = new MessageActionRow().setComponents(prevButton, nextButton, doneButton);
+    const selectRow = new MessageActionRow().setComponents(selectMenu);
 
     // add components to interaction / message
     const infoEmbed: APIEmbed = {
@@ -103,7 +104,7 @@ export async function userSelect (message: Message | CommandInteraction, options
     };
     const selectionEmbed = new Embed()
         .setTitle('Selections:')
-        .setColor(guildCfg.embeds.warning);
+        .setColor(guildCfg.embeds.waiting);
     if (message instanceof CommandInteraction)
         if (message.deferred || message.replied)
             componentMessage = (await message.fetchReply()) as Message;
@@ -111,7 +112,7 @@ export async function userSelect (message: Message | CommandInteraction, options
             componentMessage = (await message.deferReply({ fetchReply: true })) as Message;
     else
         componentMessage = message;
-    await componentMessage.edit({ content: '', embeds: [infoEmbed, selectionEmbed], components: pages.length > 1 ? [buttonRow, new MessageActionRow().setComponents(selectMenu)] : [new MessageActionRow().setComponents(selectMenu)] });
+    await componentMessage.edit({ content: null, embeds: [infoEmbed, selectionEmbed], components: (maxPage > 0 ? [buttonRow, selectRow] : [selectRow]) });
     // get user seleted option(s)
     let values: number[] = [];
     const userId = (message instanceof CommandInteraction ? message.user.id : message.author.id);
@@ -219,26 +220,32 @@ export async function userSelect (message: Message | CommandInteraction, options
 export async function getDesiredOptionLength(optionsName: string, interaction: CommandInteraction, options: UserSelectOptions): Promise<number[] | null> {
     options.minValues = options.minValues ?? 1;
     options.maxValues = options.maxValues ?? 1;
-    const guildCfg = (guildsCfg as any)[interaction.guildId ?? 'default'];
+    const guildCfg = (guildsCfg as any)[interaction.guildId ?? ''] ?? guildsCfg.default;
 
     if (options.data.length < options.minValues) {
         const embed = new Embed()
             .setDescription(`No ${optionsName} found for your input.`)
             .setColor(guildCfg.embeds.error);
-        interaction.editReply({ embeds: [embed] });
-        throw 'Not enough options provided.';
+        if (interaction.replied || interaction.deferred)
+            interaction.editReply({ embeds: [embed] });
+        else
+            interaction.reply({ embeds: [embed] });
+        return null;
     }
     if (options.data.length <= options.maxValues) {
         return options.data.map((_, index) => index);
     }
     try {
-        const values = await userSelect(interaction, options)
+        const values = await userSelect(interaction, options);
         return values;
     } catch (err) {
         const embed = new Embed()
             .setDescription('Failed to select options.')
             .setColor(guildCfg.embeds.error);
-        interaction.editReply({ embeds: [embed] });
+        if (interaction.replied || interaction.deferred)
+            interaction.editReply({ content: null, embeds: [embed] });
+        else
+            interaction.reply({ content: null, embeds: [embed] });
         return null;
     }
 }
@@ -263,7 +270,7 @@ export interface SelectShowcaseOption {
  * @returns The index of the selected option.
  */
 export async function selectShowcase(interaction: CommandInteraction, options: SelectShowcaseOption[]): Promise<number> {
-    const guildCfg = (guildsCfg as any)[interaction.guildId ?? 'default'];
+    const guildCfg = (guildsCfg as any)[interaction.guildId ?? ''] ?? guildsCfg.default;
 
     const mappedOptions = options.map(option => { 
         return { 
@@ -323,7 +330,7 @@ export async function selectShowcase(interaction: CommandInteraction, options: S
 
     let interactionMessage: Message;
     if (interaction.replied || interaction.deferred)
-        interactionMessage = (await interaction.editReply({ embeds: [embed] })) as Message;
+        interactionMessage = (await interaction.editReply({ content: null, embeds: [embed] })) as Message;
     else
         interactionMessage = (await interaction.reply({ embeds: [embed], fetchReply: true })) as Message;
     const componentMessage = (await interaction.followUp({ content: '.', components: [selectRow, viewRow] })) as Message;
@@ -435,7 +442,7 @@ export async function userDecision(channel: TextBasedChannel, decision: string, 
     let dismisses = 0;
     let acceptUsers: string[] = [];
     let dismissUsers: string[] = [];
-    const guildCfg = (guildsCfg as any)[options.guildId];
+    const guildCfg = (guildsCfg as any)[options.guildId] ?? guildsCfg.default;
     const embed = new Embed().setColor(guildCfg.embeds.info)
         .setDescription(decision)
         .setFooter({ text: "accepts: 0 | dismisses: 0" });
@@ -450,7 +457,7 @@ export async function userDecision(channel: TextBasedChannel, decision: string, 
                 dismissUsers.splice(dismissUsers.indexOf(interaction.user.id), 1);
                 dismisses--;
             }
-            embed.setFooter({ text: `accepts: ${accepts} | dismisse: ${dismisses}`});
+            embed.setFooter({ text: `accepts: ${accepts} | dismisses: ${dismisses}`});
             message.edit({ embeds: [embed] });
         }
         else if(interaction.customId == 'dismiss' && !dismissUsers.includes(interaction.user.id)) {
@@ -459,7 +466,7 @@ export async function userDecision(channel: TextBasedChannel, decision: string, 
                 acceptUsers.splice(acceptUsers.indexOf(interaction.user.id), 1);
                 accepts--;
             }
-            embed.setFooter({ text: `accepts: ${accepts} | dismisse: ${dismisses}`});
+            embed.setFooter({ text: `accepts: ${accepts} | dismisses: ${dismisses}`});
             message.edit({ embeds: [embed] });
         }
         if (accepts + dismisses >= (options.approvalNumber as number))
@@ -501,7 +508,7 @@ export interface ModDecisionOptions {
  */
 export async function modDecision(channel: TextBasedChannel, decision: string, options: ModDecisionOptions = {}): Promise<boolean> {
     if (channel.type === "DM") return userDecision(channel, decision);
-    const guildCfg = (guildsCfg as any)[channel.guildId];
+    const guildCfg = (guildsCfg as any)[channel.guildId] ?? guildsCfg.default;
     const roles: string[] = guildCfg.features.moderation;
     return userDecision(channel, decision, {...options, guildId: channel.guildId, roleWhitelist: roles });
 }

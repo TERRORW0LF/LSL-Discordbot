@@ -18,6 +18,7 @@ export async function run (interaction: CommandInteraction<"present">) {
     const mapOptions = getOptions(map, guildCfg.maps),
           selectData = mapOptions.map(value => { return { label: value } });
     
+    await defer;
     const mapIndexes = await getDesiredOptionLength('map', interaction, { placeholder: 'Select the desired map', data: selectData });
     if (!mapIndexes)
         return;

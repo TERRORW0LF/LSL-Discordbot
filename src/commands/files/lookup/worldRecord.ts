@@ -16,6 +16,7 @@ export async function run (interaction: CommandInteraction<"present">) {
 
     const submitsPromise = getAllSubmits(interaction.guildId, { patch, season });
 
+    await defer;
     const mapOptions = getOptions(map, guildCfg.maps),
           selectData = mapOptions.map(value => { return { label: value } });
     

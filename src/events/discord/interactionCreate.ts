@@ -13,7 +13,7 @@ export default async (commandCollection: Collection<string, ApplicationCommandEx
             if (!command) return;
             await command.execute(interaction);
         } catch (err) {
-            const payload = { content: '', embeds: [{description: 'Something went wrong!', color: guildsCfg.default.embeds.error }] };
+            const payload = { content: null, embeds: [{description: 'Something went wrong!', color: guildsCfg.default.embeds.error }] };
             if (interaction.deferred || interaction.replied)
                 interaction.editReply(payload);
             else

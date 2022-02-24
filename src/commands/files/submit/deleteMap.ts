@@ -13,9 +13,11 @@ export async function run (interaction: CommandInteraction<"present">) {
           category = interaction.options.getString('category', true);
     let map = interaction.options.getString('map', true);
 
-    const mapOptions = getOptions(map, guildCfg.maps),
-          selectData: UserSelectOptionsOption[] = mapOptions.map(value => { return { label: value } }),
-          mapIndexes = await getDesiredOptionLength('map', interaction, { placeholder: 'Select the desired map', data: selectData });
+    const mapOptions = getOptions(map, guildCfg.maps);
+    const selectData: UserSelectOptionsOption[] = mapOptions.map(value => { return { label: value } });
+    
+    await defer;
+    const mapIndexes = await getDesiredOptionLength('map', interaction, { placeholder: 'Select the desired map', data: selectData });
     if (!mapIndexes)
         return;
     map = mapOptions[mapIndexes[0]];
