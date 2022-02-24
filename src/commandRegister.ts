@@ -8,9 +8,8 @@ let commands: RESTPutAPIApplicationCommandsJSONBody = [];
 const commandFiles = fs.readdirSync('./dist/commands/discordRestData').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-    import(`./commands/discordRestData/${file}`).then((command: ApplicationCommandExecuter) => {
-        commands.push(command.data);
-    });
+    const { default: command } = await import(`./commands/discordRestData/${file}`);
+    commands.push(command.data);
 }
 
 const rest = new REST({ version: '9' }).setToken(discordToken);
