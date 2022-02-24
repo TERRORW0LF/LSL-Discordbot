@@ -35,7 +35,7 @@ const client = new Client({ restTimeOffset: 100, partials: ['USER', 'GUILD_MEMBE
 
 client.once('ready', (...args) => ready(...args));
 client.on('interactionCreate', async (...args) => interactionCreate(commandCollection, ...args));
-//client.on('guildMemberAdd', async (...args) => guildMemberAdd(...args));
-//client.on('guildMemberUpdate', async (...args) => guildMemberUpdate(...args));
+client.on('guildMemberAdd', async (...args) => guildMemberAdd(...args));
+client.on('guildMemberUpdate', async (...args) => guildMemberUpdate(...args));
 
 client.login(discordToken);
