@@ -11,8 +11,8 @@ const commands: Collection<string, ApplicationCommandExecuter> = new Collection(
 
 const commandFiles = fs.readdirSync('./dist/commands/discordRestData').filter(file => file.endsWith('.js'));
 for (let file of commandFiles) {
-    import(`./discordRestData/${file}`).then((command: ApplicationCommandExecuter) =>
-    commands.set(command.data.name, command));
+    const { default: command } = await import(`./discordRestData/${file}`);
+    commands.set(command.data.name, command);
 }
 
 export default commands;
