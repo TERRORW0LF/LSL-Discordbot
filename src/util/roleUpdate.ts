@@ -1,7 +1,7 @@
-import guildsConfig from "../config/guildConfig.json";
 import { Collection, Guild, GuildMember } from "discord.js";
 import { Points } from "./sheets.js";
 import { sendRank } from "./automatedMessages.js";
+import guildsCfg from '../config/guildConfig.json' assert { type: 'json' };
 
 
 /**
@@ -39,7 +39,7 @@ export type Category = "Gravspeed" | "Standard";
  * @param data The members and their respective points.
  */
 export async function roleUpdates(guild: Guild, season: string, data: Collection<string, Points>): Promise<void> {
-    const guildCfg = (guildsConfig as any)[guild.id];
+    const guildCfg = (guildsCfg as any)[guild.id];
     if (!guildCfg) return;
 
     const rolesObj = guildCfg.roles[season];

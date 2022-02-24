@@ -1,5 +1,5 @@
 import { GuildMember } from "discord.js";
-import guildsCfg from '../../config/guildConfig.json';
+import guildsCfg from '../../config/guildConfig.json' assert { type: 'json' };
 
 export default async function(member: GuildMember) {
     const guildCfg = (guildsCfg as any)[member.guild.id] ?? guildsCfg.default;

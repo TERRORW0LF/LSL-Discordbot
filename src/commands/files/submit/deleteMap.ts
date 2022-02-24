@@ -1,8 +1,8 @@
 import { getOptions, getDesiredOptionLength, UserSelectOptionsOption } from "../../../util/userInput.js";
-import guildsCfg from '../../../config/guildConfig.json';
 import { deleteSubmit, getAllSubmits } from "../../../util/sheets.js";
 import { CommandInteraction, Formatters, GuildMember } from "discord.js";
 import { APIEmbed } from "discord-api-types";
+import guildsCfg from '../../../config/guildConfig.json' assert { type: 'json' };
 
 export async function run (interaction: CommandInteraction<"present">) {
     const defer = interaction.deferReply();

@@ -1,7 +1,7 @@
-import guildsCfg from '../../../config/guildConfig.json';
 import { deleteSubmit, getAllSubmits } from "../../../util/sheets.js";
 import { APIEmbed } from "discord-api-types";
 import { CommandInteraction, GuildMember } from "discord.js";
+import guildsCfg from '../../../config/guildConfig.json' assert { type: 'json' };
 
 export async function run (interaction: CommandInteraction<"present">) {
     const defer = interaction.deferReply();

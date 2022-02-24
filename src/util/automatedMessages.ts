@@ -1,8 +1,8 @@
-import guildsCfg from '../config/guildConfig.json';
 import { Run } from "./sheets.js";
 import { Client, Formatters, GuildMember } from 'discord.js';
 import { APIEmbed } from 'discord-api-types';
 import { getMemberByName } from './roleUpdate.js';
+import guildsCfg from '../config/guildConfig.json' assert { type: 'json' };
 
 
 /**

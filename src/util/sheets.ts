@@ -3,7 +3,7 @@ import { Collection } from "discord.js";
 import { JWT } from "google-auth-library";
 import { google } from "googleapis";
 import { googleEmail, googleKey } from "../config/config.js";
-import guildsCfg from "../config/guildConfig.json";
+import guildsCfg from '../config/guildConfig.json' assert { type: 'json' };
 
 let token: JWT;
 

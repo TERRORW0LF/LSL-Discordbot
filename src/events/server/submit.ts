@@ -1,10 +1,10 @@
-import guildsCfg from '../../config/guildConfig.json';
 import { roleUpdates } from "../../util/roleUpdate.js";
 import { getAllSubmits, getJsDateFromSerialNumber, getMembersWithPoints, Run } from "../../util/sheets.js";
 import { sendPb, sendSubmit, sendWr } from "../../util/automatedMessages.js";
 import { Client } from "discord.js";
 import { NextFunction, Request, Response } from "express";
 import { herokuAuth } from '../../config/config.js';
+import guildsCfg from '../../config/guildConfig.json' assert { type: 'json' };
 
 export default async (client: Client<true>, req: Request, res: Response, next: NextFunction): Promise<void> => {
     if (req.query.auth !== herokuAuth) res.sendStatus(403);

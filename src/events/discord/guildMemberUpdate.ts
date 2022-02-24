@@ -1,5 +1,5 @@
 import { GuildMember, PartialGuildMember } from "discord.js";
-import guildsCfg from '../../config/guildConfig.json';
+import guildsCfg from '../../config/guildConfig.json' assert { type: 'json' };
 
 export default function guildMemberUpdate(oldMember: GuildMember | PartialGuildMember, newMember: GuildMember) {
     const guildCfg = (guildsCfg as any)[newMember.guild.id] ?? guildsCfg.default;

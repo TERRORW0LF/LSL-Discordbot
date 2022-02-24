@@ -1,7 +1,7 @@
 import { APIEmbed } from "discord-api-types";
 import { CommandInteraction } from "discord.js";
 import { getMembersWithPoints } from "../../../util/sheets.js";
-import guildsCfg from '../../../config/guildConfig.json';
+import guildsCfg from '../../../config/guildConfig.json' assert { type: 'json' };
 
 export async function run (interaction: CommandInteraction<"present">) {
     const defer = interaction.deferReply();

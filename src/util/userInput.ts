@@ -2,7 +2,7 @@ import { Embed } from '@discordjs/builders';
 import { APIEmbed } from 'discord-api-types';
 import { Message, MessageButton, MessageActionRow, MessageSelectMenu, CommandInteraction, MessageComponentInteraction, SelectMenuInteraction, EmojiIdentifierResolvable, TextBasedChannel, CollectorFilter, GuildMember } from 'discord.js';
 import { findBestMatch } from 'string-similarity';
-import guildsCfg from '../config/guildConfig.json';
+import guildsCfg from '../config/guildConfig.json' assert { type: 'json' };
 
 
 export interface getOptionsCompareValues {
