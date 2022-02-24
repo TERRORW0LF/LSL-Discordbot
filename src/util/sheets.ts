@@ -75,7 +75,7 @@ export async function getAllSubmits(guildId: string, options: SheetOptions): Pro
           guildCfg = (guildsCfg as any)[guildId],
           sheetId: string | undefined = Object.values(options).reduce((prev, curr) => prev?.[curr], guildCfg?.sheets);
     if (!sheetId)
-        throw 'No sheet belonging to options found.';
+        return [];
 
     const returnRuns: Run[] = [];
     const rawRuns = (await client.spreadsheets.values.get({
