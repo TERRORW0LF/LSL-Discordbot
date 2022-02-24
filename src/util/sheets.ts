@@ -97,8 +97,8 @@ export async function getAllSubmits(guildId: string, options: SheetOptions): Pro
             proof: row[3], 
             patch: options.patch,
             season: options.season,
-            category: row[4],
-            map: row[5],
+            category: row[5],
+            map: row[4],
             submitId: row[6] 
         };
     }));
