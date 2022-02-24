@@ -28,7 +28,7 @@ export async function run (interaction: CommandInteraction<"present">) {
         runs = submits.filter(submit => submit.category == category && submit.map == map);
     else
         runs = submits.filter(submit => submit.username === name && submit.category == category && submit.map == map);
-    const runSelectData: UserSelectOptionsOption[] = runs.map(run => { return { label: "" + run.submitId, description: `${Formatters.time(run.date)} | ${run.time.toFixed(2)}` } }),
+    const runSelectData: UserSelectOptionsOption[] = runs.map(run => { return { label: "ID: " + run.submitId, description: `${run.username} | ${run.time.toFixed(2)} | ${run.date.getUTCDate()}/${run.date.getUTCMonth() + 1}/${run.date.getUTCFullYear()} ${run.date.getUTCHours()}:${run.date.getUTCMinutes()}:${run.date.getUTCSeconds()}` } }),
           runIndexes = await getDesiredOptionLength('submit', interaction, { placeholder: 'Select the run to delete.', data: runSelectData });
     if (!runIndexes)
         return;

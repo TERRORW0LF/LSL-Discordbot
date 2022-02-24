@@ -3,6 +3,7 @@ import { getDesiredOptionLength, getOptions, selectShowcase, SelectShowcaseOptio
 import { getAllSubmits } from "../../../util/sheets.js";
 import { addPlaceAndPoints } from "../../../util/runs.js";
 import guildsCfg from '../../../config/guildConfig.json' assert { type: 'json' };
+import { APIEmbed } from "discord-api-types";
 
 export async function run (interaction: CommandInteraction<"present">) {
     const defer = interaction.deferReply();
@@ -32,6 +33,16 @@ export async function run (interaction: CommandInteraction<"present">) {
         && run.season === season
         && run.category === category
         && run.map === map);
+    if (!filteredRuns.length) {
+        await defer;
+        const embed: APIEmbed = {
+            description: `No submits found.`,
+            color: guildCfg.embeds.error
+        };
+        interaction.editReply({ embeds: [embed] });
+        (await proofMessage)?.delete();
+        return;
+    }
     const runsWithPlaceAndPoints = addPlaceAndPoints(filteredRuns);
     const showcaseRuns: SelectShowcaseOption[] = runsWithPlaceAndPoints.map(run => {
         return {

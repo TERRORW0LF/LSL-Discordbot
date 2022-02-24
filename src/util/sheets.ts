@@ -109,18 +109,18 @@ export async function getAllSubmits(guildId: string, options: SheetOptions): Pro
 /**
  * Deletes the submit belonging to the submitId at the specified sheet.
  * @param guildId The id of the guild to get the sheet of.
- * @param sheetOptions The options the describe the sheet.
+ * @param options The options the describe the sheet.
  * @param submitId The id of the submit.
  */
-export async function deleteSubmit(guildId: string, submitId: number, sheetOptions: SheetOptions): Promise<void> {
+export async function deleteSubmit(guildId: string, submitId: number, options: SheetOptions): Promise<void> {
     const client = google.sheets('v4'),
           token = await getGoogleAuth(),
           guildCfg = (guildsCfg as any)[guildId],
-          sheetId: string | undefined = Object.values(sheetOptions).reduce((prev, curr) => prev?.[curr], guildCfg?.sheets);
-    if (!sheetId) throw 'No sheet belonging to options found.';
+          sheetId: string | undefined = Object.values(options).reduce((prev, curr) => prev?.[curr], guildCfg?.sheets);
+    if (!sheetId) throw 'Sheet id not found';
 
-    const submits = await getAllSubmits(guildId, sheetOptions);
-    const row = submits.findIndex(elem => elem.submitId == submitId) + 2;
+    const submits = await getAllSubmits(guildId, options);
+    const row = submits.findIndex(elem => elem.submitId == submitId) + 1;
 
     await client.spreadsheets.batchUpdate({
         spreadsheetId: sheetId,
@@ -150,34 +150,37 @@ export interface Points {
 /**
  * Gets the users with their points from the given sheets.
  * @param guildId The guild which the sheet belongs to.
- * @param sheetOptions The options for the sheet to fetch.
+ * @param options The options for the sheet to fetch.
  * @returns A Promisified Collection with the username as the key and the points as the value.
  */
-export async function getMembersWithPoints(guildId: string, sheetOptions: SheetOptions): Promise<Collection<string, Points>> {
+export async function getMembersWithPoints(guildId: string, options: SheetOptions): Promise<Collection<string, Points>> {
     const client = google.sheets('v4'),
           token = await getGoogleAuth(),
           guildCfg = (guildsCfg as any)[guildId],
-          sheetId: string | undefined = Object.values(sheetOptions).reduce((prev, curr) => prev?.[curr], guildCfg?.sheets);
-    if (!sheetId) throw 'No sheet belonging to options found.';
+          sheetId: string | undefined = Object.values(options).reduce((prev, curr) => prev?.[curr], guildCfg?.sheets);
+    if (!sheetId) return new Collection();
 
     const userPoints = (await client.spreadsheets.values.batchGet({
         auth: token,
         spreadsheetId: sheetId,
         majorDimension: 'ROWS',
-        ranges: [guildCfg.sheets.points.standard, guildCfg.sheets.points.gravspeed, guildCfg.sheets.points.total]
+        ranges: [guildCfg.sheets.points.Standard, guildCfg.sheets.points.Gravspeed, guildCfg.sheets.points.total]
     })).data.valueRanges;
-    if (!userPoints) throw 'Couldn\'t get points.'
+    if (!userPoints) return new Collection();
 
     const points = new Collection<string, Points>();
-    for (const row of userPoints[2].values as any[][])
-        points.set(row[0], { Total: row[1], Standard: 0, Gravspeed: 0});
-    for (const row of userPoints[0].values as any[][]) {
-        const oldPoints = points.get(row[0]) as Points;
-        points.set(row[0], { Total: oldPoints.Total, Standard: row[1], Gravspeed: oldPoints.Gravspeed });
-    }
-    for (const row of userPoints[1].values as any[][]) {
-        const oldPoints = points.get(row[0]) as Points;
-        points.set(row[0], { Total: oldPoints.Total, Standard: oldPoints.Standard, Gravspeed: row[1] });
+    if (userPoints[2].values)
+        for (const row of userPoints[2].values)
+            points.set(row[1], { Total: row[0], Standard: 0, Gravspeed: 0});
+    if (userPoints[0].values)
+        for (const row of userPoints[0].values) {
+            const oldPoints = points.get(row[1]) as Points;
+            points.set(row[1], { Total: oldPoints.Total, Standard: row[0], Gravspeed: oldPoints.Gravspeed });
+        }
+    if (userPoints[1].values)
+        for (const row of userPoints[1].values) {
+            const oldPoints = points.get(row[1]) as Points;
+            points.set(row[1], { Total: oldPoints.Total, Standard: oldPoints.Standard, Gravspeed: row[0] });
     }
     return points;
 }

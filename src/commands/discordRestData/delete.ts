@@ -18,7 +18,8 @@ const command: ApplicationCommandExecuter = {
                 .setRequired(true))
             .addIntegerOption(option =>
                 option.setName('id')
-                .setDescription('The submit id of the run.')))
+                .setDescription('The submit id of the run.')
+                .setRequired(true)))
         .addSubcommand(sub =>
             sub.setName('map')
             .setDescription('Delete a run by map.')

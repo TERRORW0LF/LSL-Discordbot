@@ -269,10 +269,10 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
         return { 
             dense: `*${Object.values(option.dense).join(' - ')}*`,
             verbose: {
-                description: option.verbose.description ? Object.values(option.verbose.description).map(arr => `${arr[0]}: *${arr[1]}*`).join('\n') : undefined,
+                description: option.verbose.description ? Object.entries(option.verbose.description).map(arr => `${arr[0]}: *${arr[1]}*`).join('\n') : undefined,
                 image: option.verbose.image,
                 thumbnail: option.verbose.thumbnail,
-                footer: option.verbose.footer ? Object.values(option.verbose.footer).map(arr => `${arr[0]}: ${arr[1]}`).join(' | ') : undefined,
+                footer: option.verbose.footer ? Object.entries(option.verbose.footer).map(arr => `${arr[0]}: ${arr[1]}`).join(' | ') : undefined,
                 link: option.verbose.link
             }
         };
@@ -280,7 +280,22 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
     const DENSE_LENGTH = 5;
     let currItem = 0;
 
-    if (options.length <= 1) return 0;
+    if (options.length <= 1) {
+        const embedCfg = mappedOptions[0].verbose;
+        const embed: APIEmbed = {
+            description: embedCfg.description,
+            thumbnail: embedCfg.thumbnail ? { url: embedCfg.thumbnail } : undefined,
+            image: embedCfg.image ? { url: embedCfg.image } : undefined,
+            footer: { text: embedCfg.footer ?? '' },
+            color: guildCfg.embeds.success
+        };
+        await interaction.editReply({ embeds: [embed] });
+        if (embedCfg.link)
+            await linkMessage.edit(embedCfg.link);
+        else
+            await linkMessage.delete();
+        return 0;
+    }
 
     const prevFiveButton = new MessageButton()
         .setCustomId('prevFive')
@@ -299,20 +314,22 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
     const nextOneButton = new MessageButton()
         .setCustomId('nextOne')
         .setStyle('PRIMARY')
-        .setEmoji('▶️');
+        .setEmoji('▶️')
+        .setDisabled(options.length <= DENSE_LENGTH ? true : false);
     const nextFiveButton = new MessageButton()
         .setCustomId('nextFive')
         .setStyle('PRIMARY')
         .setEmoji('⏩')
+        .setDisabled(options.length <= DENSE_LENGTH ? true : false);
     const denseButton = new MessageButton()
         .setCustomId('dense')
         .setStyle('PRIMARY')
         .setLabel('Dense View')
+        .setDisabled(true);
     const verboseButton = new MessageButton()
         .setCustomId('verbose')
         .setStyle('PRIMARY')
-        .setLabel('Verbose view')
-        .setDisabled(true);
+        .setLabel('Verbose view');
     const embed = new Embed()
         .setTitle('Showcase')
         .setDescription(mappedOptions.slice(0, DENSE_LENGTH).map(page => page.dense).join('\n'))
@@ -321,12 +338,13 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
     const selectRow = new MessageActionRow().setComponents(prevFiveButton, prevOneButton, doneButton, nextOneButton, nextFiveButton);
     const viewRow = new MessageActionRow().setComponents(denseButton, verboseButton);
 
-    let componentMessage: Message;
     if (interaction.replied || interaction.deferred)
-        componentMessage = linkMessage ?? (await interaction.editReply({ content: null, embeds: [embed] })) as Message;
+        await interaction.editReply({ content: null, embeds: [embed] });
     else
-        componentMessage = linkMessage ?? (await interaction.reply({ embeds: [embed], fetchReply: true })) as Message;
+        await interaction.reply({ embeds: [embed], fetchReply: true });
 
+    const componentMessage = linkMessage;
+    await componentMessage.edit({ components: [selectRow, viewRow]});
     const filter = componentFilter({ users: [interaction.user.id] });
     const startDate = Date.now();
     let dense = true;
@@ -337,17 +355,21 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
                 color: guildCfg.embeds.error
             };
             interaction.editReply({ embeds: [errorEmbed] });
-            throw 'showcase going too long';
+            return -1;
         }
         let buttonInteraction;
         try {
             buttonInteraction = await componentMessage.awaitMessageComponent({ filter, time: 60_000 });
         } catch (_error) {
-            Promise.all([
+            embed.setColor(guildCfg.embeds.success);
+            await Promise.all([
                 interaction.editReply({ embeds: [embed] }),
-                linkMessage.edit({ content: (!dense && mappedOptions[currItem].verbose.link ? mappedOptions[currItem].verbose.link : '.') }),
                 componentMessage.edit({ components: [] })
             ]);
+            if (!dense && mappedOptions[currItem].verbose.link)
+                await linkMessage.edit({ content: mappedOptions[currItem].verbose.link });
+            else
+                await linkMessage.delete();
             return currItem;
         }
 
@@ -357,7 +379,7 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
                 prevFiveButton.setDisabled(true);
                 prevOneButton.setDisabled(true);
             }
-            if ([currItem + (dense ? DENSE_LENGTH : 1)]) {
+            if (mappedOptions[currItem + (dense ? DENSE_LENGTH : 1)]) {
                 nextFiveButton.setDisabled(false);
                 nextOneButton.setDisabled(false);
             }
@@ -373,6 +395,7 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
             prevOneButton.setDisabled(false);
         }
         else if (buttonInteraction.customId === 'dense') {
+            dense = true;
             denseButton.setDisabled(true);
             verboseButton.setDisabled(false);
             if (!mappedOptions[currItem + DENSE_LENGTH]) {
@@ -381,6 +404,7 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
             }
         }
         else if (buttonInteraction.customId === 'verbose') {
+            dense = false;
             verboseButton.setDisabled(true);
             denseButton.setDisabled(false);
             if (mappedOptions[currItem + 1]) {
@@ -390,11 +414,14 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
         }
         else {
             embed.setColor(guildCfg.embeds.success);
-            Promise.all([
+            await Promise.all([
                 interaction.editReply({ embeds: [embed] }),
-                linkMessage.edit({ content: mappedOptions[currItem].verbose.link }),
                 buttonInteraction.update({ components: [] })
             ]);
+            if (!dense && mappedOptions[currItem].verbose.link)
+                await linkMessage.edit({ content: mappedOptions[currItem].verbose.link });
+            else
+                await linkMessage.delete();
             return currItem;
         }
         if (dense) {
@@ -406,13 +433,13 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
         else {
             const embedCfg = mappedOptions[currItem].verbose;
             embed.setDescription(embedCfg.description ?? null);
-            embed.setImage(embedCfg.description ?? null);
+            embed.setImage(embedCfg.image ?? null);
             embed.setThumbnail(embedCfg.thumbnail ?? null);
             embed.setFooter({ text: embedCfg.footer ?? "" });
         }
         interaction.editReply({ embeds: [embed] });
-        linkMessage.edit({ content: (!dense && mappedOptions[currItem].verbose.link ? mappedOptions[currItem].verbose.link : '.') })
-        buttonInteraction.update({ components: [selectRow, viewRow] });
+        await buttonInteraction.update({ components: [selectRow, viewRow] });
+        linkMessage.edit({ content: (!dense && mappedOptions[currItem].verbose.link ? mappedOptions[currItem].verbose.link : '.') });
     }
 }
 
