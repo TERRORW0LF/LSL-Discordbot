@@ -169,7 +169,7 @@ export async function userSelect (message: Message | CommandInteraction, options
                         description: `Received selection.`,
                         color: guildCfg.embeds.success
                     };
-                    interaction.update({ embeds: [confirmEmbed, selectionEmbed], components: [] });
+                    await interaction.update({ embeds: [confirmEmbed, selectionEmbed], components: [] });
                     return values;
                 }
             case ('options'):
@@ -200,7 +200,7 @@ export async function userSelect (message: Message | CommandInteraction, options
                         description: `Received selection.`,
                         color: guildCfg.embeds.success
                     };
-                    interaction.update({ embeds: [confirmEmbed, selectionEmbed], components: [] });
+                    await interaction.update({ embeds: [confirmEmbed, selectionEmbed], components: [] });
                     return values;
                 }
                 interaction.update({ embeds: [infoEmbed, selectionEmbed] });
@@ -227,9 +227,9 @@ export async function getDesiredOptionLength(optionsName: string, interaction: C
             .setDescription(`No ${optionsName} found for your input.`)
             .setColor(guildCfg.embeds.error);
         if (interaction.replied || interaction.deferred)
-            interaction.editReply({ embeds: [embed] });
+            await interaction.editReply({ embeds: [embed] });
         else
-            interaction.reply({ embeds: [embed] });
+            await interaction.reply({ embeds: [embed] });
         return null;
     }
     if (options.data.length <= options.maxValues) {
@@ -243,9 +243,9 @@ export async function getDesiredOptionLength(optionsName: string, interaction: C
             .setDescription('Failed to select options.')
             .setColor(guildCfg.embeds.error);
         if (interaction.replied || interaction.deferred)
-            interaction.editReply({ content: null, embeds: [embed] });
+            await interaction.editReply({ content: null, embeds: [embed] });
         else
-            interaction.reply({ content: null, embeds: [embed] });
+            await interaction.reply({ content: null, embeds: [embed] });
         return null;
     }
 }
@@ -350,8 +350,11 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
         try {
             buttonInteraction = await componentMessage.awaitMessageComponent({ filter, time: 60_000 });
         } catch (_error) {
-            interaction.editReply({ embeds: [embed] });
-            componentMessage.edit({ content: (!dense && mappedOptions[currItem].verbose.link ? mappedOptions[currItem].verbose.link : '.')});
+            Promise.all([
+                interaction.editReply({ embeds: [embed] }),
+                linkMessage.edit({ content: (!dense && mappedOptions[currItem].verbose.link ? mappedOptions[currItem].verbose.link : '.') }),
+                componentMessage.edit({ components: [] })
+            ]);
             return currItem;
         }
 
@@ -394,8 +397,11 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
         }
         else {
             embed.setColor(guildCfg.embeds.success);
-            interaction.editReply({ embeds: [embed] });
-            buttonInteraction.update({ content: mappedOptions[currItem].verbose.link, components: [] });
+            Promise.all([
+                interaction.editReply({ embeds: [embed] }),
+                linkMessage.edit({ content: mappedOptions[currItem].verbose.link }),
+                buttonInteraction.update({ components: [] })
+            ]);
             return currItem;
         }
         if (dense) {
@@ -412,7 +418,8 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
             embed.setFooter({ text: embedCfg.footer ?? "" });
         }
         interaction.editReply({ embeds: [embed] });
-        buttonInteraction.update({ content: (!dense && mappedOptions[currItem].verbose.link ? mappedOptions[currItem].verbose.link : '.'), components: [selectRow, viewRow] });
+        linkMessage.edit({ content: (!dense && mappedOptions[currItem].verbose.link ? mappedOptions[currItem].verbose.link : '.') })
+        buttonInteraction.update({ components: [selectRow, viewRow] });
     }
 }
 
