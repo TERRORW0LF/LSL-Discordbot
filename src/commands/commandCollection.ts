@@ -9,7 +9,7 @@ export interface ApplicationCommandExecuter {
 
 const commands: Collection<string, ApplicationCommandExecuter> = new Collection();
 
-const commandFiles = fs.readdirSync('./commands/discordRestData').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync('.dist/commands/discordRestData').filter(file => file.endsWith('.js'));
 for (let file of commandFiles) {
     import(`./commands/discordRestData/${file}`).then((command: ApplicationCommandExecuter) =>
         commands.set(command.data.name, command));
