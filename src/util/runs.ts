@@ -81,7 +81,7 @@ export function addPlaceAndPoints(runs: Run[]): RunWithPlaceAndPoints[] {
  * @returns The place of the run in the runs.
  */
 export function getPlace(run: Run, wr: Run, runs: Run[]): number {
-    let place = runs.filter(run1 => run1.time - run.time < 0.0002).length + 1;
+    let place = runs.filter(run1 => run1.time - run.time < -0.0002).length + 1;
     if (place === 1 && run.submitId !== wr.submitId) place = 2;
     return place;
 }
