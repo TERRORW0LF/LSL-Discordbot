@@ -25,19 +25,19 @@ import { Run } from "./sheets.js";
  export function pbsOnly(runs: Run[]): Run[] {
     const pbs: Run[] = [];
     for (const run of runs) {
-        const index = pbs.findIndex(run1 => 
+        const pb = pbs.find(run1 => 
             run1.patch === run.patch
             && run1.season === run.season
             && run1.category === run.category
             && run1.map === run.map
             && run1.username === run.username
         );
-        if (index === -1) {
+        if (!pb) {
             pbs.push(run);
             continue;
         }
-        if (run.time < pbs[index].time || (run.time === pbs[index].time && run.date.getTime() < pbs[index].date.getTime()))
-            pbs[index] = run;
+        if (run.time < pb.time || (run.time === pb.time && pb.date.getTime() < run.date.getTime()))
+            pbs[pbs.indexOf(pb)] = run;
     }
     return pbs;
 }

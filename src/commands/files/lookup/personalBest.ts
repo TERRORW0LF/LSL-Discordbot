@@ -2,7 +2,7 @@ import { getAllSubmits } from "../../../util/sheets.js";
 import { getDesiredOptionLength, getOptions } from "../../../util/userInput.js";
 import { APIEmbed } from "discord-api-types";
 import { CommandInteraction, Formatters, Message } from "discord.js";
-import { getPlace, getPoints, pbsOnly } from "../../../util/runs.js";
+import { getPlace, getPoints, pbsOnly, sortRuns } from "../../../util/runs.js";
 import guildsCfg from '../../../config/guildConfig.json' assert { type: 'json' };
 
 export async function run (interaction: CommandInteraction<"present">) {
@@ -31,7 +31,7 @@ export async function run (interaction: CommandInteraction<"present">) {
 
     const allRuns = await submitsPromise;
     const runs = allRuns.filter(run => run.category === category && run.map === map);
-    const pbs = pbsOnly(runs);
+    const pbs = sortRuns(pbsOnly(runs));
     const pb = pbs.find(pb => pb.username === user.tag);
     if (!pb) {
         const embed: APIEmbed = {
