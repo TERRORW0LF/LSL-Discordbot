@@ -98,8 +98,9 @@
                 }
             },
             "starboard": {
-                "enabled": false,
+                "enabled": true,
                 "count": 5,
+                "emoji": "⭐",
                 "channel": "764470945331019796"
             },
             "streaming": {

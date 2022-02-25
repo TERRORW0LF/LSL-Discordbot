@@ -11,6 +11,9 @@ import listen from './events/server/listen.js';
 import guildMemberAdd from './events/discord/guildMemberAdd.js';
 import guildMemberUpdate from './events/discord/guildMemberUpdate.js';
 import axios from 'axios';
+import messageReactionAdd from './events/discord/messageReactionAdd.js';
+import messageReactionRemove from './events/discord/messageReactionRemove.js';
+import messageReactionRemoveAll from './events/discord/messageReactionRemoveAll.js';
 
 process.on('unhandledRejection', () => {});
 process.on('uncaughtException', () => {});
@@ -37,5 +40,8 @@ client.once('ready', (...args) => ready(...args));
 client.on('interactionCreate', async (...args) => interactionCreate(commandCollection, ...args));
 client.on('guildMemberAdd', async (...args) => guildMemberAdd(...args));
 client.on('guildMemberUpdate', async (...args) => guildMemberUpdate(...args));
+client.on('messageReactionAdd', async (...args) => messageReactionAdd(...args));
+client.on('messageReactionRemove', async (...args) => messageReactionRemove(...args));
+client.on('messageReactionRemoveAll', async (...args) => messageReactionRemoveAll(...args));
 
 client.login(discordToken);
