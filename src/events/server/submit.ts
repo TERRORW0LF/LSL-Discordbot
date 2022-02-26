@@ -1,5 +1,5 @@
 import { roleUpdates } from "../../util/roleUpdate.js";
-import { getAllSubmits, getJsDateFromSerialNumber, getMembersWithPoints, Run } from "../../util/sheets.js";
+import { getAllSubmits, getMembersWithPoints, Run } from "../../util/sheets.js";
 import { sendPb, sendSubmit, sendWr } from "../../util/automatedMessages.js";
 import { Client } from "discord.js";
 import { NextFunction, Request, Response } from "express";
@@ -14,7 +14,7 @@ export default async (client: Client<true>, req: Request, res: Response, next: N
     const membersWithPoints = await getMembersWithPoints(req.body.guildId, { patch: req.body.patch, season: req.body.season});
     roleUpdates(await client.guilds.fetch(req.body.guildId), req.body.season, membersWithPoints);
     const submit: Run = {
-        date: getJsDateFromSerialNumber(parseFloat(req.body.date)),
+        date: new Date(req.body.date),
         patch: req.body.patch, 
         season: req.body.season, 
         category: req.body.category, 

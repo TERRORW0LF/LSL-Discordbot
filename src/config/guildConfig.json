@@ -42,6 +42,12 @@
                     "channel": "678275161853788210"
                 }
             },
+            "starboard": {
+                "enabled": true,
+                "count": 1,
+                "emoji": "⭐",
+                "channel": "678275161853788210"
+            },
             "moderation": ["688689304897323055"]
         },
         "patches": [1.00, 1.41, 1.50],

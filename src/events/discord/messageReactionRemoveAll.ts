@@ -8,7 +8,11 @@ export default async function messageReactionRemoveAll(message: Message<boolean>
     if (!guildCfg?.features?.starboard?.enabled) return;
     if (!guildCfg?.features?.starboard?.channel) return;
     const starChannel = await message.guild?.channels.fetch(guildCfg?.features?.starboard?.channel) as TextChannel;
-    const starredMessages = await starChannel.messages.fetch({ after: message.id, limit: 100 });
+    const [afterStarredMessages, lastStarredMessages] = await Promise.all([
+        await starChannel.messages.fetch({ after: message.id, limit: 100 }),
+        await starChannel.messages.fetch({ after: message.id, limit: 100 })
+    ]);
+    const starredMessages = afterStarredMessages.concat(lastStarredMessages);
     const starMessage = starredMessages.find(message => message.embeds[0].footer?.text === message.id);
     if (!starMessage) return;
     starMessage.delete();

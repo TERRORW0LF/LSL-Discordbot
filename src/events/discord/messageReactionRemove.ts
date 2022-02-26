@@ -12,7 +12,11 @@ export default async function messageReactionRemove(reaction: MessageReaction | 
     const count = reaction.users.cache.has(message.author.id) ? reaction.count - 1 : reaction.count;
     if (count < guildCfg?.features?.starboard?.count) return;
     const starChannel = await message.guild?.channels.fetch(guildCfg?.features?.starboard?.channel) as TextChannel;
-    const starredMessages = await starChannel.messages.fetch({ after: message.id, limit: 100 });
+    const [afterStarredMessages, lastStarredMessages] = await Promise.all([
+        await starChannel.messages.fetch({ after: message.id, limit: 100 }),
+        await starChannel.messages.fetch({ after: message.id, limit: 100 })
+    ]);
+    const starredMessages = afterStarredMessages.concat(lastStarredMessages);
     const starMessage = starredMessages.find(message => message.embeds[0].footer?.text === message.id);
     if (!starMessage) return;
     await message.channel.send(`${guildCfg.features?.starboard?.emoji} ${count} ${Formatters.channelMention(message.channelId)}`);
