@@ -5,6 +5,7 @@ import { Client } from "discord.js";
 import { NextFunction, Request, Response } from "express";
 import { herokuAuth } from '../../config/config.js';
 import guildsCfg from '../../config/guildConfig.json' assert { type: 'json' };
+import { sortRuns } from "../../util/runs.js";
 
 export default async (client: Client<true>, req: Request, res: Response, next: NextFunction): Promise<void> => {
     if (req.query.auth !== herokuAuth) res.sendStatus(403);
@@ -27,18 +28,15 @@ export default async (client: Client<true>, req: Request, res: Response, next: N
     if (announceCfg?.submit?.enabled)
         sendSubmit(client, req.body.guildId, submit);
     if (announceCfg?.pb?.enabled || announceCfg?.wr?.enabled) {
-        const mapSubmits = (await getAllSubmits(req.body.guildId, { patch: req.body.patch, season: req.body.season })).filter(run => run.category == req.body.category && run.map == req.body.map);
-        mapSubmits.sort((run1, run2) => {
-            const diff = run1.time - run2.time;
-            return diff ? diff : run1.date.getTime() - run2.date.getTime();
-        });
-        const wr = mapSubmits[1];
-        const pb = mapSubmits.filter(run => run.username == req.body.name)[1];
-        if (announceCfg?.pb?.enabled && pb && pb.time - submit.time > 0) {
-            sendPb(client, req.body.guildId, submit, pb);
+        const mapSubmits = (await getAllSubmits(req.body.guildId, { patch: submit.patch, season: submit.season })).filter(run => run.category == submit.category && run.map == submit.map);
+        sortRuns(mapSubmits);
+        const wr = mapSubmits[1] ?? null;
+        const pb = mapSubmits.filter(run => run.username == req.body.name)[1] ?? null;
+        if (announceCfg?.pb?.enabled && (!pb || pb.time - submit.time > 0)) {
+            sendPb(client, req.body.guildId, pb, submit);
         }
-        if (announceCfg?.wr?.enabled && wr && wr.time - submit.time > 0) {
-            sendWr(client, req.body.guildId, submit, wr);
+        if (announceCfg?.wr?.enabled && (!wr || wr.time - submit.time > 0)) {
+            sendWr(client, req.body.guildId, wr, submit);
         }
     }
 }
