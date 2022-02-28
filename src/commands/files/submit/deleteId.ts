@@ -8,7 +8,7 @@ export async function run (interaction: CommandInteraction<"present">) {
 
     const season = interaction.options.getString('season', true),
           id = interaction.options.getInteger('id', true),
-          guildCfg = ((guildsCfg as any)[interaction.guildId ?? ""]) ?? guildsCfg.default;
+          guildCfg = (guildsCfg as any)[interaction.guildId ?? ""] ?? guildsCfg.default;
 
     const runs = await getAllSubmits(interaction.guildId, { patch: '1.50', season });
     const run = runs.find(run => run.submitId === id);

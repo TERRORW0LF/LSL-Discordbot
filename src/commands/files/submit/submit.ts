@@ -12,7 +12,7 @@ export async function run (interaction: CommandInteraction<"present">) {
           time = interaction.options.getNumber('time', true),
           proof = interaction.options.getString('proof', true),
           user = interaction.user.tag,
-          guildCfg = ((guildsCfg as any)[interaction.guildId]) ?? guildsCfg.default;
+          guildCfg = (guildsCfg as any)[interaction.guildId] ?? guildsCfg.default;
     let map = interaction.options.getString('map', true);
     
     const mapOptions = getOptions(map, guildCfg.maps),

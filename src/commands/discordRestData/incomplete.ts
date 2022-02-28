@@ -1,12 +1,12 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction } from 'discord.js';
+import { run as incomplete } from '../files/lookup/incomplete.js';
 import { ApplicationCommandExecuter } from '../commandCollection.js';
-import { run as pb } from '../files/lookup/personalBest.js';
 
 const command: ApplicationCommandExecuter = {
     data: new SlashCommandBuilder()
-        .setName('personal-best')
-        .setDescription('Show a personal best.')
+        .setName('incomplete')
+        .setDescription('Show uncompleted maps.')
         .addStringOption(option =>
             option.setName('season')
             .setDescription('The season of the run.')
@@ -18,21 +18,17 @@ const command: ApplicationCommandExecuter = {
             .addChoices([['Standard', 'Standard'], ['Gravspeed', 'Gravspeed']])
             .setRequired(true))
         .addStringOption(option =>
-            option.setName('map')
-            .setDescription('The map of the run.')
-            .setRequired(true))
-        .addStringOption(option =>
             option.setName('patch')
             .setDescription('The patch the run was submitted under.')
             .addChoices([['Pre 1.41', '1.00'], ['1.41-1.50', '1.41'], ['Post 1.50', '1.50']])
             .setRequired(false))
         .addUserOption(option =>
             option.setName('user')
-            .setDescription('The user whose pb to show.')
+            .setDescription('The user whose uncompleted maps to show.')
             .setRequired(false)).toJSON(),
-    async execute (interaction: CommandInteraction<"present">) {
-        return pb(interaction);
-    }
+    async execute(interaction: CommandInteraction<'present'>): Promise<void> {
+        return incomplete(interaction);
+    } 
 }
 
 export default command;

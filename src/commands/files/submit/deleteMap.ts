@@ -1,13 +1,13 @@
 import { getOptions, getDesiredOptionLength, UserSelectOptionsOption } from "../../../util/userInput.js";
 import { deleteSubmit, getAllSubmits } from "../../../util/sheets.js";
-import { CommandInteraction, Formatters, GuildMember } from "discord.js";
+import { CommandInteraction, GuildMember } from "discord.js";
 import { APIEmbed } from "discord-api-types";
 import guildsCfg from '../../../config/guildConfig.json' assert { type: 'json' };
 
 export async function run (interaction: CommandInteraction<"present">) {
     const defer = interaction.deferReply();
 
-    const guildCfg = ((guildsCfg as any)[interaction.guildId]) ?? guildsCfg.default,
+    const guildCfg = (guildsCfg as any)[interaction.guildId] ?? guildsCfg.default,
           name = interaction.user.tag,
           season = interaction.options.getString('season', true),
           category = interaction.options.getString('category', true);

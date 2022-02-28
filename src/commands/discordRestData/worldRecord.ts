@@ -5,7 +5,7 @@ import { run as wr } from '../files/lookup/worldRecord.js';
 
 const command: ApplicationCommandExecuter = {
     data: new SlashCommandBuilder()
-        .setName('world_record')
+        .setName('world-record')
         .setDescription('Show a world record.')
         .addStringOption(option =>
             option.setName('season')
