@@ -1,9 +1,9 @@
 import { APIEmbed } from "discord-api-types";
 import { CommandInteraction, Formatters, Message, TextBasedChannel } from "discord.js";
 import { google } from "googleapis";
+import { getGoogleAuth } from "../../../util/sheets.js";
+import { modDecision } from "../../../util/userInput.js";
 import guildsCfg from '../../../config/guildConfig.json' assert { type: 'json' };
-import { getGoogleAuth } from "../../../util/sheets";
-import { modDecision } from "../../../util/userInput";
 
 export async function run(interaction: CommandInteraction<'present'>): Promise<void> {
     const oldTag = interaction.options.getString('tag');

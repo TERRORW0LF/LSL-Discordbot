@@ -1,7 +1,7 @@
-import { CommandInteraction } from "discord.js";
-import { getAllSubmits } from "../../../util/sheets";
-import guildsCfg from '../../../config/guildConfig.json' assert { type: 'json' };
 import { APIEmbed } from "discord-api-types";
+import { CommandInteraction } from "discord.js";
+import { getAllSubmits } from "../../../util/sheets.js";
+import guildsCfg from '../../../config/guildConfig.json' assert { type: 'json' };
 
 export async function run(interaction: CommandInteraction<'present'>): Promise<void> {
     const defer = interaction.deferReply();

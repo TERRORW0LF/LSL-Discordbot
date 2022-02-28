@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction } from 'discord.js';
-import { run as incomplete } from '../files/lookup/incomplete.js';
+import { run as nameChange } from '../files/submit/nameChange.js';
 import { ApplicationCommandExecuter } from '../commandCollection.js';
 
 const command: ApplicationCommandExecuter = {
@@ -12,7 +12,7 @@ const command: ApplicationCommandExecuter = {
             .setDescription('Your old tag you want to change.')
             .setRequired(true)).toJSON(),
     async execute(interaction: CommandInteraction<'present'>): Promise<void> {
-        return incomplete(interaction);
+        return nameChange(interaction);
     }
 }
 
