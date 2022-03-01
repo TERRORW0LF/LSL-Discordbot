@@ -50,8 +50,13 @@
             },
             "moderation": ["688689304897323055"]
         },
-        "patches": [1.00, 1.41, 1.50],
-        "seasons": [1, 2, 3, 4, 5],
+        "channels": {
+            "moderation": "678275161853788210",
+            "error": "678275161853788210",
+            "log": "678275161853788210"
+        },
+        "patches": ["1.50"],
+        "seasons": ["1", "2", "3", "4", "5"],
         "categories": ["Standard", "Gravspeed"],
         "maps": ["Hanamura", "Horizon Lunar Colony", "Paris", "Temple of Anubis", "Volskaya Industries", "Dorado", "Havana", "Junkertown","Rialto",
             "Route 66", "Gibraltar", "Blizzard World", "Eichenwalde", "Hollywood", "King's Row","Numbani", "Busan Sanctuary", "Busan MEKA Base",
@@ -189,8 +194,8 @@
                 "300": "946491754138452008"
             }
         },
-        "patches": [1.00, 1.41, 1.50],
-        "seasons": [1, 2, 3, 4, 5],
+        "patches": ["1.00", "1.41", "1.50"],
+        "seasons": ["1", "2", "3", "4", "5"],
         "categories": ["Standard", "Gravspeed"],
         "maps": ["Hanamura", "Horizon Lunar Colony", "Paris", "Temple of Anubis", "Volskaya Industries", "Dorado", "Havana", "Junkertown","Rialto",
             "Route 66", "Gibraltar", "Blizzard World", "Eichenwalde", "Hollywood", "King's Row","Numbani", "Busan Sanctuary", "Busan MEKA Base",

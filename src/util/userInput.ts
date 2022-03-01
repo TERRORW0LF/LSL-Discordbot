@@ -464,57 +464,54 @@ export async function userDecision(channel: TextBasedChannel, decision: string, 
     options.trueOnTie ??= true;
     options.guildId ??= "default";
     options.approvalNumber ??= 1;
-    let accepts = 0;
-    let dismisses = 0;
-    let acceptUsers: string[] = [];
-    let dismissUsers: string[] = [];
+    let acceptUsers: Set<string> = new Set();
+    let dismissUsers: Set<string> = new Set();
     const guildCfg = (guildsCfg as any)[options.guildId] ?? guildsCfg.default;
     const embed = new Embed().setColor(guildCfg.embeds.info)
         .setDescription(decision)
         .setFooter({ text: "accepts: 0 | dismisses: 0" });
     const acceptButton = new MessageButton().setCustomId('accept').setEmoji('✅').setStyle('SUCCESS');
-    const denyButton = new MessageButton().setCustomId('accept').setEmoji('❌').setStyle('DANGER');
+    const denyButton = new MessageButton().setCustomId('dismiss').setEmoji('❌').setStyle('DANGER');
     const message = await channel.send({ embeds: [embed], components: [new MessageActionRow().setComponents(acceptButton, denyButton)]});
     const collector = message.createMessageComponentCollector({ filter: componentFilter({ users: options.userWhitelist, roles: options.roleWhitelist }), time: options.time ?? 1_800_000 });
-    collector.on('collect', interaction => {
-        if (interaction.customId == 'accept' && !acceptUsers.includes(interaction.user.id)) {
-            accepts++;
-            if (dismissUsers.includes(interaction.user.id)) {
-                dismissUsers.splice(dismissUsers.indexOf(interaction.user.id), 1);
-                dismisses--;
-            }
-            embed.setFooter({ text: `accepts: ${accepts} | dismisses: ${dismisses}`});
-            message.edit({ embeds: [embed] });
+    collector.on('collect', async interaction => {
+        if (interaction.customId == 'accept') {
+            acceptUsers.add(interaction.user.id);
+            dismissUsers.delete(interaction.user.id);
+            embed.setFooter({ text: `accepts: ${acceptUsers.size} | dismisses: ${dismissUsers.size}`});
+            await interaction.update({ embeds: [embed] });
         }
-        else if(interaction.customId == 'dismiss' && !dismissUsers.includes(interaction.user.id)) {
-            dismisses++;
-            if (acceptUsers.includes(interaction.user.id)) {
-                acceptUsers.splice(acceptUsers.indexOf(interaction.user.id), 1);
-                accepts--;
-            }
-            embed.setFooter({ text: `accepts: ${accepts} | dismisses: ${dismisses}`});
-            message.edit({ embeds: [embed] });
+        else if(interaction.customId == 'dismiss') {
+            dismissUsers.add(interaction.user.id);
+            acceptUsers.delete(interaction.user.id);
+            embed.setFooter({ text: `accepts: ${acceptUsers.size} | dismisses: ${dismissUsers.size}`});
+            await interaction.update({ embeds: [embed] });
         }
-        if (accepts + dismisses >= (options.approvalNumber as number))
+        if (acceptUsers.size + dismissUsers.size >= (options.approvalNumber as number))
             collector.stop("limit");
     });
     return new Promise((resolve, _reject) => {
-        collector.once('end', (_collected, reason) => {
-            if (reason == "time") {
-                message.edit({ embeds: [{ color: guildCfg.embeds.error, description: "Not enough people made a decision in time." }] });
+        collector.once('end', async (_collected, reason) => {
+            if (reason === "time") {
+                embed.setTitle('Timeout').setColor(guildCfg.embeds.error);
+                await message.edit({ embeds: [embed], components: [] });
                 resolve(false);
             }
-            if (accepts > dismisses) {
-                message.edit({ embeds: [{ color: guildCfg.embeds.success, description: `Decision greenlighted with **${accepts}** to ${dismisses} votes.` }] });
+            if (acceptUsers.size > dismissUsers.size) {
+                embed.setTitle('Accepted').setColor(guildCfg.embeds.success);
+                await message.edit({ embeds: [embed], components: [] });
                 resolve(true);
             }
-            if (accepts < dismisses) {
-                message.edit({ embeds: [{ color: guildCfg.embeds.error, description: `Decision denied with **${accepts}** to ${dismisses} votes.` }] });
+            else if (acceptUsers.size < dismissUsers.size) {
+                embed.setTitle('Denied').setColor(guildCfg.embeds.error);
+                await message.edit({ embeds: [embed], components: [] });
                 resolve(false);
             }
-            message.edit({ embeds: [{ color: options.trueOnTie ? guildCfg.embeds.success : guildCfg.embeds.error, 
-                description: `Decision ${options.trueOnTie ? "greenlighted" : "denied"} with a tie of **${accepts}** to ${dismisses} votes.` }] });
-            resolve(!!options.trueOnTie);
+            else {
+                embed.setTitle('Tie').setColor(guildCfg.embeds[options.trueOnTie ? "success" : "error"]);
+                await message.edit({ embeds: [embed], components: [] });
+                resolve(options.trueOnTie as boolean);
+            }
         });
     });
 }

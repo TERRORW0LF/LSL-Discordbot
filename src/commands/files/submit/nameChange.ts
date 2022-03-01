@@ -6,7 +6,7 @@ import { modDecision } from "../../../util/userInput.js";
 import guildsCfg from '../../../config/guildConfig.json' assert { type: 'json' };
 
 export async function run(interaction: CommandInteraction<'present'>): Promise<void> {
-    const oldTag = interaction.options.getString('tag');
+    const oldTag = interaction.options.getString('tag', true);
     const newTag = interaction.user.tag;
     const guildCfg = (guildsCfg as any)[interaction.guildId] ?? guildsCfg.default;
 
@@ -18,7 +18,7 @@ export async function run(interaction: CommandInteraction<'present'>): Promise<v
 
     const channel = ((await interaction.guild?.channels.fetch(guildCfg.channels.moderation)) ?? interaction.channel) as TextBasedChannel;
 
-    if (!await modDecision(channel, `${newTag} wants to update his name from ${oldTag}.`, { approvalNumber: 1 })) {
+    if (!await modDecision(channel, `**${newTag}** wants to update his name from **${oldTag}**.`, { approvalNumber: 1 })) {
         const errorEmbed: APIEmbed = {
             description: 'Your name update was denied.',
             color: guildCfg.embeds.error
@@ -35,7 +35,7 @@ export async function run(interaction: CommandInteraction<'present'>): Promise<v
     const sheets = google.sheets('v4');
 
     for (const patch of guildCfg.patches) {
-        for (const id of guildCfg.sheets[patch].values()) {
+        for (const id of Object.values(guildCfg.sheets[patch] as object)) {
             promiseArr.push((async () => {
                 const values = (await sheets.spreadsheets.values.get({
                     auth: token,
@@ -51,6 +51,7 @@ export async function run(interaction: CommandInteraction<'present'>): Promise<v
                 await sheets.spreadsheets.values.update({
                     auth: token,
                     spreadsheetId: id,
+                    valueInputOption: 'RAW',
                     range: 'Record Log!B2:B',
                     requestBody: {
                         majorDimension: 'COLUMNS',

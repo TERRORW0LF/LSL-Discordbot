@@ -87,7 +87,7 @@ export async function getAllSubmits(guildId: string, options: SheetOptions): Pro
     })).data.values;
 
     if (!rawRuns)
-        throw 'No runs found';
+        return [];
 
     returnRuns.push(...rawRuns.map(row => { 
         return { 
