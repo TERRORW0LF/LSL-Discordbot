@@ -105,6 +105,8 @@ export async function roleUpdates(guild: Guild, season: string, data: Collection
         if (guildCfg?.features?.announce?.rank?.enabled)
             sendRank(guild.client, guild.id, newFirstPlaceGravspeed.member, firstPlaceGravspeedRole, true);
     }
+
+    console.log('role updates done');
 }
 
 
