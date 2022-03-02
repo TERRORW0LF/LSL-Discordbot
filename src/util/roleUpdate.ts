@@ -94,17 +94,17 @@ export async function roleUpdates(guild: Guild, season: string, data: Collection
         if (newRole !== oldRole && guildCfg?.features?.announce?.rank?.enabled)
             sendRank(guild.client, guild.id, member.member, newRole ?? "", compareRoles(roles, oldRole, newRole))
     }
-    if (oldFirstPlaceStandard && oldFirstPlaceStandard != newFirstPlaceStandard)
-        oldFirstPlaceStandard?.member.roles.remove(firstPlaceStandardRole);
+    if (oldFirstPlaceStandard && oldFirstPlaceStandard !== newFirstPlaceStandard)
+        oldFirstPlaceStandard.member.roles.remove(firstPlaceStandardRole);
     if (newFirstPlaceStandard && !newFirstPlaceStandard.member.roles.cache.has(firstPlaceStandardRole)) {
-        newFirstPlaceStandard?.member.roles.add(firstPlaceStandardRole);
+        newFirstPlaceStandard.member.roles.add(firstPlaceStandardRole);
         if (guildCfg?.features?.announce?.rank?.enabled)
             sendRank(guild.client, guild.id, newFirstPlaceStandard.member, firstPlaceStandardRole, true);
     }
-    if (oldFirstPlaceGravspeed && oldFirstPlaceGravspeed != newFirstPlaceGravspeed)
-        oldFirstPlaceGravspeed?.member.roles.remove(firstPlaceGravspeedRole);
+    if (oldFirstPlaceGravspeed && oldFirstPlaceGravspeed !== newFirstPlaceGravspeed)
+        oldFirstPlaceGravspeed.member.roles.remove(firstPlaceGravspeedRole);
     if (newFirstPlaceGravspeed && !newFirstPlaceGravspeed.member.roles.cache.has(firstPlaceGravspeedRole)) {
-        newFirstPlaceGravspeed?.member.roles.add(firstPlaceGravspeedRole);
+        newFirstPlaceGravspeed.member.roles.add(firstPlaceGravspeedRole);
         if (guildCfg?.features?.announce?.rank?.enabled)
             sendRank(guild.client, guild.id, newFirstPlaceGravspeed.member, firstPlaceGravspeedRole, true);
     }
