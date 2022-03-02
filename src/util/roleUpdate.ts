@@ -83,14 +83,15 @@ export async function roleUpdates(guild: Guild, season: string, data: Collection
         const newRole = getRole(Math.max(member.points.Standard, member.points.Gravspeed), roles);
         let oldRole: string | null = null;
         for (const role of roles.values())
-            if (role != newRole && member.member.roles.cache.has(role)) {
+            if (member.member.roles.cache.has(role)) {
                 oldRole = role;
-                member.member.roles.remove(role);
+                if (role !== newRole)
+                    member.member.roles.remove(role);
                 break;
             }
         if (newRole && !member.member.roles.cache.has(newRole))
             member.member.roles.add(newRole);
-        if (newRole != oldRole && guildCfg?.features?.announce?.rank?.enabled)
+        if (newRole !== oldRole && guildCfg?.features?.announce?.rank?.enabled)
             sendRank(guild.client, guild.id, member.member, newRole ?? "", compareRoles(roles, oldRole, newRole))
     }
     if (oldFirstPlaceStandard && oldFirstPlaceStandard != newFirstPlaceStandard)

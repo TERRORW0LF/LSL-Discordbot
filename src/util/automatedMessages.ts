@@ -161,10 +161,11 @@ export async function sendRank(client: Client<true>, guildId: string, member: Gu
     if (!channel.isText()) return;
     const role = await guild.roles.fetch(newRole);
     const embed: APIEmbed = {
-        author: { name: member.displayName, icon_url: member.avatarURL() ?? undefined },
+        author: { name: member.displayName, icon_url: member.displayAvatarURL() ?? undefined },
         color: isRankUp ? guildCfg.embeds.success : guildCfg.embeds.error,
-        title: `${Formatters.userMention(member.id)} ${(isRankUp ? "Ranked up to" : "Ranked down to") + (role ? Formatters.roleMention(role.id) : "no role")}`,
-        description: isRankUp ? getRolePa(member.displayName) : getRoleBm(member.displayName)
+        title: `Rank update`,
+        description: `${Formatters.userMention(member.id)} ${(isRankUp ? "Ranked up to" : "Ranked down to") + (role ? Formatters.roleMention(role.id) : "no role")}`,
+        footer: { text: isRankUp ? getRolePa(member.displayName) : getRoleBm(member.displayName) }
     };
     await channel.send({ content: Formatters.userMention(member.id), embeds: [embed] });
 }

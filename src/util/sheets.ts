@@ -164,6 +164,7 @@ export async function getMembersWithPoints(guildId: string, options: SheetOption
         auth: token,
         spreadsheetId: sheetId,
         majorDimension: 'ROWS',
+        valueRenderOption: 'UNFORMATTED_VALUE',
         ranges: [guildCfg.sheets.points.Standard, guildCfg.sheets.points.Gravspeed, guildCfg.sheets.points.total]
     })).data.valueRanges;
     if (!userPoints) return new Collection();
