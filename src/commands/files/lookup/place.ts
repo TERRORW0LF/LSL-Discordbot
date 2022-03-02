@@ -52,7 +52,7 @@ export async function run (interaction: CommandInteraction<"present">) {
     const points = getPoints(run, pbs[0], place, map, category);
     let samePlaceUsers = 'none';
     if (run.submitId !== pbs[0].submitId)
-        samePlaceUsers = pbs.filter(run1 => run1.time === run.time && run1.username !== run.username).join(', ') || 'none';
+        samePlaceUsers = pbs.filter(run1 => run1.time === run.time && run1.username !== run.username).map(run1 => run1.username).join(', ') || 'none';
     
     const embed: APIEmbed = {
         title: `Place`,
