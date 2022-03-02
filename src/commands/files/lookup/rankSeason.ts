@@ -22,7 +22,7 @@ export async function run (interaction: CommandInteraction<"present">) {
         interaction.editReply({ embeds: [embed] });
         return;
     };
-    const rank = memberPoints.filter(points => points.Total < rankUser.Total).size + 1;
+    const rank = memberPoints.filter(points => points.Total > rankUser.Total).size + 1;
     const embed: APIEmbed = {
         title: `Season Rank`,
         description: `Rank: *${rank}*\nPoints: *${rankUser.Total}*`,

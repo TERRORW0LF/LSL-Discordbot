@@ -104,8 +104,8 @@
                     "channel": "685602798016004118"
                 },
                 "rank": {
-                    "enabled": false,
-                    "channel": ""
+                    "enabled": true,
+                    "channel": "685602798016004118"
                 }
             },
             "starboard": {
