@@ -68,11 +68,13 @@ export async function sendPb(client: Client<true>, guildId: string, oldPb: Run |
         description: `Patch: *${newPb.patch}*\nSeason: *${newPb.season}*\nCategory: *${newPb.category}*\nMap: *${newPb.map}*`,
         fields: [{
             name: "New PB",
-            value: `User: *${name}*\nTime: *${newPb.time.toFixed(2)}*\nProof: *${Formatters.hyperlink('link', newPb.proof)}*\nDate: *${Formatters.time(newPb.date)}*`
+            value: `User: *${name}*\nTime: *${newPb.time.toFixed(2)}*\nProof: *${Formatters.hyperlink('link', newPb.proof)}*\nDate: *${Formatters.time(newPb.date)}*`,
+            inline: true
         },
         {
             name: "Old PB",
-            value: `User: *${oldPb ? name : 'none'}*\nTime: *${oldPb?.time.toFixed(2) ?? 'none'}*\nProof: *${oldPb ? Formatters.hyperlink('link', oldPb.proof) : 'none'}*\nDate: *${oldPb ? Formatters.time(oldPb.date) : 'none'}*`
+            value: `User: *${oldPb ? name : 'none'}*\nTime: *${oldPb?.time.toFixed(2) ?? 'none'}*\nProof: *${oldPb ? Formatters.hyperlink('link', oldPb.proof) : 'none'}*\nDate: *${oldPb ? Formatters.time(oldPb.date) : 'none'}*`,
+            inline: true
         },
         {
             name: "Comparison",
@@ -113,11 +115,13 @@ export async function sendWr(client: Client<true>, guildId: string, oldRecord: R
         description: `Patch: *${newRecord.patch}*\nSeason: *${newRecord.season}*\nCategory: *${newRecord.category}*\nMap: *${newRecord.map}*`,
         fields: [{
             name: "New Record",
-            value: `User: *${name}*\nTime: *${newRecord.time.toFixed(2)}*\nProof: *${Formatters.hyperlink('link', newRecord.proof)}*\nDate: *${Formatters.time(newRecord.date)}*`
+            value: `User: *${name}*\nTime: *${newRecord.time.toFixed(2)}*\nProof: *${Formatters.hyperlink('link', newRecord.proof)}*\nDate: *${Formatters.time(newRecord.date)}*`,
+            inline: true
         },
         {
             name: "Old Record",
-            value: `User: *${oldRecord ? name : 'none'}*\nTime: *${oldRecord?.time.toFixed(2) ?? 'none'}*\nProof: *${oldRecord ? Formatters.hyperlink('link', oldRecord.proof) : 'none'}*\nDate: *${oldRecord ? Formatters.time(oldRecord.date) : 'none'}*`
+            value: `User: *${oldRecord ? name : 'none'}*\nTime: *${oldRecord?.time.toFixed(2) ?? 'none'}*\nProof: *${oldRecord ? Formatters.hyperlink('link', oldRecord.proof) : 'none'}*\nDate: *${oldRecord ? Formatters.time(oldRecord.date) : 'none'}*`,
+            inline: true
         },
         {
             name: "Comparison",
