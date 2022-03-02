@@ -80,7 +80,7 @@ export async function roleUpdates(guild: Guild, season: string, data: Collection
             oldFirstPlaceGravspeed = member;
         const newRole = getRole(Math.max(member.points.Standard, member.points.Gravspeed), roles);
         let oldRole: string | null = null;
-        for (const role in roles)
+        for (const role of roles.values())
             if (role != newRole && member.member.roles.cache.has(role)) {
                 oldRole = role;
                 member.member.roles.remove(role);
@@ -121,7 +121,7 @@ function getRole(points: number, roles: Collection<number, string>): string | nu
     for (const point of roles.keys())
         if (nearestLowerRolePoints < point && point <= points)
             nearestLowerRolePoints = point;
-    return nearestLowerRolePoints == 0 ? roles.get(nearestLowerRolePoints) as string : null;
+    return nearestLowerRolePoints !== 0 ? roles.get(nearestLowerRolePoints) as string : null;
 }
 
 
