@@ -17,7 +17,7 @@ const rest = new REST({ version: '9' }).setToken(discordToken);
 (async () => {
     try {
         console.log('Started refreshing application commands.');
-        await rest.put(Routes.applicationGuildCommands(clientId, "678275066064142347"), { body: commands });
+        await rest.put(Routes.applicationGuildCommands(clientId, "574522788967088128"), { body: commands });
         console.log('Successfully reloaded application commands.');
     } catch (err) {
         console.error(err);
