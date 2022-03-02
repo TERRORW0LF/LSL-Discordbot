@@ -70,7 +70,7 @@ export async function roleUpdates(guild: Guild, season: string, data: Collection
             isNewFirstPlaceGravspeed = true;
         }
         const guildMember = members.find(member => member.user.tag === memberName);
-        if (!guildMember) break;
+        if (!guildMember) continue;
         const member: MemberWithPoints = { member: guildMember, points: data.get(memberName) as Points };
         if (isNewFirstPlaceStandard)
             newFirstPlaceStandard = member;
