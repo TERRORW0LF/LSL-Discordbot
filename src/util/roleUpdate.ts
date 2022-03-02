@@ -61,10 +61,12 @@ export async function roleUpdates(guild: Guild, season: string, data: Collection
         let isNewFirstPlaceGravspeed = false;
         if ((data.get(memberName) as Points).Standard > newFirstPlaceStandardPoints) {
             newFirstPlaceStandardPoints = (data.get(memberName) as Points).Standard;
+            newFirstPlaceStandard = null;
             isNewFirstPlaceStandard = true;
         }
         if ((data.get(memberName) as Points).Gravspeed > newFirstPlaceGravspeedPoints) {
             newFirstPlaceGravspeedPoints = (data.get(memberName) as Points).Gravspeed;
+            newFirstPlaceGravspeed =  null;
             isNewFirstPlaceGravspeed = true;
         }
         const guildMember = members.find(member => member.user.tag === memberName);
