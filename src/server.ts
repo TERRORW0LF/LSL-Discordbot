@@ -29,8 +29,8 @@ app.post('/delete', (...args) => remove(client, ...args));
 app.listen(port, (...args) => listen(...args));
 
 setInterval(async () => {
-    axios.get(`https://lsl-discordbot-v12.herokuapp.com/ping?auth=${herokuAuth}`).catch(err => { });
-    axios.get(`https://discord-lsl.herokuapp.com/ping?auth=${herokuAuth}`).catch(err => { });
+    axios.get(`https://lsl-discordbot1.herokuapp.com/ping?auth=${herokuAuth}`).catch(err => { });
+    axios.get(`https://lsl-discordbot2.herokuapp.com/ping?auth=${herokuAuth}`).catch(err => { });
 }, 1200000);
 
 // Discord Client
