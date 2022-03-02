@@ -266,8 +266,14 @@ interface DateDifference {
     seconds: number
 }
 
+/**
+ * Gets the difference between 2 dates.
+ * @param date1 The first date, has to be the older one.
+ * @param date2 The second date, has to be the newer one.
+ * @returns A DateDifference object with the difference.
+ */
 function getDateDiff(date1: Date, date2: Date): DateDifference {
-    let sDiff = Math.round((date1.getTime() - date2.getTime()) / 1000);
+    let sDiff = Math.round((date2.getTime() - date1.getTime()) / 1000);
     const years = Math.floor(sDiff/(365*24*60*60));
     sDiff %= 365*24*60*60;
     const weeks = Math.floor(sDiff/(7*24*60*60));
