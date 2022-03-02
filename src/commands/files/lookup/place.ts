@@ -6,7 +6,7 @@ import { getPlace, getPoints, pbsOnly, sortRuns } from "../../../util/runs.js";
 import guildsCfg from '../../../config/guildConfig.json' assert { type: 'json' };
 
 export async function run (interaction: CommandInteraction<"present">) {
-    const defer = interaction.deferReply();
+    await interaction.deferReply();
     const proofMessage = interaction.channel?.send('.');
 
     const rawPlace = interaction.options.getInteger('place', true);
@@ -21,7 +21,6 @@ export async function run (interaction: CommandInteraction<"present">) {
     const mapOptions = getOptions(map, guildCfg.maps),
           selectData = mapOptions.map(value => { return { label: value } });
     
-    await defer;
     const mapIndexes = await getDesiredOptionLength('map', interaction, { placeholder: 'Select the desired map', data: selectData });
     if (!mapIndexes) {
         (await proofMessage)?.delete();
@@ -45,7 +44,6 @@ export async function run (interaction: CommandInteraction<"present">) {
             description: `This map has no submitted runs.`,
             color: guildCfg.embeds.error
         };
-        await defer;
         interaction.editReply({ embeds: [embed] });
         (await proofMessage)?.delete();
         return;
@@ -63,7 +61,6 @@ export async function run (interaction: CommandInteraction<"present">) {
         footer: { text: `ID: ${run.submitId}` },
         color: guildCfg.embeds.success
     };
-    await defer;
     interaction.editReply({ embeds: [embed] });
     ((await proofMessage) as Message).edit(run.proof);
 }

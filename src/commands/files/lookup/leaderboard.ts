@@ -6,7 +6,7 @@ import guildsCfg from '../../../config/guildConfig.json' assert { type: 'json' }
 import { APIEmbed } from "discord-api-types";
 
 export async function run (interaction: CommandInteraction<"present">) {
-    const defer = interaction.deferReply();
+    await interaction.deferReply();
     const proofMessage = interaction.channel?.send('.');
 
     const guildCfg = (guildsCfg as any)[interaction.guildId] ?? guildsCfg.default;
@@ -20,7 +20,6 @@ export async function run (interaction: CommandInteraction<"present">) {
     const mapOptions = getOptions(map, guildCfg.maps),
           selectData = mapOptions.map(value => { return { label: value } });
     
-    await defer;
     const mapIndexes = await getDesiredOptionLength('map', interaction, { placeholder: 'Select the desired map', data: selectData });
     if (!mapIndexes) {
         (await proofMessage)?.delete();
@@ -34,7 +33,6 @@ export async function run (interaction: CommandInteraction<"present">) {
         && run.category === category
         && run.map === map);
     if (!filteredRuns.length) {
-        await defer;
         const embed: APIEmbed = {
             description: `No submits found.`,
             color: guildCfg.embeds.error
@@ -68,6 +66,5 @@ export async function run (interaction: CommandInteraction<"present">) {
             }
         };
     });
-    await defer;
     selectShowcase(interaction, (await proofMessage) as Message, showcaseRuns);
 }
