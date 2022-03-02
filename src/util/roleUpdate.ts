@@ -39,7 +39,6 @@ export type Category = "Gravspeed" | "Standard";
  * @param data The members and their respective points.
  */
 export async function roleUpdates(guild: Guild, season: string, data: Collection<string, Points>): Promise<void> {
-    console.log('start');
     const guildCfg = (guildsCfg as any)[guild.id];
     if (!guildCfg) return;
 
@@ -58,7 +57,6 @@ export async function roleUpdates(guild: Guild, season: string, data: Collection
     let newFirstPlaceStandardPoints = 0;
     let newFirstPlaceGravspeedPoints = 0;
     for (const memberName of data.keys()) {
-        console.log(memberName);
         let isNewFirstPlaceStandard = false;
         let isNewFirstPlaceGravspeed = false;
         if ((data.get(memberName) as Points).Standard > newFirstPlaceStandardPoints) {
@@ -70,7 +68,7 @@ export async function roleUpdates(guild: Guild, season: string, data: Collection
             isNewFirstPlaceGravspeed = true;
         }
         const guildMember = members.find(member => member.user.tag === memberName);
-        if (!guildMember) return;
+        if (!guildMember) break;
         const member: MemberWithPoints = { member: guildMember, points: data.get(memberName) as Points };
         if (isNewFirstPlaceStandard)
             newFirstPlaceStandard = member;
