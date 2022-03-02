@@ -92,12 +92,12 @@
                     "channel": "644457453093781504"
                 },
                 "pb": {
-                    "enabled": false,
+                    "enabled": true,
                     "channel": "685602798016004118"
                 },
                 "submit": {
                     "enabled": true,
-                    "channel": "685602798016004118"
+                    "channel": "641654895086141440"
                 },
                 "delete": {
                     "enabled": false,
