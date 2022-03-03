@@ -104,7 +104,9 @@ export async function sendWr(client: Client<true>, guildId: string, oldRecord: R
     if (!channel) return;
     if (!channel.isText()) return;
     const member = await getMemberByName(guild, newRecord.username);
+    const oldMember = oldRecord ? await getMemberByName(guild, oldRecord?.username) : null;
     const name = member?.displayName ?? newRecord.username.split('#')[0];
+    const oldName = oldMember?.displayName ?? oldRecord?.username.split('#')[0];
     const diff = oldRecord ? getDateDiff(oldRecord.date, newRecord.date) : null;
     const embed: APIEmbed = {
         author: { name: name, icon_url: member?.avatarURL() ?? undefined },
@@ -120,7 +122,7 @@ export async function sendWr(client: Client<true>, guildId: string, oldRecord: R
         },
         {
             name: "Old Record",
-            value: `User: *${oldRecord ? name : 'none'}*\nTime: *${oldRecord?.time.toFixed(2) ?? 'none'}*\nProof: *${oldRecord ? Formatters.hyperlink('link', oldRecord.proof) : 'none'}*\nDate: *${oldRecord ? Formatters.time(oldRecord.date) : 'none'}*`,
+            value: `User: *${oldRecord ? oldName : 'none'}*\nTime: *${oldRecord?.time.toFixed(2) ?? 'none'}*\nProof: *${oldRecord ? Formatters.hyperlink('link', oldRecord.proof) : 'none'}*\nDate: *${oldRecord ? Formatters.time(oldRecord.date) : 'none'}*`,
             inline: true
         },
         {
@@ -130,7 +132,7 @@ export async function sendWr(client: Client<true>, guildId: string, oldRecord: R
         footer: { text: "ID: " + newRecord.submitId }
     };
     await channel.send({ content: member ? Formatters.userMention(member.id) : null, embeds: [embed] });
-    channel.send(((oldRecord && newRecord.username !== oldRecord.username) ? getBm(name) + "\n" : "") + newRecord.proof);
+    channel.send(((oldMember && newRecord.username !== oldRecord?.username) ? getBm(oldMember.id) + "\n" : "") + newRecord.proof);
 }
 
 
@@ -169,7 +171,7 @@ export async function sendRank(client: Client<true>, guildId: string, member: Gu
         color: isRankUp ? guildCfg.embeds.success : guildCfg.embeds.error,
         title: `Rank update`,
         description: `${Formatters.userMention(member.id)} ${(isRankUp ? "Ranked up to" : "Ranked down to") + (role ? Formatters.roleMention(role.id) : "no role")}`,
-        footer: { text: isRankUp ? getRolePa(member.displayName) : getRoleBm(member.displayName) }
+        footer: { text: isRankUp ? getRolePa(member.id) : getRoleBm(member.id) }
     };
     await channel.send({ content: Formatters.userMention(member.id), embeds: [embed] });
 }
@@ -177,10 +179,10 @@ export async function sendRank(client: Client<true>, guildId: string, member: Gu
 
 /**
  * Gets some fum bm if someone lost a wr.
- * @param user The username to include in the bm.
+ * @param userId The id of the user the bm is against.
  * @returns Some bm sentence, very cringe.
  */
-function getBm(user: string): string {
+function getBm(userId: string): string {
     const bm = [
         'is not gonna like that!',
         'is all washed up!',
@@ -203,16 +205,16 @@ function getBm(user: string): string {
         'are you a brig main?'
     ];
     const msg = Math.round(Math.random()*(bm.length-1));
-    return `${user} ${bm[msg]}`
+    return `${Formatters.userMention(userId)} ${bm[msg]}`
 }
 
 
 /**
  * Gets a nice message if someone has ranked up.
- * @param user The username to include in the message.
+ * @param userId The id of the user the pa is for.
  * @returns Some positive message, very cringe.
  */
-function getRolePa(user: string): string {
+function getRolePa(userId: string): string {
     const pa = [
         'ever upwards.',
         'really has it in them.',
@@ -227,16 +229,16 @@ function getRolePa(user: string): string {
         'has robotical precision.'
     ];
     const msg = Math.round(Math.random()*(pa.length-1));
-    return `${user} ${pa[msg]}`
+    return `${Formatters.userMention(userId)} ${pa[msg]}`
 }
 
 
 /**
  * Gets some fum bm if someone has fallen in rank.
- * @param user The username to include in the bm.
+ * @param userId The id of the user the mb is against.
  * @returns Some bm sentence, very cringe.
  */
-function getRoleBm(user: string): string {
+function getRoleBm(userId: string): string {
     const bm = [
         'is not gonna like that!',
         'is all washed up!',
@@ -257,7 +259,7 @@ function getRoleBm(user: string): string {
         'got relegated to the lower ranks.'
     ];
     const msg = Math.round(Math.random()*(bm.length-1));
-    return `${user} ${bm[msg]}`
+    return `${Formatters.userMention(userId)} ${bm[msg]}`
 }
 
 
