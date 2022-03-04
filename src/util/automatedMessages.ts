@@ -171,7 +171,7 @@ export async function sendRank(client: Client<true>, guildId: string, member: Gu
         color: isRankUp ? guildCfg.embeds.success : guildCfg.embeds.error,
         title: `Rank update`,
         description: `${Formatters.userMention(member.id)} ${(isRankUp ? "Ranked up to" : "Ranked down to") + (role ? Formatters.roleMention(role.id) : "no role")}`,
-        footer: { text: isRankUp ? getRolePa(member.id) : getRoleBm(member.id) }
+        footer: { text: isRankUp ? getRolePa(member.displayName) : getRoleBm(member.displayName) }
     };
     await channel.send({ content: Formatters.userMention(member.id), embeds: [embed] });
 }
@@ -211,10 +211,10 @@ function getBm(userId: string): string {
 
 /**
  * Gets a nice message if someone has ranked up.
- * @param userId The id of the user the pa is for.
+ * @param user The name of the user the pa is for.
  * @returns Some positive message, very cringe.
  */
-function getRolePa(userId: string): string {
+function getRolePa(user: string): string {
     const pa = [
         'ever upwards.',
         'really has it in them.',
@@ -229,16 +229,16 @@ function getRolePa(userId: string): string {
         'has robotical precision.'
     ];
     const msg = Math.round(Math.random()*(pa.length-1));
-    return `${Formatters.userMention(userId)} ${pa[msg]}`
+    return `${user} ${pa[msg]}`
 }
 
 
 /**
  * Gets some fum bm if someone has fallen in rank.
- * @param userId The id of the user the mb is against.
+ * @param user The name of the user the mb is against.
  * @returns Some bm sentence, very cringe.
  */
-function getRoleBm(userId: string): string {
+function getRoleBm(user: string): string {
     const bm = [
         'is not gonna like that!',
         'is all washed up!',
@@ -259,7 +259,7 @@ function getRoleBm(userId: string): string {
         'got relegated to the lower ranks.'
     ];
     const msg = Math.round(Math.random()*(bm.length-1));
-    return `${Formatters.userMention(userId)} ${bm[msg]}`
+    return `${user} ${bm[msg]}`
 }
 
 
