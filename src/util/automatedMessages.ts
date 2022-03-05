@@ -157,7 +157,7 @@ export async function sendDelete(client: Client<true>, guildId: string, submit: 
  * @param isRankUp If the member has risen or fallen in rank.
  * @returns An empty Promise.
  */
-export async function sendRank(client: Client<true>, guildId: string, member: GuildMember, newRole: string, isRankUp: boolean): Promise<void> {
+export async function sendRank(client: Client<true>, guildId: string, member: GuildMember, newRole: string | null, isRankUp: boolean): Promise<void> {
     const guildCfg = (guildsCfg as any)[guildId];
     if (!guildCfg) return;
 
@@ -165,7 +165,7 @@ export async function sendRank(client: Client<true>, guildId: string, member: Gu
     const channel = await guild.channels.fetch(guildCfg?.features?.announce?.rank?.channel);
     if (!channel) return;
     if (!channel.isText()) return;
-    const role = await guild.roles.fetch(newRole);
+    const role = newRole ? await guild.roles.fetch(newRole) : null;
     const embed: APIEmbed = {
         author: { name: member.displayName, icon_url: member.displayAvatarURL() ?? undefined },
         color: isRankUp ? guildCfg.embeds.success : guildCfg.embeds.error,

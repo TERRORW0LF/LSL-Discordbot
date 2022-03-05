@@ -92,7 +92,7 @@ export async function roleUpdates(guild: Guild, season: string, data: Collection
         if (newRole && !member.member.roles.cache.has(newRole))
             member.member.roles.add(newRole);
         if (newRole !== oldRole && guildCfg?.features?.announce?.rank?.enabled)
-            sendRank(guild.client, guild.id, member.member, newRole ?? "", compareRoles(roles, oldRole, newRole))
+            sendRank(guild.client, guild.id, member.member, newRole, compareRoles(roles, oldRole, newRole))
     }
     if (oldFirstPlaceStandard && oldFirstPlaceStandard !== newFirstPlaceStandard)
         oldFirstPlaceStandard.member.roles.remove(firstPlaceStandardRole);
