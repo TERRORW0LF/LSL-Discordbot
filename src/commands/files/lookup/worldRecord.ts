@@ -37,6 +37,7 @@ export async function run (interaction: CommandInteraction<"present">) {
             color: guildCfg.embeds.error
         }
         interaction.editReply({ embeds: [embed] });
+        (await proofMessage)?.delete();
         return;
     }
     const points = getPoints(wr, wr, 1, map, category);
