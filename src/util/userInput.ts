@@ -367,10 +367,8 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
             buttonInteraction = await componentMessage.awaitMessageComponent({ filter, time: 60_000 });
         } catch (_error) {
             embed.setColor(guildCfg.embeds.success);
-            await Promise.all([
-                interaction.editReply({ embeds: [embed] }),
-                componentMessage.edit({ components: [] })
-            ]);
+            await componentMessage.edit({ components: [] });
+            await interaction.editReply({ embeds: [embed] });
             if (!dense && mappedOptions[currItem].verbose.link)
                 await linkMessage?.edit({ content: mappedOptions[currItem].verbose.link });
             else
@@ -419,10 +417,8 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
         }
         else {
             embed.setColor(guildCfg.embeds.success);
-            await Promise.all([
-                interaction.editReply({ embeds: [embed] }),
-                buttonInteraction.update({ components: [] })
-            ]);
+            await buttonInteraction.update({ components: [] });
+            await interaction.editReply({ embeds: [embed] });
             if (!dense && mappedOptions[currItem].verbose.link)
                 await linkMessage?.edit({ content: mappedOptions[currItem].verbose.link });
             else
