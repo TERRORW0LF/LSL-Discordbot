@@ -262,7 +262,7 @@ export interface SelectShowcaseOption {
  * @param options The showcase data that can be displayed.
  * @returns The index of the selected option.
  */
-export async function selectShowcase(interaction: CommandInteraction, linkMessage: Message, options: SelectShowcaseOption[]): Promise<number> {
+export async function selectShowcase(interaction: CommandInteraction, linkMessage: Message | null, options: SelectShowcaseOption[]): Promise<number> {
     const guildCfg = (guildsCfg as any)[interaction.guildId ?? ''] ?? guildsCfg.default;
 
     const mappedOptions = options.map(option => { 
@@ -291,9 +291,9 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
         };
         await interaction.editReply({ embeds: [embed] });
         if (embedCfg.link)
-            await linkMessage.edit(embedCfg.link);
+            await linkMessage?.edit(embedCfg.link);
         else
-            await linkMessage.delete();
+            await linkMessage?.delete();
         return 0;
     }
 
@@ -338,12 +338,17 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
     const selectRow = new MessageActionRow().setComponents(prevFiveButton, prevOneButton, doneButton, nextOneButton, nextFiveButton);
     const viewRow = new MessageActionRow().setComponents(denseButton, verboseButton);
 
-    if (interaction.replied || interaction.deferred)
-        await interaction.editReply({ content: null, embeds: [embed] });
+    let interactionMessage: Message;
+    if (interaction.replied || interaction.deferred) {
+        [interactionMessage] = await Promise.all([
+            interaction.fetchReply() as Promise<Message>,
+            interaction.editReply({ content: null, embeds: [embed] })
+        ]);
+    }
     else
-        await interaction.reply({ embeds: [embed], fetchReply: true });
+        interactionMessage = await interaction.reply({ embeds: [embed], fetchReply: true }) as Message;
 
-    const componentMessage = linkMessage;
+    const componentMessage = linkMessage ?? interactionMessage;
     await componentMessage.edit({ components: [selectRow, viewRow]});
     const filter = componentFilter({ users: [interaction.user.id] });
     const startDate = Date.now();
@@ -367,9 +372,9 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
                 componentMessage.edit({ components: [] })
             ]);
             if (!dense && mappedOptions[currItem].verbose.link)
-                await linkMessage.edit({ content: mappedOptions[currItem].verbose.link });
+                await linkMessage?.edit({ content: mappedOptions[currItem].verbose.link });
             else
-                await linkMessage.delete();
+                await linkMessage?.delete();
             return currItem;
         }
 
@@ -419,9 +424,9 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
                 buttonInteraction.update({ components: [] })
             ]);
             if (!dense && mappedOptions[currItem].verbose.link)
-                await linkMessage.edit({ content: mappedOptions[currItem].verbose.link });
+                await linkMessage?.edit({ content: mappedOptions[currItem].verbose.link });
             else
-                await linkMessage.delete();
+                await linkMessage?.delete();
             return currItem;
         }
         if (dense) {
@@ -439,7 +444,7 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
         }
         interaction.editReply({ embeds: [embed] });
         await buttonInteraction.update({ components: [selectRow, viewRow] });
-        linkMessage.edit({ content: (!dense && mappedOptions[currItem].verbose.link ? mappedOptions[currItem].verbose.link : '.') });
+        linkMessage?.edit({ content: (!dense && mappedOptions[currItem].verbose.link ? mappedOptions[currItem].verbose.link : '.') });
     }
 }
 
