@@ -23,11 +23,12 @@ export async function run (interaction: CommandInteraction<"present">) {
     }
 
     membersWithPoints.sort((points1, points2) => points2.Total - points1.Total);
-    let place = 1;
+    let place = 0;
     const showcaseMembers: SelectShowcaseOption[] = membersWithPoints.map((points, member) => {
+        place++;
         return {
             dense: {
-                place: `${place++}`,
+                place: `${place}`,
                 user: member,
                 points: `${points.Total}`
             },

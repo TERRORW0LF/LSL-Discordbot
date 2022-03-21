@@ -440,10 +440,10 @@ export async function selectShowcase(interaction: CommandInteraction, linkMessag
             embed.setDescription(embedCfg.description ?? null);
             embed.setImage(embedCfg.image ?? null);
             embed.setThumbnail(embedCfg.thumbnail ?? null);
-            embed.setFooter({ text: embedCfg.footer ?? "" });
+            embed.setFooter(embedCfg.footer ? { text: embedCfg.footer } : null);
         }
-        interaction.editReply({ embeds: [embed] });
         await buttonInteraction.update({ components: [selectRow, viewRow] });
+        interaction.editReply({ embeds: [embed] });
         linkMessage?.edit({ content: (!dense && mappedOptions[currItem].verbose.link ? mappedOptions[currItem].verbose.link : '.') });
     }
 }

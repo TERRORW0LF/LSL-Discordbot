@@ -26,11 +26,12 @@ export async function run (interaction: CommandInteraction<"present">) {
 
 
     const filteredMembersWithPoints = membersWithPoints.filter(points => points[category] !== 0).sort((points1, points2) => points2[category] - points1[category]);
-    let place = 1;
+    let place = 0;
     const showcaseMembers: SelectShowcaseOption[] = filteredMembersWithPoints.map((points, member) => {
+        place++;
         return {
             dense: {
-                place: `${place++}`,
+                place: `${place}`,
                 user: member,
                 points: `${points[category]}`
             },
