@@ -24,7 +24,7 @@ export async function run (interaction: CommandInteraction<"present">) {
 
     const submits = await getAllSubmits(interaction.guildId, { patch: "1.50", season });
     let runs;
-    if ((interaction.member as GuildMember).roles.cache.hasAny(guildCfg.features.moderation))
+    if ((interaction.member as GuildMember).roles.cache.hasAny(...guildCfg.features.moderation))
         runs = submits.filter(submit => submit.category == category && submit.map == map);
     else
         runs = submits.filter(submit => submit.username === name && submit.category == category && submit.map == map);

@@ -36,18 +36,18 @@ export default async function messageReactionAdd(reaction: MessageReaction | Par
                 attachment = attachmentUrl;
             }
         }
+        await message.guild?.members.fetch(message.author.id);
         const embed = new Embed()
             .setAuthor({
                 name: message.member?.nickname ?? message.author.username,
                 iconURL: message.member?.displayAvatarURL({ dynamic: false })
             })
-            .setDescription(message.content)
+            .setDescription(message.content || null)
             .addFields(...fields)
             .setImage(attachment)
             .setColor(guildCfg.embeds.success)
             .setFooter({ text: message.id })
             .setTimestamp();
-        const starChannel = await message.guild?.channels.fetch(guildCfg.features?.starboard?.channel) as TextChannel;
         await starChannel.send({ content: `${guildCfg.features?.starboard?.emoji} ${count} ${Formatters.channelMention(message.channelId)}`, embeds: [embed] });
         return;
     }
