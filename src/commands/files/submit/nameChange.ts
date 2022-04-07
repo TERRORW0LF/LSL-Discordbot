@@ -18,7 +18,7 @@ export async function run(interaction: CommandInteraction<'present'>): Promise<v
 
     const channel = ((await interaction.guild?.channels.fetch(guildCfg.channels.moderation)) ?? interaction.channel) as TextBasedChannel;
 
-    if (!await modDecision(channel, `**${newTag}** wants to update his name from **${oldTag}**.`, { approvalNumber: 1 })) {
+    if (!await modDecision(channel, `**${newTag}** wants to update their name from **${oldTag}**.`, { approvalNumber: 1 })) {
         const errorEmbed: APIEmbed = {
             description: 'Your name update was denied.',
             color: guildCfg.embeds.error
@@ -65,7 +65,7 @@ export async function run(interaction: CommandInteraction<'present'>): Promise<v
         await Promise.all(promiseArr);
     } catch (err) {
         const errorEmbed: APIEmbed = {
-            description: 'Couldn\'t finish name update, please try again later',
+            description: 'Couldn\'t finish name update, please try again later.',
             color: guildCfg.embeds.error
         };
         await Promise.all([

@@ -19,7 +19,7 @@ export async function run (interaction: CommandInteraction<"present">) {
           selectData = mapOptions.map(value => { return { label: value } });
     
     await defer;
-    const mapIndexes = await getDesiredOptionLength('map', interaction, { placeholder: 'Select the desired map', data: selectData });
+    const mapIndexes = await getDesiredOptionLength('map', interaction, { placeholder: 'Select the desired map.', data: selectData });
     if (!mapIndexes)
         return;
     map = mapOptions[mapIndexes[0]];
