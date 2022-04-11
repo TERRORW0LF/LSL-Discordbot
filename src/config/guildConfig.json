@@ -135,6 +135,19 @@
             "error": "641654895086141440",
             "log": "641654895086141440"
         },
+        "terminology": {
+            "controls": "*It is recommended to turn `allow backwards wallriding` on and `walljump on release` off. Lucio's air movement is affected by your viewing direction, looking up gains height while looking down loses it.*\n\n[more info](https://discord.com/channels/574522788967088128/579836384085278720/963132673314934844)",
+            "jump": "*Jumps are the easiest and most intuitive thing about Lucio's advanced movement kit, just go to a wall and press your jump button twice.*\n\n[more info](https://discord.com/channels/574522788967088128/579836384085278720/963038438158917642)",
+            "skim": "*Skims are the fastest way of travel for Lucio. To perform a skim go to a wall and do two consecutive one frame long jump inputs.*\n\n[more info](https://discord.com/channels/574522788967088128/579836384085278720/729395454738956308)",
+            "onetick": "*Oneticks help bridge gaps that are too short for another skim but too long for a longskim. To perform them just go to a wall and do one one frame long jump input.*\n\n[more info](https://discord.com/channels/574522788967088128/579836384085278720/729414075984904212)",
+            "latejump": "*Latejumps are the same as jumps but the second jump input is delayed by around 0.2 secs. They give your jump more length.*\n\n[more info](https://discord.com/channels/574522788967088128/579836384085278720/729402282621272116)",
+            "lateskim": "*Lateskims are the same as skims but the second jump input is delayed by around 0.2 secs. They give your jump more length while retaining the speed advantages of a skim over a jump.*\n\n[more info](https://discord.com/channels/574522788967088128/579836384085278720/729404743377485835)",
+            "headhit": "*Headhits are skims or jumps on which you hit your head on a ceiling to transform your upwards momentum into downwards momentum without losing speed.*\n\n[more info](https://discord.com/channels/574522788967088128/579836384085278720/729657922967044168)",
+            "ceilingBoost": "*Ceiling boosts work like headhits but on a slanted ceiling to transform your upwards into forwards momentum.*\n\n[more info](https://discord.com/channels/574522788967088128/579836384085278720/729660571359903814)",
+            "curveBoost": "*Curve boosts are achieved by doing a jump on a curved wall to achieve some extra speed.*\n\n[more info](https://discord.com/channels/574522788967088128/579836384085278720/729416962391801896)",
+            "rampSlide": "*Ramp slides are used for building speed. They work by dropping onto a slanted, non-wallridable surface.*\n\n[more info](https://discord.com/channels/574522788967088128/579836384085278720/963138743722721360)",
+            "vCurve": "*V-Curves are used to clear small overhangs. They are done by long jumping but turning 180° and looking up before your second jump input.*\n\n[more info](https://discord.com/channels/574522788967088128/579836384085278720/729421900253757553)"
+        },
         "roles": {
             "firstPlace": {
                 "1": {
