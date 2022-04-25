@@ -25,7 +25,7 @@ export default async function messageReactionAdd(reaction: MessageReaction | Par
         if (message.type === 'REPLY') {
             const channel = (await message.channel.fetch()) as TextChannel;
             const repliedMessage = await channel.messages.fetch(message.reference?.messageId ?? '');
-            fields.push({ name: 'Replied to', value: repliedMessage.content, inline: false });
+            fields.push({ name: 'Replied to', value: repliedMessage.content || '\u200B', inline: false });
         }
         fields.push({ name: 'Source', value: Formatters.hyperlink('Jump!', message.url), inline: false });
         let attachment: string | null = null;
