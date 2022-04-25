@@ -28,10 +28,10 @@ export default async (client: Client<true>, req: Request, res: Response, next: N
     if (announceCfg?.submit?.enabled)
         sendSubmit(client, req.body.guildId, submit);
     if (announceCfg?.pb?.enabled || announceCfg?.wr?.enabled) {
-        const mapSubmits = (await getAllSubmits(req.body.guildId, { patch: submit.patch, season: submit.season })).filter(run => run.category == submit.category && run.map == submit.map);
+        const mapSubmits = (await getAllSubmits(req.body.guildId, { patch: submit.patch, season: submit.season })).filter(run => run.category === submit.category && run.map === submit.map && run.submitId !== submit.submitId);
         sortRuns(mapSubmits);
-        const wr = mapSubmits[1] ?? null;
-        const pb = mapSubmits.filter(run => run.username == req.body.name)[1] ?? null;
+        const wr = mapSubmits[0] ?? null;
+        const pb = mapSubmits.filter(run => run.username == req.body.name)[0] ?? null;
         if (announceCfg?.pb?.enabled && (!pb || pb.time - submit.time > 0)) {
             sendPb(client, req.body.guildId, pb, submit);
         }
