@@ -65,7 +65,7 @@ export function addPlaceAndPoints(runs: Run[]): RunWithPlaceAndPoints[] {
             && run1.map === run.map);
         const wr = sameMap[0];
         const place = getPlace(run, wr, sameMap);
-        const points = getPoints(run, wr, place, run.map, run.category);
+        const points = getPoints(run, wr);
         return { ...run, place, points };
     });
     return mappedRuns;
@@ -91,61 +91,8 @@ export function getPlace(run: Run, wr: Run, runs: Run[]): number {
  * Gets the points of a run.
  * @param run The run to get the points of.
  * @param wr The wr on the map.
- * @param place The place of the run.
- * @param map The map of the run.
- * @param category The category of the run.
- * @returns The overall points the run has achieved.
  */
-export function getPoints(run: Run, wr: Run, place: number, map: string, category: string) {
-    return getPercentilePoints(run, wr) + getMapBasePoints(map, category) + getPlacePoints(place);
-}
-
-
-/**
- * Gets the percentile points of a run.
- * @param run The run to get the points of.
- * @param wr The wr on the map.
- * @returns The percentile points the run has achieved.
- */
-export function getPercentilePoints(run: Run, wr: Run) {
-    let normalizedTime: number;
-    if ((normalizedTime = 1 - ((run.time - wr.time) / wr.time)) < 0) normalizedTime = 0;
-    return Math.round((0.4 * normalizedTime**25 + 0.05 * normalizedTime**4 + 0.25 * normalizedTime**3 + 0.3 * normalizedTime**2) * 100);
-}
-
-
-/**
- * Gets the base points for submitting a run.
- * @param map The map.
- * @param category The category.
- * @returns The base points for the map / category combination.
- */
-export function getMapBasePoints(map: string, category: string) {
-    let points;
-    if (['Gibraltar', 'Havana', 'Rialto', 'Route66'].includes(map)) points = 80;
-    else if (['Lijiang Control Center', 'Hollywood', 'Eichenwalde', 'Busan MEKA Base'].includes(map)) points = 70;
-    else if (['Volskaya Industries', 'Paris', 'Numbani', 'Nepal Shrine', 'Nepal Sanctum', 'Lijiang Night Market', 'King\'s Row', 'Junktertown', 'Horizon Lunar Colony', 'Hanamura', 'Dorado'].includes(map)) points = 60;
-    else if (['Temple of Anubis', 'Oasis University', 'Oasis City Center', 'Nepal Village', 'Lijiang Garden', 'Ilios Well', 'Illios Ruins', 'Illios Lighthouse', 'Busan Sanctuary', 'Busan Downtown', 'Blizzard World'].includes(map)) points = 50;
-    else points = 40;
-    return category === 'Standard' ? points : points / 2;
-}
-
-
-/**
- * Gets the points for achieving the given place.
- * @param place The place.
- * @returns The points for achieving the place.
- */
-export function getPlacePoints(place: number) {
-    switch(place) {
-        case 1: return 200;
-        case 2: return 180;
-        case 3: return 140;
-        case 4: return 120;
-        case 5: return 100;
-        case 6: return 60;
-        case 7: return 40;
-        case 8: return 20;
-        default: return 0;
-    }
+export function getPoints(run: Run, wr: Run) {
+    const normalized = (run.time - wr.time) / wr.time;
+    return Math.floor(Math.log(1 / (normalized + 0.0025)) / 6);
 }
