@@ -40,7 +40,7 @@ export async function run (interaction: CommandInteraction<"present">) {
         (await proofMessage)?.delete();
         return;
     }
-    const points = getPoints(wr, wr, 1, map, category);
+    const points = 100;
     const embed: APIEmbed = {
         title: `World Record`,
         description: `User: *${wr.username}*\nTime: *${wr.time.toFixed(2)}*\nPoints: *${points}*\nDate: *${Formatters.time(wr.date)}*\nProof: *${Formatters.hyperlink('link', wr.proof)}*`,

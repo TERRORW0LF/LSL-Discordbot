@@ -49,7 +49,7 @@ export async function run (interaction: CommandInteraction<"present">) {
         return;
     }
     const place = getPlace(run, pbs[0], pbs);
-    const points = getPoints(run, pbs[0], place, map, category);
+    const points = getPoints(run, pbs[0]);
     let samePlaceUsers = 'none';
     if (run.submitId !== pbs[0].submitId)
         samePlaceUsers = pbs.filter(run1 => run1.time === run.time && run1.username !== run.username).map(run1 => run1.username).join(', ') || 'none';

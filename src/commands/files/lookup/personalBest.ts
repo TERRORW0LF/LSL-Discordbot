@@ -42,7 +42,7 @@ export async function run (interaction: CommandInteraction<"present">) {
         return;
     };
     const place = getPlace(pb, pbs[0], pbs);
-    const points = getPoints(pb, pbs[0], place, map, category);
+    const points = getPoints(pb, pbs[0]);
     const embed: APIEmbed = {
         title: `Personal Best`,
         description: `Place: *${place}*\nTime: *${pb.time.toFixed(2)}*\nPoints: *${points}*\nDate: *${Formatters.time(pb.date)}*\nProof: *${Formatters.hyperlink('link', pb.proof)}*`,
