@@ -8,7 +8,7 @@ export async function run (interaction: CommandInteraction<"present">) {
     await interaction.deferReply();
 
     const guildCfg = (guildsCfg as any)[interaction.guildId] ?? guildsCfg.default;
-    const patch = interaction.options.getString('patch', false) ?? '1.50';
+    const patch = interaction.options.getString('patch', false) ?? '2.00';
     const season = interaction.options.getString('season', true);
 
     const membersWithPoints = await getMembersWithPoints(interaction.guildId, { patch, season });

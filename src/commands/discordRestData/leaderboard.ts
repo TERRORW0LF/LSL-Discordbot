@@ -21,7 +21,7 @@ const command: ApplicationCommandExecuter = {
             .addStringOption(option =>
                 option.setName('patch')
                 .setDescription('The patch of the leaderboard.')
-                .addChoices([['Pre 1.41', '1.00'], ['1.41-1.50', '1.41'], ['Post 1.50', '1.50']])
+                .addChoices([['Pre 1.41', '1.00'], ['1.41-1.50', '1.41'], ['1.51-2.00', '1.50'], ['Post 2.00', '2.00']])
                 .setRequired(false)))
         .addSubcommand(sub =>
             sub.setName('category')
@@ -39,7 +39,7 @@ const command: ApplicationCommandExecuter = {
             .addStringOption(option =>
                 option.setName('patch')
                 .setDescription('The patch of the leaderboard.')
-                .addChoices([['Pre 1.41', '1.00'], ['1.41-1.50', '1.41'], ['Post 1.50', '1.50']])
+                .addChoices([['Pre 1.41', '1.00'], ['1.41-1.50', '1.41'], ['1.51-2.00', '1.50'], ['Post 2.00', '2.00']])
                 .setRequired(false)))
         .addSubcommand(sub =>
             sub.setName('map')
@@ -61,7 +61,7 @@ const command: ApplicationCommandExecuter = {
             .addStringOption(option =>
                 option.setName('patch')
                 .setDescription('The patch of the leaderboard.')
-                .addChoices([['Pre 1.41', '1.00'], ['1.41-1.50', '1.41'], ['Post 1.50', '1.50']])
+                .addChoices([['Pre 1.41', '1.00'], ['1.41-1.50', '1.41'], ['1.51-2.00', '1.50'], ['Post 2.00', '2.00']])
                 .setRequired(false))).toJSON(),
     async execute (interaction: CommandInteraction<"present">):Promise<void> {
         switch (interaction.options.getSubcommand()) {

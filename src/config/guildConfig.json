@@ -207,7 +207,7 @@
                 "300": "946491754138452008"
             }
         },
-        "patches": ["1.00", "1.41", "1.50"],
+        "patches": ["1.00", "1.41", "1.50", "2.00"],
         "seasons": ["1", "2", "3", "4", "5"],
         "categories": ["Standard", "Gravspeed"],
         "maps": ["Hanamura", "Horizon Lunar Colony", "Paris", "Temple of Anubis", "Volskaya Industries", "Dorado", "Havana", "Junkertown","Rialto",
@@ -238,6 +238,13 @@
                 "3": "11jcNfRsduClM_-xz9IYMkA8_2UpcwGFnZroisKFs4Nk",
                 "4": "13FOXjlSfdeQiz0TqO7thu_tDJj6vTZisPRzWbgO_tMw",
                 "5": "1e6fpZYJeilUq-ZR7YStOe4rObBs-NqruWe7TE4sHYXA"
+            },
+            "2.00": {
+                "1": "1nRJFlLTmscfNqHZDvzHMblzOzQgfcO174WhBo7MBONs",
+                "2": "12AvnknxBR9gffQn42JOAiVwwUDRHitoEnzgPAG6PYWM",
+                "3": "1n_orjUGGsqyqB7Kq8hTRPywbFuamHuD7SvvVUkD2o-Y",
+                "4": "1EsIkMizAJo5M65tr9f-eSDmGrhRwbpm9UOpB68Zwkiw",
+                "5": "1GFncz7M-_4oWhgo-gR-W4K36LHhBEb_kf_qrlkgPGDE"
             }
         },
         "forms": {
@@ -246,11 +253,11 @@
             "map": "428387040",
             "time": "927634646",
             "proof": "774918022",
-            "1": "https://docs.google.com/forms/d/e/1FAIpQLSflZqu62M6iRfGMnb82KFeJG4qAQsIjhestw3GDQ5047GaQSQ/formResponse?&submit=SUBMIT",
-            "2": "https://docs.google.com/forms/d/e/1FAIpQLSdU79OL_S_CUfyUGlXoMTl3HO-eD0y3xD0O0UIt-PGmNWGDhA/formResponse?&submit=SUBMIT",
-            "3": "https://docs.google.com/forms/d/e/1FAIpQLSdcrdArKObFu0YMJ7QdhXwEfMqQ8ffn-HdA19RMcOdDZyb7LQ/formResponse?&submit=SUBMIT",
-            "4": "https://docs.google.com/forms/d/e/1FAIpQLSdBGvUIhCwd_WjyPrfqy3csl8_ZW--jDGZdmBFisU2xlYevkg/formResponse?&submit=SUBMIT",
-            "5": "https://docs.google.com/forms/d/e/1FAIpQLSepF8u98qSB7d0sTwI1HayPB5GXSrUWcPlUP0MvzyMMsyYKng/formResponse?&submit=SUBMIT"
+            "1": "https://docs.google.com/forms/d/e/1FAIpQLScbYxJzmwg5cdZb0nuYGgVW-qBQE-yMiDp3p79pNcNo0Jlt6Q/formResponse?&submit=SUBMIT",
+            "2": "https://docs.google.com/forms/d/e/1FAIpQLSd13z7yojXLr_pO5L0922DWjLRg-arRbSMs2ONristPuDRB6w/formResponse?&submit=SUBMIT",
+            "3": "https://docs.google.com/forms/d/e/1FAIpQLScXBE4dW2y8X2CsO9F19HGW_iE9aiLh_xLBsbyjs8qpYtW-DA/formResponse?&submit=SUBMIT",
+            "4": "https://docs.google.com/forms/d/e/1FAIpQLSfdATwtYGGnhXRmRJ3cxbl74Snh4ZHbcfWQgAEZ-NIUpeEqIA/formResponse?&submit=SUBMIT",
+            "5": "https://docs.google.com/forms/d/e/1FAIpQLSfcl_BpvgBBrqFnecGr91x1ki7wSxksh1dv85YLyudVLjpe2g/formResponse?&submit=SUBMIT"
         }
     }
 }

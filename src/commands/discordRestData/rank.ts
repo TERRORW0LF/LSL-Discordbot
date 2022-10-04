@@ -23,7 +23,7 @@ const command: ApplicationCommandExecuter = {
             .addStringOption(option =>
                 option.setName('patch')
                 .setDescription('The patch of the ranking.')
-                .addChoices([['Pre 1.41', '1.00'], ['1.41-1.50', '1.41'], ['Post 1.50', '1.50']])
+                .addChoices([['Pre 1.41', '1.00'], ['1.41-1.50', '1.41'], ['1.51-2.00', '1.50'], ['Post 2.00', '2.00']])
                 .setRequired(false)))
         .addSubcommand(sub =>
             sub.setName('category')
@@ -41,7 +41,7 @@ const command: ApplicationCommandExecuter = {
             .addStringOption(option =>
                 option.setName('patch')
                 .setDescription('The patch of the ranking.')
-                .addChoices([['Pre 1.41', '1.00'], ['1.41-1.50', '1.41'], ['Post 1.50', '1.50']])
+                .addChoices([['Pre 1.41', '1.00'], ['1.41-1.50', '1.41'], ['1.51-2.00', '1.50'], ['Post 2.00', '2.00']])
                 .setRequired(false))
             .addUserOption(option =>
                 option.setName('user')

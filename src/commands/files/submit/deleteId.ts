@@ -10,7 +10,7 @@ export async function run (interaction: CommandInteraction<"present">) {
           id = interaction.options.getInteger('id', true),
           guildCfg = (guildsCfg as any)[interaction.guildId ?? ""] ?? guildsCfg.default;
 
-    const runs = await getAllSubmits(interaction.guildId, { patch: '1.50', season });
+    const runs = await getAllSubmits(interaction.guildId, { patch: '2.00', season });
     const run = runs.find(run => run.submitId === id);
     if (!run || (run.username !== interaction.user.tag 
         && !(interaction.member as GuildMember).roles.cache.hasAny(...guildCfg.features.moderation))) {
@@ -24,7 +24,7 @@ export async function run (interaction: CommandInteraction<"present">) {
     }
 
     try {
-        await deleteSubmit(interaction.guildId, id, { patch: "1.50", season });
+        await deleteSubmit(interaction.guildId, id, { patch: "2.00", season });
     } catch (error) {
         const embed: APIEmbed = {
             description: "Failed to delete run.",

@@ -10,7 +10,7 @@ export async function run (interaction: CommandInteraction<"present">) {
     const proofMessage = interaction.channel?.send('.');
 
     const rawPlace = interaction.options.getInteger('place', true);
-    const patch = interaction.options.getString('patch', false) ?? '1.50';
+    const patch = interaction.options.getString('patch', false) ?? '2.00';
     const season = interaction.options.getString('season', true);
     const category = interaction.options.getString('category', true);
     let map = interaction.options.getString('map', true);

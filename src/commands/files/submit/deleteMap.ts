@@ -22,7 +22,7 @@ export async function run (interaction: CommandInteraction<"present">) {
         return;
     map = mapOptions[mapIndexes[0]];
 
-    const submits = await getAllSubmits(interaction.guildId, { patch: "1.50", season });
+    const submits = await getAllSubmits(interaction.guildId, { patch: "2.00", season });
     let runs;
     if ((interaction.member as GuildMember).roles.cache.hasAny(...guildCfg.features.moderation))
         runs = submits.filter(submit => submit.category == category && submit.map == map);
@@ -35,7 +35,7 @@ export async function run (interaction: CommandInteraction<"present">) {
     const run = runs[runIndexes[0]];
 
     try {
-        await deleteSubmit(interaction.guildId, run.submitId, { patch: "1.50", season });
+        await deleteSubmit(interaction.guildId, run.submitId, { patch: "2.00", season });
     } catch (error) {
         const embed: APIEmbed = {
             description: 'Failed to delete run.',
