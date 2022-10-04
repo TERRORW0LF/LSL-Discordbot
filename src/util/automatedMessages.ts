@@ -23,7 +23,6 @@ export async function sendSubmit(client: Client<true>, guildId: string, submit: 
     const member = await getMemberByName(guild, submit.username);
     const name = member?.displayName ?? submit.username.split('#')[0];
     const embed: APIEmbed = {
-        author: { name: name, icon_url: member?.displayAvatarURL() ?? undefined },
         color: guildCfg.embeds.info,
         title: `New Submit by ${name}`,
         url: submit.proof,
@@ -31,7 +30,7 @@ export async function sendSubmit(client: Client<true>, guildId: string, submit: 
         description: `Patch: *${submit.patch}*\nSeason: *${submit.season}*\nCategory: *${submit.category}*\nMap: *${submit.map}*`,
         fields: [{
             name: "Submit",
-            value: `User: *${name}*\nTime: *${submit.time.toFixed(2)}*\nProof: *${Formatters.hyperlink("link", submit.proof)}*\nDate: *${Formatters.time(submit.date)}*`
+            value: `Time: *${submit.time.toFixed(2)}*\nProof: *${Formatters.hyperlink("link", submit.proof)}*\nDate: *${Formatters.time(submit.date)}*`
         }],
         footer: { text: `${submit.submitId}` }
     };
@@ -60,7 +59,6 @@ export async function sendPb(client: Client<true>, guildId: string, oldPb: Run |
     const name = member?.displayName ?? newPb.username.split('#')[0];
     const diff = oldPb ? getDateDiff(oldPb.date, newPb.date) : null;
     const embed: APIEmbed = {
-        author: { name: name, icon_url: member?.displayAvatarURL() ?? undefined },
         color: guildCfg.embeds.warning,
         title: `New Personal Best by ${name}`,
         url: newPb.proof,
@@ -68,12 +66,12 @@ export async function sendPb(client: Client<true>, guildId: string, oldPb: Run |
         description: `Patch: *${newPb.patch}*\nSeason: *${newPb.season}*\nCategory: *${newPb.category}*\nMap: *${newPb.map}*`,
         fields: [{
             name: "New PB",
-            value: `User: *${name}*\nTime: *${newPb.time.toFixed(2)}*\nProof: *${Formatters.hyperlink('link', newPb.proof)}*\nDate: *${Formatters.time(newPb.date)}*`,
+            value: `Time: *${newPb.time.toFixed(2)}*\nProof: *${Formatters.hyperlink('link', newPb.proof)}*\nDate: *${Formatters.time(newPb.date)}*`,
             inline: true
         },
         {
             name: "Old PB",
-            value: `User: *${oldPb ? name : 'none'}*\nTime: *${oldPb?.time.toFixed(2) ?? 'none'}*\nProof: *${oldPb ? Formatters.hyperlink('link', oldPb.proof) : 'none'}*\nDate: *${oldPb ? Formatters.time(oldPb.date) : 'none'}*`,
+            value: `Time: *${oldPb?.time.toFixed(2) ?? 'none'}*\nProof: *${oldPb ? Formatters.hyperlink('link', oldPb.proof) : 'none'}*\nDate: *${oldPb ? Formatters.time(oldPb.date) : 'none'}*`,
             inline: true
         },
         {
@@ -109,7 +107,6 @@ export async function sendWr(client: Client<true>, guildId: string, oldRecord: R
     const oldName = oldMember?.displayName ?? oldRecord?.username.split('#')[0];
     const diff = oldRecord ? getDateDiff(oldRecord.date, newRecord.date) : null;
     const embed: APIEmbed = {
-        author: { name: name, icon_url: member?.avatarURL() ?? undefined },
         color: guildCfg.embeds.success,
         title: `New World Record by ${name}`,
         url: newRecord.proof,
@@ -167,7 +164,6 @@ export async function sendRank(client: Client<true>, guildId: string, member: Gu
     if (!channel.isText()) return;
     const role = newRole ? await guild.roles.fetch(newRole) : null;
     const embed: APIEmbed = {
-        author: { name: member.displayName, icon_url: member.displayAvatarURL() ?? undefined },
         color: isRankUp ? guildCfg.embeds.success : guildCfg.embeds.error,
         title: `Rank update`,
         description: `${Formatters.userMention(member.id)} ${(isRankUp ? "Ranked up to " : "Ranked down to ") + (role ? Formatters.roleMention(role.id) : "no role")}`,
