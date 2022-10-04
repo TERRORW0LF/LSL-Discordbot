@@ -242,7 +242,7 @@ export async function submit(guildId: string, submit: SubmitOptions): Promise<vo
     submitURL += `&entry.${guildFormsConfig.user}=${encodeURIComponent(submit.user)}`
     submitURL += `&entry.${guildFormsConfig.category}=${encodeURIComponent(submit.category)}`
     submitURL += `&entry.${guildFormsConfig.map}=${encodeURIComponent(submit.map)}`
-    submitURL += `&entry.${guildFormsConfig.time}=${encodeURIComponent(submit.time.toFixed(2))}`
+    submitURL += `&entry.${guildFormsConfig.time}=${encodeURIComponent(submit.time.toFixed(3))}`
     submitURL += `&entry.${guildFormsConfig.proof}=${encodeURIComponent(submit.proof)}`
 
     const res = await axios.get(submitURL);

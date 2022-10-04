@@ -9,11 +9,11 @@ export async function run (interaction: CommandInteraction<"present">) {
 
     const season = interaction.options.getString('season', true),
           category = interaction.options.getString('category', true),
-          time = interaction.options.getNumber('time', true),
           proof = interaction.options.getString('proof', true),
           user = interaction.user.tag,
           guildCfg = (guildsCfg as any)[interaction.guildId] ?? guildsCfg.default;
-    let map = interaction.options.getString('map', true);
+    let map = interaction.options.getString('map', true),
+        time = interaction.options.getNumber('time', true);
     
     const mapOptions = getOptions(map, guildCfg.maps),
           selectData = mapOptions.map(value => { return { label: value } });
@@ -23,6 +23,8 @@ export async function run (interaction: CommandInteraction<"present">) {
     if (!mapIndexes)
         return;
     map = mapOptions[mapIndexes[0]];
+
+    time = 0.016 * Math.ceil(time / 0.016 - 0.000001);
     
     try {
         await submit(interaction.guildId, { user, season, category, map, time, proof });
