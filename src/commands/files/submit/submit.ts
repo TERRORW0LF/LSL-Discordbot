@@ -23,8 +23,6 @@ export async function run (interaction: CommandInteraction<"present">) {
     if (!mapIndexes)
         return;
     map = mapOptions[mapIndexes[0]];
-
-    time = 0.016 * Math.ceil(time / 0.016 - 0.000001);
     
     try {
         await submit(interaction.guildId, { user, season, category, map, time, proof });
