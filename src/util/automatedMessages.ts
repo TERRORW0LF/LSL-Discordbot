@@ -30,7 +30,7 @@ export async function sendSubmit(client: Client<true>, guildId: string, submit: 
         description: `Patch: *${submit.patch}*\nSeason: *${submit.season}*\nCategory: *${submit.category}*\nMap: *${submit.map}*`,
         fields: [{
             name: "Submit",
-            value: `Time: *${submit.time.toFixed(2)}*\nProof: *${Formatters.hyperlink("link", submit.proof)}*\nDate: *${Formatters.time(submit.date)}*`
+            value: `Time: *${submit.time.toFixed(3)}*\nProof: *${Formatters.hyperlink("link", submit.proof)}*\nDate: *${Formatters.time(submit.date)}*`
         }],
         footer: { text: `${submit.submitId}` }
     };
@@ -66,17 +66,17 @@ export async function sendPb(client: Client<true>, guildId: string, oldPb: Run |
         description: `Patch: *${newPb.patch}*\nSeason: *${newPb.season}*\nCategory: *${newPb.category}*\nMap: *${newPb.map}*`,
         fields: [{
             name: "New PB",
-            value: `Time: *${newPb.time.toFixed(2)}*\nProof: *${Formatters.hyperlink('link', newPb.proof)}*\nDate: *${Formatters.time(newPb.date)}*`,
+            value: `Time: *${newPb.time.toFixed(3)}*\nProof: *${Formatters.hyperlink('link', newPb.proof)}*\nDate: *${Formatters.time(newPb.date)}*`,
             inline: true
         },
         {
             name: "Old PB",
-            value: `Time: *${oldPb?.time.toFixed(2) ?? 'none'}*\nProof: *${oldPb ? Formatters.hyperlink('link', oldPb.proof) : 'none'}*\nDate: *${oldPb ? Formatters.time(oldPb.date) : 'none'}*`,
+            value: `Time: *${oldPb?.time.toFixed(3) ?? 'none'}*\nProof: *${oldPb ? Formatters.hyperlink('link', oldPb.proof) : 'none'}*\nDate: *${oldPb ? Formatters.time(oldPb.date) : 'none'}*`,
             inline: true
         },
         {
             name: "Comparison",
-            value: `Time save: *${oldPb ? (oldPb.time - newPb.time).toFixed(2) : 'undefined'}*\nAchieved after: *${diff ? `${diff.years} years, ${diff.weeks} weeks, ${diff.days} days, ${diff.hours} hours, ${diff.minutes} mins, ${diff.seconds} secs`: 'undefined'}*`
+            value: `Time save: *${oldPb ? (oldPb.time - newPb.time).toFixed(3) : 'undefined'}*\nAchieved after: *${diff ? `${diff.years} years, ${diff.weeks} weeks, ${diff.days} days, ${diff.hours} hours, ${diff.minutes} mins, ${diff.seconds} secs`: 'undefined'}*`
         }],
         footer: { text: "ID: " + newPb.submitId }
     };
@@ -114,17 +114,17 @@ export async function sendWr(client: Client<true>, guildId: string, oldRecord: R
         description: `Patch: *${newRecord.patch}*\nSeason: *${newRecord.season}*\nCategory: *${newRecord.category}*\nMap: *${newRecord.map}*`,
         fields: [{
             name: "New Record",
-            value: `User: *${name}*\nTime: *${newRecord.time.toFixed(2)}*\nProof: *${Formatters.hyperlink('link', newRecord.proof)}*\nDate: *${Formatters.time(newRecord.date)}*`,
+            value: `User: *${name}*\nTime: *${newRecord.time.toFixed(3)}*\nProof: *${Formatters.hyperlink('link', newRecord.proof)}*\nDate: *${Formatters.time(newRecord.date)}*`,
             inline: true
         },
         {
             name: "Old Record",
-            value: `User: *${oldRecord ? oldName : 'none'}*\nTime: *${oldRecord?.time.toFixed(2) ?? 'none'}*\nProof: *${oldRecord ? Formatters.hyperlink('link', oldRecord.proof) : 'none'}*\nDate: *${oldRecord ? Formatters.time(oldRecord.date) : 'none'}*`,
+            value: `User: *${oldRecord ? oldName : 'none'}*\nTime: *${oldRecord?.time.toFixed(3) ?? 'none'}*\nProof: *${oldRecord ? Formatters.hyperlink('link', oldRecord.proof) : 'none'}*\nDate: *${oldRecord ? Formatters.time(oldRecord.date) : 'none'}*`,
             inline: true
         },
         {
             name: "Comparison",
-            value: `Time save: *${oldRecord ? (oldRecord.time - newRecord.time).toFixed(2) : 'undefined'}*\nAchieved after: *${diff ? `${diff.years} years, ${diff.weeks} weeks, ${diff.days} days, ${diff.hours} hours, ${diff.minutes} mins, ${diff.seconds} secs`: 'undefined'}*`
+            value: `Time save: *${oldRecord ? (oldRecord.time - newRecord.time).toFixed(3) : 'undefined'}*\nAchieved after: *${diff ? `${diff.years} years, ${diff.weeks} weeks, ${diff.days} days, ${diff.hours} hours, ${diff.minutes} mins, ${diff.seconds} secs`: 'undefined'}*`
         }],
         footer: { text: "ID: " + newRecord.submitId }
     };
