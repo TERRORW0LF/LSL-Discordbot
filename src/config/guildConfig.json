@@ -61,12 +61,13 @@
             "error": "678275161853788210",
             "log": "678275161853788210"
         },
-        "patches": ["1.50"],
+        "patches": ["2.00"],
         "seasons": ["1", "2", "3", "4", "5"],
         "categories": ["Standard", "Gravspeed"],
-        "maps": ["Hanamura", "Horizon Lunar Colony", "Paris", "Temple of Anubis", "Volskaya Industries", "Dorado", "Havana", "Junkertown","Rialto",
-            "Route 66", "Gibraltar", "Blizzard World", "Eichenwalde", "Hollywood", "King's Row","Numbani", "Busan Sanctuary", "Busan MEKA Base",
-            "Busan Downtown", "Ilios Well", "Ilios Ruins", "Ilios Lighthouse", "Lijiang Night Market", "Lijiang Garden", "Lijiang Control Center",
+        "maps": ["Hanamura", "Horizon Lunar Colony", "Paris", "Temple of Anubis", "Volskaya Industries", "Blizzard World", "Eichenwalde",
+            "Hollywood", "King's Row", "Midtown", "Numbani", "Paraiso", "Circuit Royal", "Dorado", "Havana", "Junkertown","Rialto",
+            "Route 66", "Gibraltar", "Colosseo", "Esperanca", "New Queen Street", "Busan Sanctuary", "Busan MEKA Base", "Busan Downtown", 
+            "Ilios Well", "Ilios Ruins", "Ilios Lighthouse", "Lijiang Night Market", "Lijiang Garden", "Lijiang Control Center",
             "Nepal Village", "Nepal Sanctum", "Nepal Shrine", "Oasis City Center", "Oasis University", "Oasis Gardens"],
         "sheets": {
             "runs": "Record Log!A2:G",
@@ -76,7 +77,7 @@
                 "Standard": "Points Sheet!A3:B",
                 "Gravspeed": "Points Sheet!D3:E"
             },
-            "1.50": {
+            "2.00": {
                 "1": "1FVWxhVCEFe1MXuclEwQe-fBxdxeqB3ZQtUmfJ8aPxWg"
             }
         },
@@ -222,9 +223,10 @@
         "patches": ["1.00", "1.41", "1.50", "2.00"],
         "seasons": ["1", "2", "3", "4", "5"],
         "categories": ["Standard", "Gravspeed"],
-        "maps": ["Hanamura", "Horizon Lunar Colony", "Paris", "Temple of Anubis", "Volskaya Industries", "Dorado", "Havana", "Junkertown","Rialto",
-            "Route 66", "Gibraltar", "Blizzard World", "Eichenwalde", "Hollywood", "King's Row","Numbani", "Busan Sanctuary", "Busan MEKA Base",
-            "Busan Downtown", "Ilios Well", "Ilios Ruins", "Ilios Lighthouse", "Lijiang Night Market", "Lijiang Garden", "Lijiang Control Center",
+        "maps": ["Hanamura", "Horizon Lunar Colony", "Paris", "Temple of Anubis", "Volskaya Industries", "Blizzard World", "Eichenwalde",
+            "Hollywood", "King's Row", "Midtown", "Numbani", "Paraiso", "Circuit Royal", "Dorado", "Havana", "Junkertown","Rialto",
+            "Route 66", "Gibraltar", "Colosseo", "Esperanca", "New Queen Street", "Busan Sanctuary", "Busan MEKA Base", "Busan Downtown", 
+            "Ilios Well", "Ilios Ruins", "Ilios Lighthouse", "Lijiang Night Market", "Lijiang Garden", "Lijiang Control Center",
             "Nepal Village", "Nepal Sanctum", "Nepal Shrine", "Oasis City Center", "Oasis University", "Oasis Gardens"],
         "sheets": {
             "runs": "Record Log!A2:G",
