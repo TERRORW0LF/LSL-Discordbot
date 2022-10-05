@@ -43,7 +43,7 @@ export async function run (interaction: CommandInteraction<"present">) {
     const points = 100;
     const embed: APIEmbed = {
         title: `World Record`,
-        description: `User: *${wr.username}*\nTime: *${wr.time.toFixed(2)}*\nPoints: *${points}*\nDate: *${Formatters.time(wr.date)}*\nProof: *${Formatters.hyperlink('link', wr.proof)}*`,
+        description: `User: *${wr.username}*\nTime: *${wr.time.toFixed(3)}*\nPoints: *${points}*\nDate: *${Formatters.time(wr.date)}*\nProof: *${Formatters.hyperlink('link', wr.proof)}*`,
         footer: { text: `ID: ${wr.submitId}` },
         color: guildCfg.embeds.success
     };

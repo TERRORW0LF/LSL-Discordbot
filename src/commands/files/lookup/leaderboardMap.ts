@@ -47,14 +47,14 @@ export async function run (interaction: CommandInteraction<"present">) {
             dense: {
                 place: `${run.place}`,
                 user: run.username,
-                time: run.time.toFixed(2),
+                time: run.time.toFixed(3),
                 proof: Formatters.hyperlink('link', run.proof)
             },
             verbose: {
                 description: {
                     Place: `${run.place}`,
                     User: run.username,
-                    Time: run.time.toFixed(2),
+                    Time: run.time.toFixed(3),
                     Points: `${run.points}`,
                     Date: Formatters.time(run.date),
                     Proof: Formatters.hyperlink('link', run.proof),

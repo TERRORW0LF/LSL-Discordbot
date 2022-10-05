@@ -57,7 +57,7 @@ export async function run (interaction: CommandInteraction<"present">) {
     const embed: APIEmbed = {
         title: `Place`,
         description: `Translated place: *${reqPlace}*\nSheets place: *${place}*\nUser: *${run.username}*\nOther users: *${samePlaceUsers}*\n`
-            + `Time: *${run.time.toFixed(2)}*\nPoints: *${points}*\nDate: *${Formatters.time(run.date)}*\nProof: *${Formatters.hyperlink('link', run.proof)}*`,
+            + `Time: *${run.time.toFixed(3)}*\nPoints: *${points}*\nDate: *${Formatters.time(run.date)}*\nProof: *${Formatters.hyperlink('link', run.proof)}*`,
         footer: { text: `ID: ${run.submitId}` },
         color: guildCfg.embeds.success
     };
