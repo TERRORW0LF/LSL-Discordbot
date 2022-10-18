@@ -10,8 +10,10 @@ const command: ApplicationCommandExecuter = {
         .addStringOption(opt =>
             opt.setName('name')
             .setDescription('The name of the terminology / tech.')
-            .setChoices([["Controls", "controls"], ["Jump", "jump"], ["Skim", "skim"], ["Onetick", "onetick"], ["Latejump", "latejump"], ["Lateskim", "lateskim"],
-                         ["Headhit", "headhit"], ["Ceiling boost", "ceilingBoost"], ["Curve boost", "curveBoost"], ["Ramp slide", "rampSlide"], ["V-Curve", "vCurve"]])
+            .setChoices([["Controls", "controls"], ["Wallride Mechanics", "wallrideMechanics"], ["Bhop", "bhop"], ["Bhop (animationless)", "bhopAnimationless"],
+                         ["Onetick", "onetick"], ["Jump", "jump"], ["Skim", "skim"], ["Latejump", "latejump"], ["Lateskim", "lateskim"], ["Headhit", "headhit"],
+                         ["Ceiling boost", "ceilingBoost"], ["Curve boost", "curveBoost"], ["Ramp slide", "rampSlide"], ["Ramp jump", "rampJump"],
+                         ["Wall climb", "wallClimb"], ["Corner climb", "cornerClimb"], ["Pole climb", "poleClimb"], ["V-Curve", "vCurve"]])
             .setRequired(true)).toJSON(),
     async execute(interaction: CommandInteraction<"present">): Promise<void> {
         return terminology(interaction);
