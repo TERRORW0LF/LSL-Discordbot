@@ -14,8 +14,9 @@ export async function run (interaction: CommandInteraction<"present">) {
     const category = interaction.options.getString('category', true) as Category;
 
     const membersWithPoints = await getMembersWithPoints(interaction.guildId, { patch, season });
+    const filteredMembersWithPoints = membersWithPoints.filter(points => points[category] !== 0).sort((points1, points2) => points2[category] - points1[category]);
 
-    if (!membersWithPoints.size) {
+    if (!filteredMembersWithPoints.size) {
         const embed: APIEmbed = {
             description: `No users found.`,
             color: guildCfg.embeds.error
@@ -23,9 +24,7 @@ export async function run (interaction: CommandInteraction<"present">) {
         interaction.editReply({ embeds: [embed] });
         return;
     }
-
-
-    const filteredMembersWithPoints = membersWithPoints.filter(points => points[category] !== 0).sort((points1, points2) => points2[category] - points1[category]);
+    
     let place = 0;
     const showcaseMembers: SelectShowcaseOption[] = filteredMembersWithPoints.map((points, member) => {
         place++;
