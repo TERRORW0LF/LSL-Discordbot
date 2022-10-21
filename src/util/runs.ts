@@ -94,6 +94,6 @@ export function getPlace(run: Run, wr: Run, runs: Run[]): number {
  */
 export function getPoints(run: Run, wr: Run) {
     const normalized = (run.time - wr.time) / wr.time;
-    const points = Math.floor(100 * Math.log(1 / (normalized + 0.0025)) / 6);
+    const points = Math.round(100 * Math.log(1 / (normalized + 0.0025)) / 6);
     return points < 0 ? 0 : points;
 }
