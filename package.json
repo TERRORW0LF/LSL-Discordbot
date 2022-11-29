@@ -23,6 +23,8 @@
     "npm": "^7.0.0"
   },
   "scripts": {
-     "postinstall": "tsc"
+     "postinstall": "tsc",
+     "start-rasp": "npm postinstall && node dist/server.js",
+     "start-env": "npm postinstall && export $(cat .env | grep \"^[^#;]\" |xargs)&& npm start"
   }
 }
