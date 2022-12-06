@@ -24,7 +24,6 @@
   },
   "scripts": {
      "postinstall": "tsc",
-     "start-rasp": "npm run start-env && node dist/server.js",
-     "start-env": "export $(cat .env | grep \"^[^#;]\"| xargs)"
+     "start": "node dist/server.js"
   }
 }
