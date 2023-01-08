@@ -1,10 +1,11 @@
 import fs from 'node:fs';
-import { Collection, Interaction } from 'discord.js';
+import { AutocompleteInteraction, Collection, Interaction } from 'discord.js';
 import { RESTPostAPIApplicationCommandsJSONBody } from 'discord-api-types/v9';
 
 export interface ApplicationCommandExecuter {
     data: RESTPostAPIApplicationCommandsJSONBody,
-    execute(interaction: Interaction): Promise<void>;
+    execute(interaction: Interaction): Promise<void>,
+    complete?(interaction: AutocompleteInteraction): Promise<void>;
 }
 
 const commands: Collection<string, ApplicationCommandExecuter> = new Collection();

@@ -1,7 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction } from 'discord.js';
+import { AutocompleteInteraction, CommandInteraction } from 'discord.js';
 import { ApplicationCommandExecuter } from '../commandCollection.js';
 import { run as wr } from '../files/lookup/worldRecord.js';
+import { run as completeMap} from '../files/autocomplete/map.js';
 
 const command: ApplicationCommandExecuter = {
     data: new SlashCommandBuilder()
@@ -20,6 +21,7 @@ const command: ApplicationCommandExecuter = {
         .addStringOption(option =>
             option.setName('map')
             .setDescription('The map of the run.')
+            .setAutocomplete(true)
             .setRequired(true))
         .addStringOption(option =>
             option.setName('patch')
@@ -28,6 +30,9 @@ const command: ApplicationCommandExecuter = {
             .setRequired(false)).toJSON(),
     async execute (interaction: CommandInteraction<"present">) {
         return wr(interaction);
+    },
+    async complete (interaction: AutocompleteInteraction<'present'>) {
+        return completeMap(interaction);
     }
 }
 

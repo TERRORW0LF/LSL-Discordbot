@@ -1,9 +1,10 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction } from 'discord.js';
+import { AutocompleteInteraction, CommandInteraction } from 'discord.js';
 import { ApplicationCommandExecuter } from '../commandCollection.js';
 import { run as season } from '../files/lookup/leaderboardSeason.js';
 import { run as category } from '../files/lookup/leaderboardCategory.js';
 import { run as map } from '../files/lookup/leaderboardMap.js';
+import { run as completeMap} from '../files/autocomplete/map.js';
 
 
 const command: ApplicationCommandExecuter = {
@@ -57,6 +58,7 @@ const command: ApplicationCommandExecuter = {
             .addStringOption(option =>
                 option.setName('map')
                 .setDescription('The map of the leaderboard.')
+                .setAutocomplete(true)
                 .setRequired(true))
             .addStringOption(option =>
                 option.setName('patch')
@@ -69,6 +71,9 @@ const command: ApplicationCommandExecuter = {
             case "category": return category(interaction);
             default: return map(interaction);
         }
+    },
+    async complete (interaction: AutocompleteInteraction<'present'>) {
+        return completeMap(interaction);
     }
 }
 

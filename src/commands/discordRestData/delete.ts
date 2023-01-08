@@ -1,7 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { run as deleteId } from '../files/submit/deleteId.js';
 import { run as deleteMap } from '../files/submit/deleteMap.js';
-import { CommandInteraction } from 'discord.js';
+import { run as completeMap } from '../files/autocomplete/map.js';
+import { AutocompleteInteraction, CommandInteraction } from 'discord.js';
 import { ApplicationCommandExecuter } from '../commandCollection.js';
 
 const command: ApplicationCommandExecuter = {
@@ -36,6 +37,7 @@ const command: ApplicationCommandExecuter = {
             .addStringOption(option =>
                 option.setName('map')
                 .setDescription('The map of the run.')
+                .setAutocomplete(true)
                 .setRequired(true))).toJSON(),
     async execute (interaction: CommandInteraction<"present">) {
         switch (interaction.options.getSubcommand(true)) {
@@ -46,6 +48,9 @@ const command: ApplicationCommandExecuter = {
             default:
                 throw new Error('Command not found');
         }
+    },
+    async complete (interaction: AutocompleteInteraction<'present'>) {
+        return completeMap(interaction);
     }
 }
 
