@@ -1,7 +1,6 @@
 import express from 'express';
 import { Client, Intents } from 'discord.js';
 import commandCollection from './commands/commandCollection.js';
-import interaction from './events/discord/interaction.js';
 import interactionCreate from './events/discord/interactionCreate.js';
 import ready from './events/discord/ready.js';
 import guildMemberAdd from './events/discord/guildMemberAdd.js';
