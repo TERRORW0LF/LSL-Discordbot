@@ -22,4 +22,11 @@ export default async (commandCollection: Collection<string, ApplicationCommandEx
         }
         return;
     }
+    if (interaction.isAutocomplete()) {
+        const command = commandCollection.get(interaction.commandName);
+        if (command?.complete)
+            command?.complete(interaction);
+        else
+            interaction.respond([]);
+    }
 }
