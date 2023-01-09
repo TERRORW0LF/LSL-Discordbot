@@ -5,8 +5,8 @@ import { ApplicationCommandExecuter } from '../commandCollection.js';
 
 const command: ApplicationCommandExecuter = {
     data: new SlashCommandBuilder()
-        .setName('coin-flip')
-        .setDescription('Flip a coin.').toJSON(),
+        .setName('joke')
+        .setDescription('Post a random dad joke.').toJSON(),
     async execute(interaction: CommandInteraction<'present'>): Promise<void> {
         return joke(interaction);
     }
