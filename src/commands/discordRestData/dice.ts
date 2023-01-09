@@ -5,8 +5,8 @@ import { ApplicationCommandExecuter } from '../commandCollection.js';
 
 const command: ApplicationCommandExecuter = {
     data: new SlashCommandBuilder()
-        .setName('coin-flip')
-        .setDescription('Flip a coin.')
+        .setName('dice')
+        .setDescription('Throw some dice.')
         .addIntegerOption(option =>
             option.setName('faces')
             .setDescription('Number of faces the dice should have.')
