@@ -1,7 +1,6 @@
 import fs from 'node:fs';
 import { REST } from '@discordjs/rest';
 import { RESTPutAPIApplicationCommandsJSONBody, Routes } from 'discord-api-types/v9';
-import { ApplicationCommandExecuter } from '../src/commands/commandCollection.js';
 import { discordToken, clientId } from './config/config.js';
 
 let commands: RESTPutAPIApplicationCommandsJSONBody = [];

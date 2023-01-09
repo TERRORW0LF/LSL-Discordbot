@@ -1,6 +1,6 @@
 import { AutocompleteInteraction } from "discord.js";
-import guildsCfg from "../../../config/guildConfig.json";
-import { getOptions } from "../../../util/userInput";
+import guildsCfg from "../../../config/guildConfig.json" assert { type: 'json' };
+import { getOptions } from "../../../util/userInput.js";
 
 export async function run(interaction: AutocompleteInteraction<'present'>): Promise<void> {
     const guildCfg = (guildsCfg as any)[interaction.guildId];
