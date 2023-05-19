@@ -141,6 +141,36 @@ export async function deleteSubmit(guildId: string, submitId: number, options: S
 }
 
 
+/**
+ * Updates the submit belonging to the submitId with a new link to the video proof.
+ * @param guildId The id of the guild to get the sheets of.
+ * @param submitId The id of the submit.
+ * @param link The new link to the run.
+ * @param options The options that descripe the sheet.
+ */
+export async function editSubmit(guildId: string, submitId: number, link: string, options: SheetOptions): Promise<void> {
+    const client = google.sheets('v4'),
+          token = await getGoogleAuth(),
+          guildCfg = (guildsCfg as any)[guildId],
+          sheetId: string | undefined = Object.values(options).reduce((prev, curr) => prev?.[curr], guildCfg?.sheets);
+    if (!sheetId) throw 'Sheet id not found';
+
+    const submits = await getAllSubmits(guildId, options);
+    const row = submits.findIndex(elem => elem.submitId == submitId) + 2;
+
+    await client.spreadsheets.values.update({
+        spreadsheetId: sheetId,
+        auth: token,
+        valueInputOption: 'RAW',
+        range: `Record Log!D${row}`,
+        requestBody: {
+            majorDimension: 'ROWS',
+            values: [[link]]
+        }
+    });
+}
+
+
 export interface Points {
     Standard: number,
     Gravspeed: number,
