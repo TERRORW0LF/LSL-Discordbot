@@ -37,7 +37,7 @@ const command: ApplicationCommandExecuter = {
                 option.setName('patch')
                 .setDescription('The patch the run was submitted under.')
                 .addChoices([['Pre 1.41', '1.00'], ['1.41-1.49', '1.41'], ['1.50-1.99', '1.50'], ['Post 2.00', '2.00']])
-                .setRequired(false))
+                .setRequired(true))
             .addStringOption(option =>
                 option.setName('season')
                 .setDescription('The season of the run.')
